@@ -14,6 +14,7 @@ var bench: Bench
 var controls: TouchControls
 var sun: DirectionalLight3D
 var env: Environment
+var village: Village
 var water: MeshInstance3D
 var water_foam: ShaderMaterial
 var water_plain: ShaderMaterial
@@ -245,36 +246,12 @@ func _wave_texture(seed_value: int, bump: float) -> NoiseTexture2D:
 	return t
 
 
-## Simple house blocks at the scene_fjord.py village spots, one mesh for the whole village.
+## The look-dev village as real buildings (scripts/Village.gd, tools/spike/export_village.py).
 func _build_village() -> void:
-	var walls: Array[Color] = [
-		Color(0.55, 0.16, 0.12),
-		Color(0.78, 0.56, 0.24),
-		Color(0.90, 0.88, 0.84),
-		Color(0.17, 0.14, 0.12)
-	]
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for h: Dictionary in terrain.meta["village"]:
-		var p: Array = h["pos"]
-		var base := Vector3(float(p[0]), float(p[1]), float(p[2]))
-		var xf := Transform3D(Basis(Vector3.UP, deg_to_rad(float(h["yaw"]))), base)
-		_house(st, xf, float(h["w"]), float(h["d"]), 2.9, walls[int(h["wall"])])
-	var j: Dictionary = terrain.meta["jetty"]
-	var a := Vector3(float(j["from"][0]), float(j["from"][1]), float(j["from"][2]))
-	var b := Vector3(float(j["to"][0]), float(j["to"][1]), float(j["to"][2]))
-	var mid := (a + b) * 0.5
-	var xj := Transform3D(Basis(Vector3.UP, atan2(b.x - a.x, b.z - a.z)), mid - Vector3(0, 0.3, 0))
-	_box(st, xj, Vector3(2.4, 0.3, a.distance_to(b)), Color(0.35, 0.27, 0.20))
-	st.generate_normals()
-	var mi := MeshInstance3D.new()
-	mi.mesh = st.commit()
-	var m := StandardMaterial3D.new()
-	m.vertex_color_use_as_albedo = true
-	m.roughness = 0.85
-	m.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mi.material_override = m
-	add_child(mi)
+	village = Village.new()
+	village.name = "Village"
+	add_child(village)
+	village.build()
 
 
 ## Waterfall down the real gully near scene y=1300 (path from terrain.json, traced like
@@ -376,73 +353,6 @@ func _build_ingrid() -> void:
 	Humans.loop_all(anim)
 	if anim:
 		anim.play("idle")
-
-
-func _house(st: SurfaceTool, xf: Transform3D, w: float, d: float, h: float, wall: Color) -> void:
-	_box(st, xf * Transform3D(Basis(), Vector3(0, h * 0.5 - 1.0, 0)), Vector3(w, h + 2.0, d), wall)
-	var roof := Color(0.27, 0.25, 0.17)
-	var r: float = w * 0.5 + 0.4
-	var ridge: float = h + w * 0.42
-	var hd: float = d * 0.5 + 0.4
-	var quads: Array = [
-		[Vector3(-r, h, -hd), Vector3(0, ridge, -hd), Vector3(0, ridge, hd), Vector3(-r, h, hd)],
-		[Vector3(0, ridge, -hd), Vector3(r, h, -hd), Vector3(r, h, hd), Vector3(0, ridge, hd)],
-	]
-	for q: Array in quads:
-		_quad(st, xf, q, roof)
-	var gw: float = w * 0.5
-	var g0: Array = [
-		Vector3(-gw, h, -d * 0.5), Vector3(gw, h, -d * 0.5), Vector3(0, ridge, -d * 0.5)
-	]
-	var g1: Array = [Vector3(gw, h, d * 0.5), Vector3(-gw, h, d * 0.5), Vector3(0, ridge, d * 0.5)]
-	for g: Array in [g0, g1]:
-		st.set_color(wall)
-		for v: Vector3 in g:
-			st.add_vertex(xf * v)
-
-
-func _quad(st: SurfaceTool, xf: Transform3D, q: Array, col: Color) -> void:
-	st.set_color(col)
-	for k: int in [0, 1, 2, 0, 2, 3]:
-		st.add_vertex(xf * (q[k] as Vector3))
-
-
-func _box(st: SurfaceTool, xf: Transform3D, size: Vector3, col: Color) -> void:
-	var e := size * 0.5
-	var faces: Array = [
-		[
-			Vector3(-e.x, e.y, -e.z),
-			Vector3(e.x, e.y, -e.z),
-			Vector3(e.x, e.y, e.z),
-			Vector3(-e.x, e.y, e.z)
-		],
-		[
-			Vector3(-e.x, -e.y, e.z),
-			Vector3(e.x, -e.y, e.z),
-			Vector3(e.x, e.y, e.z),
-			Vector3(-e.x, e.y, e.z)
-		],
-		[
-			Vector3(e.x, -e.y, -e.z),
-			Vector3(-e.x, -e.y, -e.z),
-			Vector3(-e.x, e.y, -e.z),
-			Vector3(e.x, e.y, -e.z)
-		],
-		[
-			Vector3(e.x, -e.y, e.z),
-			Vector3(e.x, -e.y, -e.z),
-			Vector3(e.x, e.y, -e.z),
-			Vector3(e.x, e.y, e.z)
-		],
-		[
-			Vector3(-e.x, -e.y, -e.z),
-			Vector3(-e.x, -e.y, e.z),
-			Vector3(-e.x, e.y, e.z),
-			Vector3(-e.x, e.y, -e.z)
-		],
-	]
-	for f: Array in faces:
-		_quad(st, xf, f, col)
 
 
 func _build_player() -> void:

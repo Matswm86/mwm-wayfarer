@@ -7,8 +7,10 @@ const TERRAIN_DIR := "res://assets/terrain/"
 ## A tile splits into its four children when the camera is closer than this times its size.
 const LOD_SPLIT := 1.0
 const LOD_MARGIN := 0.1
-## Tiles from this level down cast shadows (0 = 2560 m ... 4 = 160 m).
-const SHADOW_LEVEL := 3
+## Tiles from this level down cast real-time shadows (0 = 2560 m ... 4 = 160 m; 5 = none).
+## None since the graphics pass: the terrain's shadow on itself is baked (bake_terrain_light.py),
+## which saves the terrain triangles in every shadow split.
+const SHADOW_LEVEL := 5
 const SKIRT_DEPTH := 6.0
 
 ## Trees: pines within this radius of the camera, cones beyond (switch done per tree in the shader).
