@@ -1,0 +1,74 @@
+{
+ "deer": {
+  "clips": {
+   "idle": "Deer|Deer_Idle",
+   "walk": "Deer|Deer_WalkFast_F"
+  },
+  "tris": 14992
+ },
+ "doe": {
+  "clips": {
+   "graze": "Stand_Eating_01",
+   "walk": "Walk",
+   "run": "Trot"
+  },
+  "tris": 5296
+ },
+ "elk": {
+  "clips": {
+   "graze": "Stand_Eating_01",
+   "walk": "Walk",
+   "run": "Trot"
+  },
+  "tris": 7966
+ },
+ "moose": {
+  "clips": {
+   "idle": "Moose|Moose_Idle",
+   "walk": "Moose|Moose_WalkFast_F"
+  },
+  "tris": 10944
+ },
+ "wolf": {
+  "clips": {
+   "idle": "Wolf|Wolf_Howl",
+   "walk": "Wolf|Wolf_WalkFast_F"
+  },
+  "tris": 10080
+ },
+ "fox": {
+  "clips": {
+   "idle": "Fox|Fox_Stand",
+   "walk": "Fox|Fox_WalkFast_F",
+   "howl": "Fox|Fox_Howl"
+  },
+  "tris": 8420
+ },
+ "rabbit": {
+  "clips": {
+   "idle": "Rabbit|Rabbit_Idle",
+   "walk": "Rabbit|Rabbit_WalkSlow_F"
+  },
+  "tris": 6080
+ },
+ "bear": {
+  "clips": {
+   "graze": "Stand_Eating_01",
+   "idle": "Stand_Idle_01",
+   "walk": "Walk"
+  },
+  "tris": 7588
+ },
+ "eagle": {
+  "clips": {
+   "fly": "Animation"
+  },
+  "tris": 6524
+ },
+ "gull": {
+  "clips": {
+   "fly": "Animation"
+  },
+  "tris": 5704
+ }
+}
