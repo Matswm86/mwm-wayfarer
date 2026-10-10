@@ -5,9 +5,11 @@ shader_type spatial;
 render_mode unshaded, blend_mix, cull_disabled, depth_draw_never, shadows_disabled;
 
 uniform float speed = 1.6;
-uniform vec4 water_color : source_color = vec4(0.90, 0.94, 0.95, 1.0);
+uniform vec4 water_color : source_color = vec4(0.97, 0.99, 1.0, 1.0);
 uniform vec4 shade_color : source_color = vec4(0.55, 0.66, 0.68, 1.0);
-uniform float opacity = 0.85;
+uniform float opacity = 0.95;
+// above 1 so the white water stays bright after the AgX tonemap, as sunlit foam does
+uniform float brightness = 1.35;
 
 float hash12(vec2 p) {
 	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -28,6 +30,6 @@ void fragment() {
 	float streak = vnoise(p) * 0.65 + vnoise(p * vec2(2.0, 3.0)) * 0.35;
 	float edge = smoothstep(0.0, 0.25, UV.x) * smoothstep(1.0, 0.75, UV.x);
 	float a = edge * smoothstep(0.25, 0.6, streak + 0.15);
-	ALBEDO = mix(shade_color.rgb, water_color.rgb, smoothstep(0.35, 0.8, streak));
+	ALBEDO = mix(shade_color.rgb, water_color.rgb, smoothstep(0.35, 0.8, streak)) * brightness;
 	ALPHA = clamp(a * opacity, 0.0, 1.0);
 }

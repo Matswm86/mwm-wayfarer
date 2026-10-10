@@ -19,9 +19,10 @@ const TREE_NEAR_CHUNK := 640.0
 const TREE_FAR_CHUNK := 2560.0
 const TREE_FAR_END := 7000.0
 
-## Grass: one blade per GRASS_SPACING m grid point within GRASS_RADIUS of the player.
-const GRASS_RADIUS := 40.0
-const GRASS_SPACING := 0.6
+## Ground cover: one plant (two crossed cards) per GRASS_SPACING m grid point within
+## GRASS_RADIUS of the player.
+const GRASS_RADIUS := 35.0
+const GRASS_SPACING := 0.5
 
 const PLAYER_WALK := 4.5
 const PLAYER_RUN := 8.0
@@ -62,6 +63,12 @@ const WATER_PROBES: Array[Vector4] = [
 	Vector4(0.0, -5400.0, 4200.0, 5200.0),
 ]
 const WATER_PROBE_HEIGHT := 40.0
+
+## Waterfall: ribbon half-width at the top and the foot (m), height above the gully floor (m),
+## mist puff size (m). Wide and bright enough to read from the village about 1.1 km away.
+const FALLS_WIDTH := Vector2(15.0, 28.0)
+const FALLS_LIFT := 7.0
+const FALLS_MIST_SIZE := 55.0
 
 const BENCH_SECONDS := 60.0
 const BENCH_WARMUP := 1.0
@@ -119,3 +126,121 @@ const PRESETS: Array[Dictionary] = [
 	},
 ]
 const FOREST_STEPS: Array[float] = [0.35, 0.65, 1.0]
+
+## Wildlife (scripts/Wildlife.gd). area = centre x, z; radius in m; size = longest side of the
+## model in m; walk speed m/s; flee = distance at which it runs from the player (0 = ignores);
+## range = visibility range in m; low = how many of `count` the Low preset keeps; fly = altitude.
+const WILDLIFE: Array[Dictionary] = [
+	{
+		"species": "doe",
+		"count": 3,
+		"low": 2,
+		"area": [165.0, 30.0],
+		"radius": 40.0,
+		"size": 1.7,
+		"walk": 1.2,
+		"flee": 30.0,
+		"range": 300.0,
+	},
+	{
+		"species": "deer",
+		"count": 2,
+		"low": 1,
+		"area": [180.0, 10.0],
+		"radius": 40.0,
+		"size": 1.9,
+		"walk": 1.3,
+		"flee": 30.0,
+		"range": 300.0,
+	},
+	{
+		"species": "elk",
+		"count": 1,
+		"low": 0,
+		"area": [255.0, 60.0],
+		"radius": 35.0,
+		"size": 2.5,
+		"walk": 1.4,
+		"flee": 35.0,
+		"range": 400.0,
+	},
+	{
+		"species": "moose",
+		"count": 1,
+		"low": 0,
+		"area": [270.0, -10.0],
+		"radius": 35.0,
+		"size": 3.0,
+		"walk": 1.3,
+		"flee": 25.0,
+		"range": 400.0,
+	},
+	{
+		"species": "fox",
+		"count": 1,
+		"low": 0,
+		"area": [205.0, -60.0],
+		"radius": 30.0,
+		"size": 1.1,
+		"walk": 1.1,
+		"flee": 18.0,
+		"range": 150.0,
+	},
+	{
+		"species": "rabbit",
+		"count": 3,
+		"low": 0,
+		"area": [150.0, -40.0],
+		"radius": 25.0,
+		"size": 0.45,
+		"walk": 0.6,
+		"flee": 10.0,
+		"range": 80.0,
+	},
+	{
+		"species": "wolf",
+		"count": 2,
+		"low": 0,
+		"area": [-290.0, -440.0],
+		"radius": 30.0,
+		"size": 1.6,
+		"walk": 1.4,
+		"flee": 0.0,
+		"range": 600.0,
+	},
+	{
+		"species": "bear",
+		"count": 1,
+		"low": 0,
+		"area": [-300.0, 250.0],
+		"radius": 30.0,
+		"size": 2.0,
+		"walk": 1.0,
+		"flee": 0.0,
+		"range": 600.0,
+	},
+	{
+		"species": "eagle",
+		"count": 1,
+		"low": 1,
+		"area": [400.0, -200.0],
+		"radius": 250.0,
+		"size": 2.1,
+		"speed": 14.0,
+		"fly": 450.0,
+		"flee": 0.0,
+		"range": 2500.0,
+	},
+	{
+		"species": "gull",
+		"count": 5,
+		"low": 2,
+		"area": [20.0, -60.0],
+		"radius": 90.0,
+		"size": 2.2,
+		"speed": 9.0,
+		"fly": 30.0,
+		"flee": 0.0,
+		"range": 600.0,
+	},
+]

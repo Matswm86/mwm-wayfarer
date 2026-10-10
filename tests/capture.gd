@@ -50,6 +50,7 @@ func _ready() -> void:
 			main.bench.view(Vector3(250.0, 12.0, -230.0), top.lerp(_v(fall[fall.size() - 1]), 0.6))
 			await _frames(60)
 			await _shot("waterfall_from_village_high")
+			await _wildlife_shots()
 		main.bench.view(high, spawn_look)
 		await _frames(45)
 		await _shot("fjord_high_view_%s" % tag)
@@ -93,6 +94,20 @@ func _ready() -> void:
 		await _shot("bench_result")
 	print("CAPTURE DONE")
 	get_tree().quit()
+
+
+## The grazing deer on the meadow, then the gulls over the fjord with the walls behind.
+func _wildlife_shots() -> void:
+	var doe: Node3D = main.wildlife.animals[0].node
+	var dp := doe.global_position
+	main.bench.view(dp + Vector3(9.0, 2.2, 12.0), dp + Vector3(0.0, 0.8, 0.0))
+	await _frames(45)
+	await _shot("animals_meadow_high")
+	var gull: Node3D = main.wildlife.animals[main.wildlife.animals.size() - 1].node
+	var gp := gull.global_position
+	main.bench.view(gp + Vector3(-6.0, -2.0, 8.0), gp)
+	await _frames(2)
+	await _shot("birds_fjord_high")
 
 
 ## Eye height in the village street between the houses, looking down the row of houses.

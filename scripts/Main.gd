@@ -15,6 +15,7 @@ var controls: TouchControls
 var sun: DirectionalLight3D
 var env: Environment
 var village: Village
+var wildlife: Wildlife
 var water: MeshInstance3D
 var water_foam: ShaderMaterial
 var water_plain: ShaderMaterial
@@ -42,13 +43,18 @@ func _ready() -> void:
 	forest = Forest.new()
 	forest.name = "Forest"
 	add_child(forest)
-	forest.build(terrain.meta)
+	forest.build(terrain)
 	_build_player()
 	grass = Grass.new()
 	grass.name = "Grass"
 	add_child(grass)
 	grass.build(terrain)
 	grass.target = player
+	wildlife = Wildlife.new()
+	wildlife.name = "Wildlife"
+	add_child(wildlife)
+	wildlife.build(terrain)
+	wildlife.target = player
 	bench = Bench.new()
 	bench.name = "Bench"
 	add_child(bench)
@@ -268,11 +274,11 @@ func _build_waterfall() -> void:
 		var d: Vector3 = pts[mini(i + 1, pts.size() - 1)] - pts[maxi(i - 1, 0)]
 		var side := Vector3(-d.z, 0.0, d.x).normalized()
 		var t: float = float(i) / float(pts.size() - 1)
-		var w: float = lerpf(9.0, 18.0, t)
+		var w: float = lerpf(SpikeConfig.FALLS_WIDTH.x, SpikeConfig.FALLS_WIDTH.y, t)
 		if i > 0:
 			along += pts[i].distance_to(pts[i - 1])
-		verts.append(pts[i] - side * w + Vector3(0.0, 5.0, 0.0))
-		verts.append(pts[i] + side * w + Vector3(0.0, 5.0, 0.0))
+		verts.append(pts[i] - side * w + Vector3(0.0, SpikeConfig.FALLS_LIFT, 0.0))
+		verts.append(pts[i] + side * w + Vector3(0.0, SpikeConfig.FALLS_LIFT, 0.0))
 		uvs.append(Vector2(0.0, along / 10.0))
 		uvs.append(Vector2(1.0, along / 10.0))
 		if i > 0:
@@ -294,12 +300,12 @@ func _build_waterfall() -> void:
 	add_child(mi)
 
 	var mist := GPUParticles3D.new()
-	mist.amount = 24
+	mist.amount = 40
 	mist.lifetime = 5.0
 	mist.visibility_aabb = AABB(Vector3(-60, -10, -60), Vector3(120, 90, 120))
 	var pm := ParticleProcessMaterial.new()
 	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
-	pm.emission_sphere_radius = 12.0
+	pm.emission_sphere_radius = 22.0
 	pm.direction = Vector3(0, 1, 0)
 	pm.spread = 50.0
 	pm.initial_velocity_min = 2.0
@@ -310,13 +316,13 @@ func _build_waterfall() -> void:
 	var fade := Gradient.new()
 	fade.set_color(0, Color(1, 1, 1, 0))
 	fade.set_color(1, Color(1, 1, 1, 0))
-	fade.add_point(0.3, Color(1, 1, 1, 0.45))
+	fade.add_point(0.3, Color(1, 1, 1, 0.55))
 	var ramp := GradientTexture1D.new()
 	ramp.gradient = fade
 	pm.color_ramp = ramp
 	mist.process_material = pm
 	var quad := QuadMesh.new()
-	quad.size = Vector2(26, 26)
+	quad.size = Vector2(SpikeConfig.FALLS_MIST_SIZE, SpikeConfig.FALLS_MIST_SIZE)
 	var qm := StandardMaterial3D.new()
 	qm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	qm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -336,6 +342,18 @@ func _build_waterfall() -> void:
 	mist.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mist.position = pts[pts.size() - 1] + Vector3(0, 4, 0)
 	add_child(mist)
+	# spray where the water drops steepest, so the fall reads from the village 1 km away
+	var steep_i: int = 1
+	var steep: float = 0.0
+	for i in range(1, pts.size()):
+		var drop: float = (pts[i - 1].y - pts[i].y) / maxf(pts[i - 1].distance_to(pts[i]), 0.1)
+		if drop > steep:
+			steep = drop
+			steep_i = i
+	var spray := mist.duplicate() as GPUParticles3D
+	spray.amount = 24
+	spray.position = pts[steep_i] + Vector3(0, 6, 0)
+	add_child(spray)
 
 
 ## Ingrid (GDD 6.4), idle on the shore by the jetty. MakeHuman CC0, tools/spike/export_human.py.
@@ -422,6 +440,7 @@ func apply_preset(i: int) -> void:
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
 	grass.set_density(float(p["grass"]))
+	wildlife.set_density(i > 0)
 	set_foam(bool(p["foam"]))
 	PerfOverlay.set_button_text("preset", "Preset: %s" % p["name"])
 	_update_forest_text()
