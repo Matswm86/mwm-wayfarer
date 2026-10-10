@@ -5,6 +5,8 @@ extends Node
 ## look at a fjord wall (LOD cracks) and the joystick drawn. Then a short bench per preset that
 ## logs draw calls and primitives (laptop fps means nothing for phones).
 ## CAPTURE_BENCH_SECONDS sets the bench length (default 20, 0 = skip).
+## CAPTURE_HIDE_UI=1 hides the readout and buttons (clean frames for look comparisons; the
+## draw and primitive counts are still printed per shot).
 
 var out_dir: String = OS.get_environment("CAPTURE_DIR")
 var main: Node3D
@@ -13,6 +15,10 @@ var main: Node3D
 func _ready() -> void:
 	main = load("res://scenes/Main.tscn").instantiate()
 	add_child(main)
+	if not main.warm:
+		await main.warmed_up
+	if OS.get_environment("CAPTURE_HIDE_UI") == "1":
+		PerfOverlay.set_ui_visible(false)
 	await _frames(30)
 	var path: Array = main.terrain.meta["bench_path"]
 	var high := _v(path[7])
@@ -27,12 +33,13 @@ func _ready() -> void:
 		await _shot("spawn_%s" % tag)
 		if preset == 1:
 			continue
+		await _village_street(tag)
+		var ing: Node3D = main.get_node("Ingrid")
+		var ip := ing.global_position
+		main.bench.view(ip + Vector3(-5.0, 2.2, 7.0), ip + Vector3(0.0, 1.3, 0.0))
+		await _frames(45)
+		await _shot("ingrid_dock_%s" % tag)
 		if preset == 2:
-			var ing: Node3D = main.get_node("Ingrid")
-			var ip := ing.global_position
-			main.bench.view(ip + Vector3(-5.0, 2.2, 7.0), ip + Vector3(0.0, 1.3, 0.0))
-			await _frames(45)
-			await _shot("ingrid_dock_high")
 			var fall: Array = main.terrain.meta["waterfall"]
 			var top := _v(fall[0])
 			main.bench.view(Vector3(250.0, 12.0, -230.0), top.lerp(_v(fall[fall.size() - 1]), 0.6))
@@ -77,6 +84,17 @@ func _ready() -> void:
 		await _shot("bench_result")
 	print("CAPTURE DONE")
 	get_tree().quit()
+
+
+## Eye height in the village street between the houses, looking down the row of houses.
+func _village_street(tag: String) -> void:
+	var a := Vector3(224.0, 0.0, -128.0)
+	var b := Vector3(300.0, 0.0, -250.0)
+	a.y = main.terrain.height_at(a.x, a.z) + 1.7
+	b.y = main.terrain.height_at(b.x, b.z) + 2.5
+	main.bench.view(a, b)
+	await _frames(45)
+	await _shot("village_street_%s" % tag)
 
 
 func _v(p: Array) -> Vector3:
