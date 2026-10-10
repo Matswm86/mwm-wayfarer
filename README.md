@@ -2,7 +2,7 @@
 
 **[Download the phone performance spike APK (Android)](https://github.com/Matswm86/mwm-wayfarer/releases/download/latest/mwm-wayfarer.apk)**
 
-<p align="center"><img src="docs/spike/spawn_high.jpg" alt="Spike build, High preset: the player stands on a grassy shore at the head of the fjord, steep grey-green walls with pine and birch forest on both sides, the village houses on the right" width="720"></p>
+<p align="center"><img src="docs/spike/spawn_high.jpg" alt="Spike build, High preset: the player stands in grass tufts on the fjord shore under a cloudy sky, grey gneiss walls mirrored in the calm water, turf-roofed timber houses and pines on the right" width="720"></p>
 
 Working title. A non-violent open-world game for Android: explore, gather, build, trade and travel between regions that each look different. Engine: Godot 4.6 (Mobile renderer).
 
@@ -12,14 +12,19 @@ The current build is a test scene, not the game. It answers one question: can a 
 
 What is in it:
 - 12.8 x 12.8 km of real terrain (Kartverket 10 m model, 2.5 m round the village), drawn as chunked tiles with five levels of detail.
-- Grey rock on steep faces with detail at two scales, darker wet rock at the waterline, grass low, snow only on flatter high ground.
-- The fjord water with chart-depth shallows and an optional shore-foam effect.
-- Up to 55 000 pines and birches below about 500 m, grass round the player, a waterfall down the gully on the east wall.
+- Grey gneiss walls (cliff scan at two scales, seep streaks, lichen, rockfall chutes, scree under the cliffs, moss in hollows), a darker wet band at the waterline, grass low, snow only on flatter high ground. The walls' shadows on the valley and the sky occlusion in gullies are baked from the elevation data.
+- A Poly Haven cloud sky, AgX tone mapping, glow, blue-grey depth haze from 200 m, a near-white 30 degree sun.
+- The fjord water mirrors the walls (two reflection probes), with calm ripples, chart-depth shallows and shore foam.
+- Real village buildings: turf-roof timber houses, boathouses, boats and a wooden pier, with baked ambient occlusion.
+- Up to 55 000 pines, spruces and broadleaf trees below about 500 m, drawn as impostors of scanned trees (8 directions, 2 heights); grass tufts, tall grass, ferns and shrubs round the player; a waterfall down the gully on the east wall that reads from the village.
+- Wildlife: does and deer grazing near the village, an elk and a moose at the forest edge, a fox and rabbits by the fields, wolves and a bear far off, an eagle over the walls and gulls over the fjord. They graze, wander and run from you; no combat.
 - Ingrid, a villager standing idle by the jetty, and a walking explorer you control.
 
-| Spawn, Low preset | Over the fjord | Waterfall gully | Ingrid at the jetty |
+| Spawn, Low preset | Village street | Over the fjord | Waterfall gully |
 |---|---|---|---|
-| ![](docs/spike/spawn_low.jpg) | ![](docs/spike/fjord_high_view_high.jpg) | ![](docs/spike/wall_close_high.jpg) | ![](docs/spike/ingrid_dock_high.jpg) |
+| ![](docs/spike/spawn_low.jpg) | ![](docs/spike/village_street_high.jpg) | ![](docs/spike/fjord_high_view_high.jpg) | ![](docs/spike/wall_close_high.jpg) |
+| **Ingrid at the jetty** | **Deer on the meadow** | **Gull over the fjord** | **Waterfall from the village** |
+| ![](docs/spike/ingrid_dock_high.jpg) | ![](docs/spike/animals_meadow_high.jpg) | ![](docs/spike/birds_fjord_high.jpg) | ![](docs/spike/waterfall_from_village_high.jpg) |
 
 All screenshots come from the real Godot build (screenshot bot `tests/capture.tscn`, rendered on a laptop GPU). Laptop frame rates say nothing about phones; only the Bench numbers on the phone count.
 
@@ -39,7 +44,7 @@ The APK runs on 64-bit phones and 32-bit tablets (arm64-v8a and armeabi-v7a). It
 
 ## Readout and buttons
 
-Top left (always on): frames per second, p95 frame time over the last 300 frames, draw calls, primitives, video memory and static memory.
+Top left (always on): frames per second, p95 frame time over the last 300 frames, draw calls, primitives, video memory and static memory, and a line with the vsync mode and anti-aliasing.
 
 | Button | What it does |
 |---|---|
@@ -49,12 +54,17 @@ Top left (always on): frames per second, p95 frame time over the last 300 frames
 | Bench 60 s | Flies the camera along a fixed 60 s path over the village and the fjord, then shows average fps, p95 ms, max ms, average and max draw calls and max primitives for the current preset. |
 | Bench L/M/H | Runs the same flight for Low, Medium and High in a row (3 minutes) and shows one line per preset. |
 | Hide result | Closes the bench result. |
+| VSync | Switches vsync off and on. With vsync on, the phone caps at its display rate (120 fps showed as 8.3 ms on every preset). Both bench buttons always run with vsync off and print the mode the driver reports, so the result shows the real frame time. |
 
-| Preset | Render scale | Sun shadows | Forest | Grass | Shore foam |
-|---|---|---|---|---|---|
-| Low | 0.70 | off | 35 % | off | off |
-| Medium | 0.85 | on (2 splits, 70 m) | 65 % | half | off |
-| High | 1.00 | on (2 splits, 70 m) | 100 % | full | on |
+At start the game renders every preset once behind a "Loading" note (about 2-3 s) so the shaders compile before you play, instead of stuttering the first time a preset or effect appears.
+
+| Preset | Render scale | Anti-aliasing | Sun shadows | Glow | Rock grain | Forest | Ground cover | Shore foam | Wildlife |
+|---|---|---|---|---|---|---|---|---|---|
+| Low | 0.70 | none | off (baked terrain shadows only) | off | 40 m only | 35 % | off | off | 6 animals |
+| Medium | 0.85 | MSAA 2x | 2 splits, 120 m, 2048 atlas | on | 40 m + 7 m | 65 % | half | off | all 20 |
+| High | 1.00 | MSAA 4x | 4 splits, 160 m, 4096 atlas | on | 40 m + 7 m | 100 % | full | on | all 20 |
+
+Laptop counts from the screenshot bot (1920 x 1080): Low max 71 draws / 209k primitives, Medium 127 / 358k, High 133 / 517k (bench flight maxima: Low 67 / 200k, Medium 118 / 343k, High 133 / 494k).
 
 To report a phone result: run Bench L/M/H and take a screenshot of the result box.
 
@@ -64,14 +74,32 @@ To report a phone result: run Bench L/M/H and take a screenshot of the result bo
 - `project.godot`, `scenes/`, `scripts/`, `shaders/`, `tests/`: the Godot spike. Every tunable number is in `scripts/SpikeConfig.gd`.
 - `tools/terrain/npz_to_godot.py`: bakes the terrain, forest, waterfall, village and bench path into `assets/terrain/`. Frame: scene (x, y, h) maps to Godot (x, h, -y), so Godot -Z looks down the fjord.
 - `tools/terrain/copy_textures.py`: copies the CC0 textures into `assets/textures/`. `tools/spike/export_human.py`: exports the MakeHuman characters into `assets/models/`.
+- `tools/spike/`: graphics-pass tools: `bake_terrain_light.py` (baked sun shadow and sky occlusion), `sky_to_ldr.py`, `export_village.py` + `village_textures.py`, `bake_tree_impostors.py` + `pack_tree_atlas.py`, `bake_ground_cards.py` + `pack_ground_cards.py`, `export_animals.py`, `vram_import.sh`.
 - `tools/art/`: Blender scripts that render the look-dev scenes. `tools/terrain/dem_to_game.py`: turns real elevation data into the fjord scene's terrain.
 
 ## Credits
 
 - Fjord terrain and sea depth © Kartverket (CC BY 4.0), [kartverket.no](https://www.kartverket.no).
 - Archipelago and canyon terrain: produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.
-- Textures, models and skies from Poly Haven (CC0).
-- Water and grass shaders ported from "stylized-components" by Christian Ortiz (Cortiz), MIT licence; full text in `shaders/LICENSE-stylized-components.txt`.
+- Textures, models, trees, plants and the sky from Poly Haven (CC0).
+- Water foam and grass placement helpers ported from "stylized-components" by Christian Ortiz (Cortiz), MIT licence; full text in `shaders/LICENSE-stylized-components.txt`.
 - Characters made with MakeHuman system assets and MPFB (CC0 assets and output).
 
-Sources and licence notes: `assets/_raw/dem/SOURCE.md`, `assets/_raw/dem/cop30/SOURCE.md`, `assets/textures/SOURCE.md`, `assets/models/SOURCE.md`.
+### Animal models (Sketchfab)
+
+Several are CC Attribution-NonCommercial: fine for this free build, but they must be replaced or licensed before any paid release. Full list: `assets/models/animals/CREDITS.md`.
+
+| In game | Model | Author | Licence | Page |
+|---|---|---|---|---|
+| deer | DEER - Realistic 3D Model (DEMO FREE) | WildMesh_3D | CC Attribution-NonCommercial | https://sketchfab.com/3d-models/none-3997d669818c4e0d8c8bcafb0a1ae2ee |
+| doe | Realistic Animated Doe 3D Model | WildMesh_3D | CC Attribution | https://sketchfab.com/3d-models/none-b6172618aa304473a4cf7b9246c0a218 |
+| elk | Realistic Animated Elk 3D Model | WildMesh_3D | CC Attribution | https://sketchfab.com/3d-models/none-787834f9caa2474d9f1814b807c072d7 |
+| moose | MOOSE - Realistic 3D Model (DEMO FREE) | WildMesh_3D | CC Attribution-NonCommercial | https://sketchfab.com/3d-models/none-0ee3d3f1e02746c89d6a5754dfd2ee67 |
+| wolf | WOLF - Realistic 3D Model (DEMO FREE) | WildMesh_3D | CC Attribution-NonCommercial | https://sketchfab.com/3d-models/none-8840b859a566485c874a27b1731e1db8 |
+| fox | FOX - Realistic 3D Model (DEMO FREE) | WildMesh_3D | CC Attribution-NonCommercial | https://sketchfab.com/3d-models/none-83b1b144712c43d282d90c2fb15ba450 |
+| rabbit | RABBIT - Realistic 3D Model (DEMO FREE) | WildMesh_3D | CC Attribution-NonCommercial | https://sketchfab.com/3d-models/none-d70284ea0d7644988bdcd327c3ffb59a |
+| bear | Realistic Animated Bear 3D Model | WildMesh_3D | CC Attribution | https://sketchfab.com/3d-models/none-bffc3c87d2d148ff8533e1cc8a11c9f1 |
+| eagle | eagle | alexdubnoff (author match unverified) | CC Attribution-NonCommercial | https://sketchfab.com/3d-models/none-c2cd3a0995b949c2a978125d17dfe8af |
+| gull | Seagull | Dayvable (author match unverified) | CC Attribution | https://sketchfab.com/3d-models/none-dc42ffc81c86480e9e7f7752fa134174 |
+
+Sources and licence notes: `assets/_raw/dem/SOURCE.md`, `assets/_raw/dem/cop30/SOURCE.md`, `assets/textures/SOURCE.md`, `assets/sky/SOURCE.md`, `assets/models/SOURCE.md`, `assets/models/village/SOURCE.md`, `assets/models/trees/SOURCE.md`, `assets/models/ground/SOURCE.md`, `assets/models/animals/CREDITS.md`.
