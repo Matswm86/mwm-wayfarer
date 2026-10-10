@@ -8,6 +8,7 @@ signal warmed_up
 
 var terrain: Terrain
 var forest: Forest
+var near_trees: NearTrees
 var grass: Grass
 var grass_far: Grass
 var player: Player
@@ -45,6 +46,10 @@ func _ready() -> void:
 	forest.name = "Forest"
 	add_child(forest)
 	forest.build(terrain)
+	near_trees = NearTrees.new()
+	near_trees.name = "NearTrees"
+	add_child(near_trees)
+	near_trees.build(forest, SpikeConfig.TREE_MESH)
 	_build_player()
 	grass = Grass.new()
 	grass.name = "Grass"
@@ -489,6 +494,7 @@ func apply_preset(i: int) -> void:
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
+	near_trees.set_radius(float(p["tree_geo"]))
 	grass.set_density(float(p["grass"]))
 	grass_far.set_density(1.0 if bool(p["grass_far"]) else 0.0)
 	wildlife.set_density(i > 0)

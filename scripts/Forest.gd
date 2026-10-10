@@ -15,6 +15,9 @@ const DIR := "res://assets/models/trees/"
 ## Tree height at instance scale 1 (the old procedural pine was 13.2 m): conifers, broadleaf.
 const CONIFER_HEIGHT := 14.0
 const BROADLEAF_HEIGHT := 11.0
+## The only broadleaf impostor is Poly Haven's island_tree_01, which reads as an olive grove in a
+## Norwegian fjord; its places take pines and spruces until a birch impostor exists.
+const USE_BROADLEAF := false
 ## Per impostor variant (trees.json order): albedo tint toward Norwegian forest greens.
 const TINTS: Array[Vector3] = [
 	Vector3(0.80, 0.92, 0.82),
@@ -34,6 +37,7 @@ var _near: Array[MultiMeshInstance3D] = []
 var _far: Dictionary = {}  # Vector2i (2560 m cell) -> MultiMeshInstance3D
 var _far_members: Dictionary = {}  # Vector2i -> Array of chunk indices
 var _total: int = 0
+var _origin := Vector2.ZERO  # x0, z0 of the coarse grid (chunk 0, 0)
 
 
 func build(terrain: Terrain) -> void:
@@ -42,6 +46,7 @@ func build(terrain: Terrain) -> void:
 	var coarse: Dictionary = meta["coarse"]
 	var x0: float = float(coarse["x0"])
 	var z0: float = float(coarse["z0"])
+	_origin = Vector2(x0, z0)
 	_chunks = forest["chunks"]
 	var bytes := FileAccess.get_file_as_bytes(SpikeConfig.TERRAIN_DIR + "trees.bin")
 	var data := bytes.to_float32_array()
@@ -90,7 +95,9 @@ func build(terrain: Terrain) -> void:
 			var b := Basis(Vector3.UP, data[o + 3]).scaled(Vector3.ONE * data[o + 4])
 			var h: float = fposmod(data[o + 3] * 7.13, 1.0)
 			# species 0: pines and spruces (spruce a little more common), 1: broadleaf
-			var variant: int = 4 if sp == 1 else int(fposmod(data[o + 3] * 13.7, 1.0) * 4.0)
+			var variant: int = int(fposmod(data[o + 3] * 13.7, 1.0) * 4.0)
+			if sp == 1 and USE_BROADLEAF:
+				variant = 4
 			var w: int = t * FLOATS
 			var row: Array[float] = [
 				b.x.x,
@@ -173,6 +180,36 @@ func set_shadows(on: bool) -> void:
 			if on
 			else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		)
+
+
+## Conifers within r of the camera are drawn as meshes by NearTrees; the impostors hide them.
+func set_geo_radius(r: float) -> void:
+	near_mat.set_shader_parameter("geo_radius", r)
+	far_mat.set_shader_parameter("geo_radius", r)
+
+
+## Indices of the 640 m chunks that overlap a circle of radius r round c.
+func chunks_near(c: Vector3, r: float) -> Array[int]:
+	var out: Array[int] = []
+	var size: float = SpikeConfig.TREE_NEAR_CHUNK
+	for k in _chunks.size():
+		var ch: Array = _chunks[k]
+		var x0: float = _origin.x + int(ch[0]) * size
+		var z0: float = _origin.y + int(ch[1]) * size
+		var nx: float = clampf(c.x, x0, x0 + size)
+		var nz: float = clampf(c.z, z0, z0 + size)
+		if Vector2(c.x - nx, c.z - nz).length() < r:
+			out.append(k)
+	return out
+
+
+func chunk_buffer(k: int) -> PackedFloat32Array:
+	return _buffers[k]
+
+
+## Trees of chunk k drawn at the current density (the first share of the shuffled list).
+func chunk_visible_count(k: int) -> int:
+	return int(ceil(_buffers[k].size() / float(FLOATS) * density))
 
 
 func visible_trees() -> int:

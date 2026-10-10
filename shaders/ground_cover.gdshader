@@ -28,6 +28,8 @@ uniform float card_gain[6];
 // cumulative pick weights per card (last = 1.0)
 uniform float card_pick[6];
 uniform vec3 grass_center;
+// forest stand density (npz_to_godot.py): ferns and shrubs under the trees, not meadow grass
+uniform sampler2D forest_mask : filter_linear, repeat_disable;
 uniform float grass_radius = 40.0;
 uniform float grid_spacing = 0.6;
 // far ring (Ultra): fades in from inner_radius, bigger clumps
@@ -62,6 +64,11 @@ void vertex() {
 	float kind = 0.0;
 	for (int i = 0; i < 5; i++) {
 		kind += step(card_pick[i], r4);
+	}
+	vec2 fuv = clamp((grid_pt.xz - coarse_rect.xy) / coarse_rect.zw, vec2(0.0), vec2(1.0));
+	float forest = textureLod(forest_mask, fuv * (1.0 - coarse_texel) + 0.5 * coarse_texel, 0.0).r;
+	if (hash12(key + 5.7) < forest * 0.85) {
+		kind = r3 < 0.65 ? 4.0 : 5.0;
 	}
 	float size = card_size[int(kind)] * card_scale[int(kind)] * mix(size_jitter.x, size_jitter.y, r3);
 

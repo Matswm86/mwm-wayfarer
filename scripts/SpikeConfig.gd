@@ -18,6 +18,10 @@ const TREE_NEAR_RADIUS := 320.0
 const TREE_NEAR_CHUNK := 640.0
 const TREE_FAR_CHUNK := 2560.0
 const TREE_FAR_END := 7000.0
+## Ultra: conifers within tree_geo m of the camera are meshes (scripts/NearTrees.gd), full detail
+## within TREE_LOD0_RADIUS, the light LOD beyond.
+const TREE_LOD0_RADIUS := 22.0
+const TREE_MESH := "res://assets/models/trees/scots_pine/scots_pine_a.glb"
 
 ## Ground cover: one plant (two crossed cards) per GRASS_SPACING m grid point within
 ## GRASS_RADIUS of the player.
@@ -102,6 +106,7 @@ const WARMUP_FRAMES := 3
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
+		"tree_geo": 0.0,
 		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 0,
@@ -121,6 +126,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
+		"tree_geo": 0.0,
 		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 1,
@@ -140,6 +146,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
+		"tree_geo": 0.0,
 		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 1,
@@ -159,6 +166,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Ultra",
+		"tree_geo": 70.0,
 		"grass_far": true,
 		"shadow_blur": 1.6,
 		"terrain_quality": 2,

@@ -28,6 +28,7 @@ uniform bool is_far = false;
 uniform float elev_low = 5.0;
 uniform float elev_high = 40.0;
 uniform float wind_strength = 0.012;
+uniform float geo_radius = 0.0;
 
 varying vec4 uv_a;  // low row: nearest two directions
 varying vec4 uv_b;  // high row
@@ -47,6 +48,8 @@ void vertex() {
 	yaw = atan(-MODEL_MATRIX[0].z, MODEL_MATRIX[0].x);
 	float d = distance(root.xz, lod_center.xz);
 	bool hide = is_far ? (d < lod_radius) : (d >= lod_radius);
+	// conifers near the camera are real meshes (scripts/NearTrees.gd)
+	hide = hide || (distance(root, lod_center) < geo_radius && INSTANCE_CUSTOM.r < 3.5);
 	float row = floor(INSTANCE_CUSTOM.r + 0.5);
 	vec2 fi = frame_info[int(row)] * sc;
 	vec3 centre = root + vec3(0.0, fi.y, 0.0);

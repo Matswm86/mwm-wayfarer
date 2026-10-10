@@ -13,6 +13,9 @@ const CLIFF_TARGET := Vector3(420.0, 0.0, -500.0)
 const CLIFF_CAMERA := Vector3(320.0, 0.0, -540.0)
 const FOREST_TARGET := Vector3(-430.0, 0.0, 775.0)
 const FOREST_CAMERA := Vector3(-215.0, 0.0, 545.0)
+## eye height inside the densest stand near the spawn (115 trees within 40 m)
+const STAND_CAMERA := Vector3(140.0, 0.0, 118.0)
+const STAND_TARGET := Vector3(176.0, 0.0, 166.0)
 
 var out_dir: String = OS.get_environment("CAPTURE_DIR")
 var suffix: String = OS.get_environment("CAPTURE_SUFFIX")
@@ -43,12 +46,15 @@ func _ready() -> void:
 		main.apply_preset(preset)
 		var tag: String = str(SpikeConfig.PRESETS[preset]["name"]).to_lower()
 		main.player.camera.current = true
+		_ground_cover_follows(main.player)
 		await _frames(45)
 		await _shot("spawn_%s" % tag)
+		_ground_cover_follows(main.bench.camera)
 		await _village_street(tag)
 		await _animals(tag)
 		await _view(CLIFF_CAMERA, 5.0, CLIFF_TARGET, 5.0, "cliff_close_%s" % tag)
 		await _view(FOREST_CAMERA, 45.0, FOREST_TARGET, 20.0, "forest_slope_%s" % tag)
+		await _view(STAND_CAMERA, 1.7, STAND_TARGET, 4.0, "forest_inside_%s" % tag)
 		main.bench.view(high, spawn_look)
 		await _frames(45)
 		await _shot("high_view_%s" % tag)
@@ -58,6 +64,7 @@ func _ready() -> void:
 		await _frames(45)
 		await _shot("ingrid_dock_%s" % tag)
 
+	_ground_cover_follows(main.player)
 	# walk forward for 2 s with the stick held, to prove movement and collision
 	main.apply_preset(presets[presets.size() - 1])
 	main.player.camera.current = true
@@ -122,6 +129,12 @@ func _village_street(tag: String) -> void:
 	await _shot("village_street_%s" % tag)
 
 
+## Grass and ferns grow round whatever the shot looks from (the player in play).
+func _ground_cover_follows(n: Node3D) -> void:
+	main.grass.target = n
+	main.grass_far.target = n
+
+
 func _v(p: Array) -> Vector3:
 	return Vector3(float(p[0]), float(p[1]), float(p[2]))
 
@@ -139,4 +152,9 @@ func _shot(shot_name: String) -> void:
 	var vram := Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
 	var path := out_dir.path_join(shot_name + suffix + ".png")
 	img.save_png(path)
-	print("SHOT %-24s draws %4d  prims %7d  vram %.0f MB  -> %s" % [shot_name, dc, pr, vram, path])
+	print(
+		(
+			"SHOT %-24s draws %4d  prims %7d  vram %.0f MB  near trees %d  -> %s"
+			% [shot_name, dc, pr, vram, main.near_trees.count(), path]
+		)
+	)

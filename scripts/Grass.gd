@@ -35,6 +35,7 @@ func build(
 	mat.shader = load("res://shaders/ground_cover.gdshader")
 	terrain.apply_height_params(mat)
 	terrain.apply_light_params(mat)
+	mat.set_shader_parameter("forest_mask", load(SpikeConfig.TERRAIN_DIR + "forest_mask.png"))
 	mat.set_shader_parameter("grass_radius", radius)
 	mat.set_shader_parameter("grid_spacing", spacing)
 	mat.set_shader_parameter("inner_radius", inner)
