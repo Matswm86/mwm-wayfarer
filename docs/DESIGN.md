@@ -9,11 +9,14 @@ Mockups this spec is drawn from (all 1920x1080 landscape, in `docs/mockups/`):
 | File | What it shows | State |
 |---|---|---|
 | `key_fjord_real_terrain.jpg` | Approved world frame: Skarvik Fjord on real Kartverket terrain, day light set | Approved look reference (10-10) |
-| `ui_hud.jpg` | Exploring HUD | Layout OK; text sizes and 62% chips are below this spec (section 4.8) |
+| `key_fjord_rock.jpg` | Same frame after the rock pass (10-10 b): gneiss walls, far gullies, neutral sun, fog 0.22 | Proposed replacement for the reference (designer verdict: passes; owner sign-off owed) |
+| `key_archipelago_terraces.jpg` | Kefalonia from the slope above the headland: terraces with dry-stone risers and olive rows, bay, layered far coast | Improved; still below bar in the bare foreground and the pale far coast |
+| `key_canyon_siq.jpg` | Redwall Oasis from inside the siq: sunlit strata wall, warm bounce, sky strip | Passes as direction; walls a little too clean (more Antelope Canyon than Wadi Rum) |
+| `ui_hud.jpg` | Exploring HUD on the rock-pass fjord key | Matches this spec (type redrawn 10-10 b) |
 | `ui_trade.jpg` | Skarvik market, Sell tab | Matches this spec |
 | `ui_wonder.jpg` | Wonder discovery card, the Singing Cavern | Matches this spec; the vista is a 2D composite stand-in |
-| `ui_talk.jpg` | Talk to Ingrid (fisher), GDD 6.4 line | Matches this spec; NPC not rendered (placeholder frame) |
-| `build_draft.jpg` | Build mode | Older text sizes, same fix as the HUD |
+| `ui_talk.jpg` | Talk to Ingrid (fisher), GDD 6.4 line, Ingrid rendered (MakeHuman stand-in) | Matches this spec (10-10 b); face is a stand-in, not shippable |
+| `build_draft.jpg` | Build mode on the rock-pass fjord | Type matches this spec (10-10 b); the ghost sits on the shore path, move it onto the meadow in the next pass |
 
 ---
 
@@ -94,7 +97,20 @@ Scale. The mock is 1920x1080 = 2.625 px per dp on a 411 dp tall phone. Sizes in 
 | Label | Inter | 34 | 13 | 500 | Secondary lines, explanations |
 | Caption / caps | Inter | **32** (floor), caps 28 with 8% tracking | 12 | 500 / 700 | Reasons, kg, column heads |
 
-Hard floor: **no text below 32 px** (12 sp), caps column heads 28 px only because tracking and weight 700 compensate. Body never below 40 px. The HUD and build mocks from 10-07 use 17-24 px: they must be redrawn at this scale before the builder copies them (section 4.8).
+Hard floor: **no text below 32 px** (12 sp) on screens the player reads (cards, talk, trade), and **nothing below 28 px anywhere**, HUD included (owner 10-10). The only 28-30 px text: caps labels with 8% tracking and weight 700 (column heads, "BUILD") and the compass NE/NW letters (bold). Body never below 40 px. Every text-carrying chip or panel over the world sits at **0.84 alpha** or more.
+
+**HUD and build-mode scale** (redrawn 10-10 b; was 15-24 px):
+
+| HUD element | Font | px | sp | Weight |
+|---|---|---|---|---|
+| Compass N/E/S/W | Inter | 40 | 15 | 700 |
+| Compass NE/NW/SE/SW | Inter | 30 | 11 | 700, `muted_d`; hidden when a marker icon sits within 9 deg |
+| Compass marker label ("Bluewater Falls 1.2 km") | Inter | 32 | 12 | 600, pill 52 tall; neighbours alternate two rows so labels never overlap |
+| Time/weather chip, pack chip | Inter | 36 | 14 | 600, chips 72 and 92 tall, 400 wide |
+| Action button label ("Gather") | Inter | 32 | 12 | 700, `ink` on `amber` |
+| World prompt ("Cloudberries x6") | Inter | 34 | 13 | 600, pill 64 tall |
+| Build banner: caps / title / sub-line | Inter | 28 caps / 44 / 34 | 11 / 17 / 13 | 700 / 700 / 500 (`muted_d`) |
+| Build material chips, hint line, "Place frame" | Inter | 36 / 34 / 32 | 14 / 13 / 12 | 600 / 500 / 700 |
 
 Wording: plain words, short sentences, no jargon. "You get each", not "Unit price". "74% high", not "+74% Δ". "Ingrid remembers: you paid fair for her herring", not "Affinity +5". Numbers carry units (kg, coins, km).
 
@@ -151,10 +167,10 @@ Pressed state: scale to 0.96 and darken fill 12% for 0.08 s, release 0.15 s ease
 - Warmth / Fullness / Rest: hidden above 50 (GDD 7); below, a 130 px chip with icon + number, `clay` icon below 25.
 - Stamina: a ring around the character (world space), not on the HUD.
 
-### 4.8 Open fixes on the 10-07 mocks (before the builder copies them)
-1. `ui_hud.jpg` and `build_draft.jpg`: raise text to section 3 (compass labels 32, chips 34-40), raise chip alpha from 0.62-0.66 to 0.80.
-2. HUD compass markers: keep amber for wonders, white for rumors, teal for trade.
-3. Redraw both with `ui_screens.py hud|build` on the real-terrain frame for the next artifact.
+### 4.8 HUD (`ui_hud.jpg`), fixed 10-10 b
+1. Type per the HUD table in section 3; every chip `ink` at 0.84 (`HUD_A` in `ui_screens.py`).
+2. Compass 940 x 76, top centre, 40 px from the top. Markers: amber diamond = wonder, white speech bubble = rumor, `teal_l` anchor = trade. Labels hang under the bar on two alternating rows.
+3. `build_draft.jpg` redrawn on the real-terrain `build` render (10-10 b).
 
 ## 5. Layout
 
@@ -179,31 +195,55 @@ All regions share: scanned or photo-sourced CC0 materials, real-world scale (doo
 
 | Region | Terrain | Water | Buildings | Vegetation | Light |
 |---|---|---|---|---|---|
-| **R1 Skarvik Fjord** | Real elevation (Kartverket DTM 10, Naeroyfjord), granite walls 50-70 deg with benches, scree aprons | Deep blue-green to clear brown-green shallows, mirror-calm reflections of the walls | Dark-tarred and falu-red timber, turf roofs, stone footings, wooden pier | Birch and pine below 500 m, dense; heather, cloudberry bog; bare rock above | High-latitude sun 25-35 deg, long soft shadows, cool fill from the sky |
-| **R2 Amberline Isles** | Limestone islands, terraces, sea caves, a natural arch | Turquoise shallows over sand, deep cobalt off the shelf | White limestone, older marble ruins half buried | Olive, cypress, dry gold grass, figs | Hard Mediterranean sun 45-60 deg, short dark shadows, bright bounce |
-| **R3 Redwall Oasis** | Red sandstone slot canyons, cliff dwellings, layered strata | Small green pools in the oasis only | Mud brick and sandstone, indigo awnings, caravanserai courtyards | Date palms, low scrub | Strong warm sun, deep cool shadows in slots; night = huge star field |
+| **R1 Skarvik Fjord** | Real elevation (Kartverket DTM 10, Naeroyfjord), granite/gneiss walls 50-70 deg with benches, scree aprons. **Rock pass 10-10 b:** faces steeper than about 48 deg are dark grey gneiss (albedo 0.18-0.32, never beige), one scan at two scales (40 m + 7 m, the 7 m grain only within 350-900 m of the camera), vertical seep streaks, olive lichen; a darker glossy wet band 0-3 m above the water; snow only on flatter ground above about 1250 m; beyond 1.5 km the tiled scans fade to flat forest green (gentle slopes) and grey (steep), broken by a 300 m noise; from 400 m out, steep faces get rockfall chutes (noise stretched 8x along Z, as bump + darkening); terrain specular 0.12 and roughness 1.0 far (grazing sky reflections had turned far slopes white) | Deep blue-green to clear brown-green shallows, mirror-calm reflections of the walls | Dark-tarred and falu-red timber, turf roofs, stone footings, wooden pier | Birch and pine below 500 m, dense; heather, cloudberry bog; bare rock above | High-latitude sun 25-35 deg, long soft shadows, cool fill from the sky |
+| **R2 Amberline Isles** | Limestone islands, terraces, sea caves, a natural arch. Olive terraces = 3 m steps with steep 0.4 m-deep dry-stone risers (stone-wall scan) and soil treads, olives in rows mid-tread; terrace fields need ground at 0.6 m resolution or the risers vanish | Turquoise shallows over sand, deep cobalt off the shelf | White limestone, older marble ruins half buried | Olive, cypress, dry gold grass, figs | Hard Mediterranean sun 45-60 deg, short dark shadows, bright bounce |
+| **R3 Redwall Oasis** | Red sandstone slot canyons, cliff dwellings, layered strata. **The siq (slot) is the region's signature view:** 5-10 m floor, 60 m walls that lean apart towards a sky strip, built as wall meshes (not heightfield), rounded ledges every 2-3 m, colour bands deep red #6E3020 / #8E3E26, sandstone #B5653E / #C47A50, ochre #D9A273, cream #E6C9A2, rose #B0604A | Small green pools in the oasis only | Mud brick and sandstone, indigo awnings, caravanserai courtyards | Date palms, low scrub | Strong warm sun, deep cool shadows in slots; night = huge star field |
 | **R4 Greenmouth Delta** | Flat channels, mud banks, buttress roots | Wide brown-green, slow, misty | Stilt houses of hardwood and reed | Mangroves, giant trees, ferns; glowing fungi at night | Diffuse humid light, mist in the morning (the one region allowed denser fog, 0.45 max) |
 | **R5 Frostspine Highlands** | Glacier tongues, moraines, terraced barley | Meltwater, hot springs steaming | Stone and felt huts, cairns | Barley, moss, sparse juniper | Thin, bright, blue-white light; snow glare kept under control by exposure |
 
-Terrain from real elevation data wherever the licence allows (section 7.4). A heightfield cannot draw a near-vertical face: use rock scan meshes on true cliff bands (above about 70 deg), not stretched heightfield textures (10-10 lesson: stretched cells give vertical streaks).
+Terrain from real elevation data wherever the licence allows (section 7.4). A heightfield cannot draw a near-vertical face: use rock scan meshes on true cliff bands (above about 70 deg), not stretched heightfield textures (10-10 lesson: stretched cells give vertical streaks). Features narrower than the data (a 5 m slot in 30 m data) are authored meshes laid into the real relief.
+
+**Four questions, answered for the 10-10 b additions**
+- *Fjord rock pass:* 1) yes, the walls fill half of every fjord frame; 2) one splat shader, triplanar on the steep layer only, plus three world-space masks (streaks, wet band, snow) = a few ALU ops, no extra textures beyond the second scan sample; 3) the far fade is itself the cheap trick (it removes texture work past 1.5 km); 4) fits. Verdict: ship it, with the 7 m grain sample skipped on the floor tier.
+- *Siq walls:* 1) yes, it is the region's key view; 2) two wall meshes at 1 m spacing in game (about 40k triangles each, LOD 2 m past 60 m), one material, no transparency; 3) strata are geometry, not a parallax shader: cheaper on the Mobile renderer; 4) fits.
+- *Terrace fields:* 1) yes at 30-300 m; 2) 0.6 m ground only inside the two field ellipses, coarse terrain elsewhere; in game bake the risers into the heightmap at 0.5 m and use one stone-wall layer; 3) beyond 300 m the stone bands could be a painted macro texture; 4) fits.
 
 ### 7.2 Lighting rules (learned 2026-10-10 on the fjord key)
 1. **The sun must reach the scene.** In a fjord or canyon, the sun elevation has to clear the walls: 30 deg on the fjord key. At 7 deg nothing received direct light and the frame went flat.
 2. **Daytime HDRI matched to the sun.** Use a clear or partly cloudy daytime sky (`kloofendal_48d_partly_cloudy_puresky`) whose sun direction and colour agree with the key light. **Never put a dusk HDRI with a high sun**: the 10-10 test gave a black sky hole that the fog had been hiding.
-3. **Light fog:** depth fog starting at **about 200 m**, maximum density **about 0.3**. Mist cards at alpha 0.15 at most. Fog is for distance, not for hiding missing detail; the 0.7 fog and four 0.4 mist cards washed the old frame out.
+3. **Light fog:** depth fog starting at **about 200 m**, maximum density **0.22** on the fjord (was 0.3: it laid a milky sheet over every wall past 3 km, 10-10 b probe). Mist cards at alpha 0.15 at most. Fog is for distance, not for hiding missing detail; the 0.7 fog and four 0.4 mist cards washed the old frame out.
 4. **Exposure 0**, no auto-exposure jumps; grade only after lighting and materials stop improving (refmatch, section 10).
 5. Water needs real reflections of the walls (reflection probe or a cheap planar on the phone, section 10), not probe-only grey.
 6. Dusk, night and aurora are separate presets with their own HDRI, sun below 5 deg, moon key and lantern accents. Test each preset on its own; never mix day sky with night light.
-7. The look-dev overrides live as env vars in `tools/art/scene_fjord.py` (`WF_SUN_ELEV`, `WF_SUN_ENERGY`, `WF_FOG_START`, `WF_FOG_MAX`, `WF_MIST_ALPHA`, `WF_EXPOSURE`, `WF_HDRI`, `WF_DEM`, `WF_YAW`). The approved set: `WF_DEM=1 WF_YAW=-10`, sun 30 deg, fog 200 / 0.3, mist 0.15, exposure 0, kloofendal HDRI.
+7. **Sun colour follows sun height.** A 30 deg morning sun is near white, `(1.0, 0.90, 0.78)`; the old golden-hour `(1.0, 0.66, 0.36)` turned every sunlit face beige (10-10 b) and is only for suns below about 12 deg (`WF_SUN_WARM=1`).
+8. **Aerial perspective is not fog.** Within 2 km keep fog at 0.3 or less. Past 3 km the haze may reach about 0.36 with quadratic falloff, blue-grey `(0.62, 0.74, 0.90)`, never milky white, so headlands separate into layers (archipelago 10-10 b: start 250 m, depth 5200 m, max 0.36). The compositor mixes fog in linear light, so 0.3 already reads as a heavy veil after the view transform.
+9. **Slots and canyons:** sun high (about 74 deg) and across the slot so it lands on the upper wall; sky fill low (HDRI 0.45) so the shadow wall glows with warm bounce instead of going grey-blue.
+10. The look-dev overrides live as env vars in `tools/art/scene_fjord.py` (`WF_SUN_ELEV`, `WF_SUN_ENERGY`, `WF_FOG_START`, `WF_FOG_MAX`, `WF_MIST_ALPHA`, `WF_EXPOSURE`, `WF_HDRI`, `WF_DEM`, `WF_YAW`). The approved set: `WF_DEM=1 WF_YAW=-10`, sun 30 deg, fog 200 / 0.22 (10-10 b), mist 0.15, exposure 0, kloofendal HDRI.
 
 ### 7.3 Characters and props
 - Realistic proportions, work clothes in natural dyes (wool grey, oilskin yellow, linen, falu red); no bright synthetic colours on NPCs.
-- Faces must read at talk-camera distance (waist-up, about 1.5 m). This is the weakest asset today: the 10-07 MakeHuman preview faces are not shippable (`assets/_raw/build/prev_fisher.png`). Characters are the next art risk after terrain.
+- Faces must read at talk-camera distance (waist-up, 3.5-4 m with a 60 mm lens). MakeHuman (MPFB, CC0) is the stand-in: good enough for mockups, not for shipping; characters are the next art risk after terrain.
+- **Ingrid** (`wf_mh.py` preset `ingrid`, 10-10 b): woman about 50, long mid-brown hair (a ponytail read as a man from the front), orange oilskin bibs over a grey-blue wool shirt, texture eyes (the procedural MPFB eyes glow at talk distance), calm talk pose `talk_calm` (hands low, no wide gesture). Talk camera: over the player's left shoulder, NPC face at x about 660 px, y about 400 px at 1080p, player blurred under the replies.
 - Item icons: render each item model in the game's own daylight on transparent, 256 px, three-quarter view, consistent light from top-left (`tools/art/icons.py`). The trade mock uses Poly Haven's own CC0 thumbnails as stand-ins.
 - Textures: 2048 px max, 1024 for props, ASTC on Android. Atlas small props.
 
 ### 7.4 Sources
-Poly Haven (CC0: models, textures, HDRIs), Blender Studio Human Base Meshes (CC0), MakeHuman system assets (CC0), Kartverket DTM (CC BY 4.0). Non-Norway regions need other open elevation data (for example Copernicus GLO-30); **its licence is UNVERIFIED** and must be checked before use. Every new source goes into CREDITS (section 11) the day it is added.
+Poly Haven (CC0: models, textures, HDRIs), Blender Studio Human Base Meshes (CC0), MakeHuman system assets (CC0), Kartverket DTM (CC BY 4.0), Copernicus GLO-30 for Kefalonia and Wadi Rum (licence verified 10-10: free, distribution allowed, the credit text in `assets/_raw/dem/cop30/SOURCE.md` is required). Every new source goes into CREDITS (section 11) the day it is added.
+
+### 7.5 Animals (wildlife only, GDD line 32)
+- Realistic scanned-look or hand-sculpted models with real proportions and fur textures; rigged with at least walk, run, idle/graze. **No stylized, low-poly, cel-shaded or anthropomorphic packs.**
+- Licence: CC0 or CC BY 4.0 only, checked on the asset page itself (Sketchfab shows it under the viewer; record author, URL, licence and the date in `assets/_raw/animals/<species>/CREDITS.md`). CC BY-NC (most "DEMO FREE" WildMesh / "Stylized" AnimalMesh3D items) is out. Tripo free-tier output is out (Tripo keeps the rights).
+- Phone budget: 8-20k triangles per animal, one 2048 texture, at most 6 full animals near the camera, impostors or culling beyond 80 m.
+- 10-10 b shortlist (licence checked through the Sketchfab API, not yet downloaded: needs a Sketchfab login):
+
+| Species | Model | Author | Licence | Tris / clips | Verdict |
+|---|---|---|---|---|---|
+| Red deer (stand-in) | Realistic Animated Elk 3D Model (wapiti, the red deer's closest relative) `787834f9caa2474d9f1814b807c072d7` | WildMesh 3D | CC BY 4.0 | 7.9k / 53 | Best realistic rigged cervid found; author notes "known rigging problems" in this older version |
+| Red deer (alt) | Animated Deer `4cff1e63f4e941198b3d56300b3393b9` | igor-lir | CC BY 4.0 | 31.7k / 1 | Realistic red-deer stag, one clip only |
+| Wolf | Animated Wolf `23a3a563d48049d5b9844ddc1b5b6e79` | igor-lir | CC BY 4.0 | 27.3k / 1 | Realistic grey wolf, one clip only |
+| Red fox | Animated Fox 3D Model `7b7d4f07d47a444ab6c08b62adfd4aff` | AnimalMesh3D | CC BY 4.0 | 19.5k / 69 | Realistic, full clip set |
+| Hare | Animated Rabbit `244017d76f804d6eaa0dd2c33bcff50f` | AnimalMesh3D | CC BY 4.0 | 8.2k / 36 | Brown, hare-like proportions |
+| Moose, reindeer, eagle, sheep, pony | none passed | | | | Only stylized, NC or low-poly found; next: paid realistic packs or a commissioned set |
 
 ## 8. Do and don't
 
@@ -218,7 +258,8 @@ Poly Haven (CC0: models, textures, HDRIs), Blender Studio Human Base Meshes (CC0
 **Don't**
 - No purple, no blue-purple gradients, no glassmorphism, no glowing orbs in UI.
 - No text under 32 px, no text panels under 0.80 alpha.
-- No dusk sky with a high sun; no fog above 0.3 outside the delta.
+- No dusk sky with a high sun; no fog above 0.3 within 2 km outside the delta (far aerial perspective: rule 7.2.8).
+- No golden-hour sun colour on a 30 deg sun.
 - No quest markers floating over wonders (GDD P3: found by curiosity). Compass hints only after a rumor.
 - No damage numbers, red flashes or "danger" styling: there is no combat.
 - No stretched heightfield cliffs; use scan meshes on true cliff bands.
@@ -271,7 +312,8 @@ CREDITS.md does not exist yet; create it with the first build. Required lines:
 | Poly Haven models, textures, HDRIs | CC0 | No obligation; credit "Poly Haven" as courtesy |
 | Blender Studio Human Base Meshes | CC0 | No obligation; courtesy credit |
 | MakeHuman system assets | CC0 | No obligation; courtesy credit |
-| Copernicus GLO-30 or other DEMs (future regions) | **UNVERIFIED** | Check the licence and attribution text before the first download |
+| Copernicus GLO-30 (Kefalonia, Wadi Rum terrain) | Copernicus DEM licence (verified 10-10) | **Required** credit text, see `assets/_raw/dem/cop30/SOURCE.md` |
+| Animal models (section 7.5) | CC BY 4.0 each | **Required**: author + model name + licence in the in-game credits for every model shipped |
 | Voices (TTS model, future) | **open** (GDD 13) | Piper lessac/ryan are non-commercial and excluded; record the chosen model's licence here |
 
 No personal names, internal paths or tool names in the in-game credits or the store text.

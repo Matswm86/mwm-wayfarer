@@ -8,6 +8,7 @@ Characters face -Y in MakeHuman; human(...) turns them to face +Y like the rest 
 from __future__ import annotations
 
 import math
+import os
 
 import addon_utils
 import bpy
@@ -39,6 +40,15 @@ PRESETS = {
         skin="old_caucasian_male/old_caucasian_male.mhmat", hair="short04/short04.mhclo",
         eyebrows="eyebrow006/eyebrow006.mhclo", clothes=["male_worksuit01/male_worksuit01.mhclo", "shoes03/shoes03.mhclo"],
     ),
+    # Ingrid, fisher of Skarvik (GDD 6.4): woman about 50, work bibs over a wool shirt, long hair (the ponytail read
+    # male from the front at talk distance, 10-10 b). No hat: the talk camera must read her face.
+    "ingrid": dict(
+        phenotype=dict(gender=0.0, age=0.88, muscle=0.55, weight=0.55, proportions=0.6, height=0.45, cupsize=0.45, firmness=0.45,
+                       race=dict(asian=0.0, caucasian=1.0, african=0.0)),
+        skin="middleage_caucasian_female/middleage_caucasian_female.mhmat", hair="long01/long01.mhclo",
+        eyebrows="eyebrow010/eyebrow010.mhclo", clothes=["male_worksuit01/male_worksuit01.mhclo", "shoes03/shoes03.mhclo"],
+        eyes_material="MAKESKIN",  # texture eyes: the procedural ones glow at talk distance
+    ),
     "trader": dict(
         phenotype=dict(gender=1.0, age=0.7, muscle=0.5, weight=0.55, proportions=0.6, height=0.55, cupsize=0.5, firmness=0.5,
                        race=dict(asian=0.2, caucasian=0.3, african=0.5)),
@@ -58,11 +68,11 @@ def human(kind, name=None):
     info["eyebrows"] = p["eyebrows"]
     info["eyelashes"] = "eyelashes01/eyelashes01.mhclo"
     info["teeth"] = "teeth_base/teeth_base.mhclo"
-    info["hair"] = p["hair"]
+    info["hair"] = os.environ.get(f"WF_HAIR_{kind.upper()}", p["hair"])  # look-dev override
     info["clothes"] = p["clothes"]
     info["skin_mhmat"] = p["skin"]
     info["skin_material_type"] = "ENHANCED_SSS"
-    info["eyes_material_type"] = "PROCEDURAL_EYES"
+    info["eyes_material_type"] = p.get("eyes_material", "PROCEDURAL_EYES")
     info["name"] = name or kind
     st = HS.get_default_deserialization_settings()
     st["subdiv_levels"] = 1
@@ -102,6 +112,34 @@ def recolor(obj, hue_lo, hue_hi, sat_min, target_hue, target_sat, value_mul, sat
         nt.links.new(A.math_node(nt, "MULTIPLY", v, value_mul, clamp=True), comb.inputs[2])
         out = A.mixc(nt, mask, src, comb.outputs[0])
         nt.links.new(out, b.inputs["Base Color"])
+
+
+def tint(obj, rgb, sat_max=None, strength=1.0):
+    """Multiply the base colour of every material on obj by rgb (linear). With sat_max, only pixels whose
+    saturation is below sat_max are tinted (e.g. the white shirt in the worksuit atlas, not the bibs)."""
+    for slot in obj.material_slots:
+        m = slot.material
+        if m is None or not m.use_nodes:
+            continue
+        nt = m.node_tree
+        b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if b is None:
+            continue
+        if b.inputs["Base Color"].is_linked:
+            src = b.inputs["Base Color"].links[0].from_socket
+        else:
+            rgbn = nt.nodes.new("ShaderNodeRGB")
+            rgbn.outputs[0].default_value = tuple(b.inputs["Base Color"].default_value)
+            src = rgbn.outputs[0]
+        mul = A.mixc(nt, 1.0, src, (*rgb, 1.0), blend="MULTIPLY")
+        if sat_max is None:
+            fac = strength
+        else:
+            sep = nt.nodes.new("ShaderNodeSeparateColor")
+            sep.mode = "HSV"
+            nt.links.new(src, sep.inputs["Color"])
+            fac = A.math_node(nt, "MULTIPLY", A.maprange(nt, sep.outputs[1], sat_max, sat_max - 0.06), strength)
+        nt.links.new(A.mixc(nt, fac, src, mul), b.inputs["Base Color"])
 
 
 def tame_eyes(objs):
@@ -202,6 +240,10 @@ POSES = {
     "talk": dict(spine=(-3, 0, 0), chest=(0, 4, 6), neck=(0, 0, 4), head=(-4, 5, 6),
                  wristL=(0.25, -0.03, 1.00), poleL=(0.3, 1, 0), wristR=(-0.30, -0.30, 1.22), poleR=(-1, 0.4, -0.6),
                  handL=(0.05, -0.15, -1), handR=(-0.5, -0.9, 0.5), curl=30),
+    # calmer talk for the face-on talk camera: right hand loosely in front at the bib, left hand down, head level
+    "talk_calm": dict(spine=(-2, 0, 0), chest=(0, 2, 3), neck=(0, 0, 2), head=(-3, 3, 0),
+                      wristL=(0.25, -0.04, 0.98), poleL=(0.3, 1, 0), wristR=(-0.16, -0.24, 1.06), poleR=(-1, 0.4, -0.6),
+                      handL=(0.05, -0.15, -1), handR=(0.3, -0.8, -0.3), curl=35),
     "vend": dict(spine=(6, 0, 0), chest=(5, 0, 0), neck=(0, 0, 0), head=(-8, 0, 12),
                  wristL=(0.20, -0.32, 1.06), poleL=(1, 0.5, -0.6), wristR=(-0.20, -0.32, 1.06), poleR=(-1, 0.5, -0.6),
                  handL=(0, -1, -0.3), handR=(0, -1, -0.3), curl=25),
@@ -268,10 +310,21 @@ def character(kind, pose_name, loc=(0, 0, 0), yaw_deg=0.0, gear=True):
         for c in kids:
             if "casualsuit" in c.name:
                 recolor(c, 0.52, 0.68, 0.12, 0.08, 0.28, 0.42)  # jeans -> dark brown canvas trousers
-    if kind == "fisher":
+    if kind in ("fisher", "ingrid"):
         for c in kids:
             if "worksuit" in c.name:
                 recolor(c, 0.50, 0.70, 0.08, 0.075, 0.9, 1.0)  # light-blue overalls -> orange oilskin bibs
+    if kind == "ingrid":
+        for c in kids:
+            n = c.name.lower()
+            if "worksuit" in n:
+                tint(c, (0.34, 0.37, 0.42), sat_max=0.30)  # white tee -> grey-blue wool undershirt
+            elif n.endswith(".body"):
+                tint(c, (1.0, 0.86, 0.76), strength=0.55)  # outdoor skin: warmer, less porcelain
+            elif "long01" in n:
+                tint(c, (0.78, 0.74, 0.72))  # less copper: weathered mid brown
+            elif "high-poly" in n:
+                tint(c, (0.78, 0.78, 0.8))  # shade the sclera a little: pure white eyes stare at talk distance
     if kind == "trader":
         for c in kids:
             if "casualsuit" in c.name:

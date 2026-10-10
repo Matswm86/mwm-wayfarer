@@ -45,66 +45,68 @@ def grade(im, vignette=0.22, contrast=1.04, sat=1.03):
 
 
 # ---------------------------------------------------------------- HUD
+# Sizes follow DESIGN.md section 3 (10-10 b): nothing under 30 px, labels 32+, chips 36, panels >= 0.82 alpha.
+HUD_A = 0.84  # ink alpha for every HUD chip that carries text
+
+
 def compass(im, heading=352, markers=()):
-    d = ImageDraw.Draw(im)
-    cw, ch = 760, 50
-    x0, y0 = (W - cw) // 2, 34
-    U.panel(im, (x0, y0, x0 + cw, y0 + ch), radius=25, fill=U.INK, alpha=0.62, drop=False)
+    cw, ch = 940, 76
+    x0, y0 = (W - cw) // 2, 40
+    U.panel(im, (x0, y0, x0 + cw, y0 + ch), radius=ch // 2, fill=U.INK, alpha=HUD_A, drop=False)
     d = ImageDraw.Draw(im)
     fov = 150.0
-    f_card = U.font(22, 700)
-    f_small = U.font(15, 600)
-    for deg in range(0, 360, 15):
+    f_card = U.font(40, 700)
+    f_small = U.font(30, 700)
+    span = cw / 2 - 44
+
+    def xpos(deg):
         rel = ((deg - heading + 540) % 360) - 180
+        return rel, x0 + cw / 2 + rel / (fov / 2) * span
+
+    for deg in range(0, 360, 15):
+        rel, x = xpos(deg)
         if abs(rel) > fov / 2:
             continue
-        x = x0 + cw / 2 + rel / (fov / 2) * (cw / 2 - 30)
+        near = any(abs(((m[1] - deg + 540) % 360) - 180) < 9 for m in markers)
+        if near and deg % 90:
+            continue  # a marker icon sits here: drop the NE/NW label or tick so they never overlap
         if deg % 90 == 0:
             d.text((x, y0 + ch / 2), "NESW"[deg // 90], font=f_card, fill=U.TEXT_D, anchor="mm")
         elif deg % 45 == 0:
-            d.text(
-                (x, y0 + ch / 2),
-                ["NE", "SE", "SW", "NW"][deg // 90],
-                font=f_small,
-                fill=U.MUTED_D,
-                anchor="mm",
-            )
+            d.text((x, y0 + ch / 2), ["NE", "SE", "SW", "NW"][deg // 90], font=f_small, fill=U.MUTED_D, anchor="mm")
         else:
-            d.line((x, y0 + 18, x, y0 + ch - 18), fill=(*U.MUTED_D, 255), width=2)
-    for kind, deg, label in markers:
-        rel = ((deg - heading + 540) % 360) - 180
-        x = x0 + cw / 2 + rel / (fov / 2) * (cw / 2 - 30)
-        yy = y0 + ch + 22
+            d.line((x, y0 + 26, x, y0 + ch - 26), fill=(*U.MUTED_D, 255), width=3)
+    f = U.font(32, 600)
+    for i, (kind, deg, label) in enumerate(markers):
+        rel, x = xpos(deg)
         if kind == "wonder":
-            U.ic_diamond(d, (x, y0 + ch / 2), 11, U.AMBER, ring=U.INK)
-            U.ic_star(d, (x, y0 + ch / 2), 5, U.INK)
+            U.ic_diamond(d, (x, y0 + ch / 2), 16, U.AMBER, ring=U.INK)
+            U.ic_star(d, (x, y0 + ch / 2), 7, U.INK)
         elif kind == "rumor":
-            U.ic_bubble(d, (x, y0 + ch / 2 - 2), 11, U.TEXT_D)
+            U.ic_bubble(d, (x, y0 + ch / 2 - 2), 16, U.TEXT_D)
         elif kind == "trade":
-            U.ic_anchor(d, (x, y0 + ch / 2), 13, U.TEAL, w=3)
-        f = U.font(17, 600)
+            U.ic_anchor(d, (x, y0 + ch / 2), 18, U.TEAL_L, w=4)
+        row = i % 2 if len(markers) > 2 else 0  # neighbours alternate rows so 32 px labels never overlap
+        yy = y0 + ch + 40 + row * 62
         tw = U.tw(label, f)
-        U.panel(
-            im,
-            (x - tw / 2 - 10, yy - 13, x + tw / 2 + 10, yy + 15),
-            radius=14,
-            fill=U.INK,
-            alpha=0.62,
-            drop=False,
-        )
+        U.panel(im, (x - tw / 2 - 20, yy - 26, x + tw / 2 + 20, yy + 26), radius=26, fill=U.INK, alpha=HUD_A, drop=False)
         d = ImageDraw.Draw(im)
-        d.text(
-            (x, yy + 1), label, font=f, fill=U.AMBER if kind == "wonder" else U.TEXT_D, anchor="mm"
-        )
-    # heading caret
-    d.polygon([(W / 2 - 8, y0 - 2), (W / 2 + 8, y0 - 2), (W / 2, y0 + 8)], fill=U.TEXT_D)
+        if row:
+            d.line((x, y0 + ch + 4, x, yy - 28), fill=(*U.TEXT_D, 150), width=2)
+        d.text((x, yy + 1), label, font=f, fill=U.AMBER if kind == "wonder" else U.TEXT_D, anchor="mm")
+    d.polygon([(W / 2 - 11, y0 - 3), (W / 2 + 11, y0 - 3), (W / 2, y0 + 11)], fill=U.TEXT_D)
     return im
 
 
 def chip(im, x, y, w, h, draw_fn):
-    U.panel(im, (x, y, x + w, y + h), radius=h // 2, fill=U.INK, alpha=0.66, drop=False)
+    U.panel(im, (x, y, x + w, y + h), radius=h // 2, fill=U.INK, alpha=HUD_A, drop=False)
     d = ImageDraw.Draw(im)
     draw_fn(d)
+
+
+def round_chip(im, c, r, alpha=HUD_A):
+    U.panel(im, (c[0] - r, c[1] - r, c[0] + r, c[1] + r), radius=r, fill=U.INK, alpha=alpha, drop=False)
+    return ImageDraw.Draw(im)
 
 
 def hud(raw, out):
@@ -118,121 +120,73 @@ def hud(raw, out):
             ("trade", 40, "Skarvik dock"),
         ],
     )
-    d = ImageDraw.Draw(im)
-    # top-left: menu disc (48 dp min) + map disc
+    # top-left: settings + map, 130 px discs
     for i, fn in enumerate(
-        (
-            lambda dd, c: U.ic_gear(dd, c, 26, U.TEXT_D, U.INK),
-            lambda dd, c: U.ic_map(dd, c, 22, U.TEXT_D),
-        )
+        (lambda dd, c: U.ic_gear(dd, c, 30, U.TEXT_D, U.INK), lambda dd, c: U.ic_map(dd, c, 26, U.TEXT_D))
     ):
-        c = (M + 63 + i * 140, M + 63)
-        U.panel(
-            im,
-            (c[0] - 63, c[1] - 63, c[0] + 63, c[1] + 63),
-            radius=63,
-            fill=U.INK,
-            alpha=0.62,
-            drop=False,
-        )
-        d = ImageDraw.Draw(im)
+        c = (M + 65 + i * 148, M + 65)
+        d = round_chip(im, c, 65)
         fn(d, c)
-    # top-right: time/weather + pack weight
-    f = U.font(24, 600)
+    # top-right: time/weather + pack weight (36 px)
+    f = U.font(36, 600)
     x1 = W - M
+    cw = 400
     chip(
-        im,
-        x1 - 300,
-        M + 6,
-        300,
-        54,
+        im, x1 - cw, M, cw, 72,
         lambda dd: (
-            U.ic_moon(dd, (x1 - 270, M + 33), 13, U.TEXT_D, U.over(U.INK, (40, 50, 60), 0.66)),
-            dd.text((x1 - 245, M + 33), "21:40  Clear  4°C", font=f, fill=U.TEXT_D, anchor="lm"),
+            U.ic_sun(dd, (x1 - cw + 42, M + 36), 16, U.TEXT_D),
+            dd.text((x1 - cw + 76, M + 37), "10:40  Clear  9°C", font=f, fill=U.TEXT_D, anchor="lm"),
         ),
     )
 
     def pack(dd):
-        U.ic_pack(dd, (x1 - 270, M + 103), 14, U.TEXT_D)
-        dd.text((x1 - 245, M + 104), "18.4 / 30 kg", font=f, fill=U.TEXT_D, anchor="lm")
-        dd.rounded_rectangle((x1 - 245, M + 124, x1 - 40, M + 130), 3, fill=(255, 255, 255, 60))
-        dd.rounded_rectangle(
-            (x1 - 245, M + 124, x1 - 245 + int(205 * 18.4 / 30), M + 130), 3, fill=U.TEAL
-        )
+        yc = M + 90 + 34
+        U.ic_pack(dd, (x1 - cw + 42, yc), 17, U.TEXT_D)
+        dd.text((x1 - cw + 76, yc + 1), "18.4 / 30 kg", font=f, fill=U.TEXT_D, anchor="lm")
+        dd.rounded_rectangle((x1 - cw + 76, yc + 30, x1 - 44, yc + 38), 4, fill=(255, 255, 255, 60))
+        dd.rounded_rectangle((x1 - cw + 76, yc + 30, x1 - cw + 76 + int((cw - 120) * 18.4 / 30), yc + 38), 4, fill=U.TEAL)
 
-    chip(im, x1 - 300, M + 72, 300, 64, pack)
+    chip(im, x1 - cw, M + 90, cw, 92, pack)
     # left move stick (thumb zone), bottom-left
     c = (M + 190, H - M - 190)
     L = U.layer((W, H))
     dl = ImageDraw.Draw(L)
-    dl.ellipse(
-        (c[0] - 150, c[1] - 150, c[0] + 150, c[1] + 150),
-        fill=(17, 21, 26, 70),
-        outline=(246, 243, 236, 120),
-        width=3,
-    )
-    dl.ellipse(
-        (c[0] - 52 + 20, c[1] - 52 - 34, c[0] + 52 + 20, c[1] + 52 - 34), fill=(246, 243, 236, 205)
-    )
+    dl.ellipse((c[0] - 150, c[1] - 150, c[0] + 150, c[1] + 150), fill=(17, 21, 26, 70), outline=(246, 243, 236, 120), width=3)
+    dl.ellipse((c[0] - 52 + 20, c[1] - 52 - 34, c[0] + 52 + 20, c[1] + 52 - 34), fill=(246, 243, 236, 205))
     im.alpha_composite(L)
-    # right: action button (Gather) + jump
+    # right: Action (190 px, amber) + Traverse + Interact
     ca = (W - M - 120, H - M - 150)
-    U.shadow(im, (ca[0] - 84, ca[1] - 84, ca[0] + 84, ca[1] + 84), 84, blur=16, alpha=80)
+    U.shadow(im, (ca[0] - 95, ca[1] - 95, ca[0] + 95, ca[1] + 95), 95, blur=16, alpha=80)
     d = ImageDraw.Draw(im)
-    U.disc(d, ca, 84, U.AMBER, ring=U.WHITE, ring_w=4)
-    U.ic_leaf(d, (ca[0], ca[1] - 10), 40, U.INK)
-    d.text((ca[0], ca[1] + 46), "Gather", font=U.font(22, 700), fill=U.INK, anchor="mm")
-    cj = (ca[0] - 200, ca[1] + 70)
-    U.panel(
-        im,
-        (cj[0] - 64, cj[1] - 64, cj[0] + 64, cj[1] + 64),
-        radius=64,
-        fill=U.INK,
-        alpha=0.66,
-        drop=False,
-    )
-    d = ImageDraw.Draw(im)
-    U.ic_jump(d, cj, 30, U.TEXT_D)
-    cc = (ca[0] - 170, ca[1] - 150)
-    U.panel(
-        im,
-        (cc[0] - 64, cc[1] - 64, cc[0] + 64, cc[1] + 64),
-        radius=64,
-        fill=U.INK,
-        alpha=0.66,
-        drop=False,
-    )
-    d = ImageDraw.Draw(im)
-    U.ic_hand(d, (cc[0], cc[1] + 4), 30, U.TEXT_D)
+    U.disc(d, ca, 95, U.AMBER, ring=U.WHITE, ring_w=4)
+    U.ic_leaf(d, (ca[0], ca[1] - 16), 42, U.INK)
+    d.text((ca[0], ca[1] + 44), "Gather", font=U.font(32, 700), fill=U.INK, anchor="mm")
+    cj = (ca[0] - 215, ca[1] + 70)
+    d = round_chip(im, cj, 65)
+    U.ic_jump(d, cj, 32, U.TEXT_D)
+    cc = (ca[0] - 185, ca[1] - 160)
+    d = round_chip(im, cc, 65)
+    U.ic_hand(d, (cc[0], cc[1] + 4), 32, U.TEXT_D)
     # world-space gather prompt pinned to a plant
-    gx, gy = 1180, 760
-    U.panel(im, (gx - 6, gy - 6, gx + 6, gy + 6), radius=6, fill=U.AMBER, alpha=1.0, drop=False)
+    gx, gy = 1180, 780
+    U.panel(im, (gx - 7, gy - 7, gx + 7, gy + 7), radius=7, fill=U.AMBER, alpha=1.0, drop=False)
     d = ImageDraw.Draw(im)
-    d.line((gx, gy - 8, gx, gy - 46), fill=U.AMBER, width=3)
+    d.line((gx, gy - 9, gx, gy - 50), fill=U.AMBER, width=3)
     lab = "Cloudberries  x6"
-    f2 = U.font(22, 600)
+    f2 = U.font(34, 600)
     tw = U.tw(lab, f2)
-    U.panel(
-        im,
-        (gx - tw / 2 - 18, gy - 92, gx + tw / 2 + 18, gy - 48),
-        radius=22,
-        fill=U.INK,
-        alpha=0.78,
-        drop=False,
-    )
+    U.panel(im, (gx - tw / 2 - 24, gy - 116, gx + tw / 2 + 24, gy - 52), radius=32, fill=U.INK, alpha=HUD_A, drop=False)
     d = ImageDraw.Draw(im)
-    d.text((gx, gy - 70), lab, font=f2, fill=U.TEXT_D, anchor="mm")
+    d.text((gx, gy - 84), lab, font=f2, fill=U.TEXT_D, anchor="mm")
     im.convert("RGB").save(out, optimize=True)
+    sky = (200, 205, 215)
     U.report(
         [
-            ("hud label on ink 66% over dark scene", U.TEXT_D, U.over(U.INK, (40, 50, 60), 0.66)),
-            (
-                "hud label on ink 66% over bright sky",
-                U.TEXT_D,
-                U.over(U.INK, (200, 205, 215), 0.66),
-            ),
-            ("Gather label on amber", U.INK, U.AMBER),
-            ("muted tick on ink", U.MUTED_D, U.over(U.INK, (200, 205, 215), 0.62)),
+            ("hud text on ink 84% over bright sky", U.TEXT_D, U.over(U.INK, sky, HUD_A)),
+            ("hud text on ink 84% over white", U.TEXT_D, U.over(U.INK, (255, 255, 255), HUD_A)),
+            ("NE/NW muted on ink 84% over sky", U.MUTED_D, U.over(U.INK, sky, HUD_A)),
+            ("wonder label amber on ink 84% over sky", U.AMBER, U.over(U.INK, sky, HUD_A)),
+            ("Gather label ink on amber", U.INK, U.AMBER),
         ]
     )
 
@@ -778,49 +732,39 @@ def build(raw, out):
     im = grade(load(raw), vignette=0.15)
     d = ImageDraw.Draw(im)
     # mode banner top-left
-    U.panel(im, (M, M, M + 470, M + 96), radius=22, fill=U.INK, alpha=0.8, drop=False)
+    sub = "Flat ground  ·  2 m from the path  ·  Snap on"
+    pw = max(U.tw("Timber house, frame stage", U.font(44, 700)), U.tw(sub, U.font(34, 500))) + 64
+    U.panel(im, (M, M, M + pw, M + 196), radius=28, fill=U.INK, alpha=0.84, drop=False)
     d = ImageDraw.Draw(im)
-    d.text((M + 28, M + 32), "BUILD", font=U.font(18, 700), fill=U.TEAL, anchor="lm")
-    d.text(
-        (M + 28, M + 66),
-        "Timber house, frame stage",
-        font=U.font(27, 700),
-        fill=U.TEXT_D,
-        anchor="lm",
-    )
-    d.text(
-        (M + 30, M + 128),
-        "Flat ground  ·  2 m from the path  ·  Snap on",
-        font=U.font(21, 500),
-        fill=U.TEXT_D,
-        anchor="lm",
-    )
+    U.caps(d, (M + 32, M + 40), "Build", 28, U.TEAL_L, anchor="lm")
+    d.text((M + 32, M + 94), "Timber house, frame stage", font=U.font(44, 700), fill=U.TEXT_D, anchor="lm")
+    d.text((M + 32, M + 150), sub, font=U.font(34, 500), fill=U.MUTED_D, anchor="lm")
     # material cost chips bottom center
     mats = [("Logs", 12, 12), ("Planks", 30, 40), ("Turf", 8, 8), ("Stone", 6, 10)]
-    f = U.font(24, 600)
-    widths = [U.tw(f"{n}  {have} / {need}", f) + 70 for n, have, need in mats]
-    tot = sum(widths) + 16 * (len(mats) - 1)
-    x = (W - tot) // 2
-    y = H - M - 70
+    f = U.font(36, 600)
+    widths = [U.tw(f"{n}  {have} / {need}", f) + 96 for n, have, need in mats]
+    tot = sum(widths) + 18 * (len(mats) - 1)
+    x = (W - tot) // 2 - 120
+    y = H - M - 84
     for (n, have, need), w in zip(mats, widths):
         ok = have >= need
         U.panel(
             im,
-            (x, y, x + w, y + 64),
-            radius=32,
+            (x, y, x + w, y + 84),
+            radius=42,
             fill=U.INK,
-            alpha=0.82,
+            alpha=0.84,
             outline=U.TEAL if ok else U.CLAY,
             ow=3,
             drop=False,
         )
         d = ImageDraw.Draw(im)
         if ok:
-            U.ic_check(d, (x + 30, y + 32), 22, U.TEAL, w=5)
+            U.ic_check(d, (x + 40, y + 42), 26, U.TEAL, w=6)
         else:
-            U.ic_cross(d, (x + 30, y + 32), 22, U.CLAY, w=5)
-        d.text((x + 54, y + 33), f"{n}  {have} / {need}", font=f, fill=U.TEXT_D, anchor="lm")
-        x += w + 16
+            U.ic_cross(d, (x + 40, y + 42), 26, U.CLAY, w=6)
+        d.text((x + 72, y + 43), f"{n}  {have} / {need}", font=f, fill=U.TEXT_D, anchor="lm")
+        x += w + 18
     # right-side controls: rotate L / R, confirm, cancel (all >= 48 dp)
     cx = W - M - 90
     cy = H // 2 + 40
@@ -857,29 +801,28 @@ def build(raw, out):
     )
     d = ImageDraw.Draw(im)
     U.ic_cross(d, cx2, 34, U.TEXT_D, w=7)
-    d.text((cc[0], cc[1] + 112), "Place frame", font=U.font(22, 700), fill=U.TEXT_D, anchor="mm")
+    fl = U.font(32, 700)
+    lw = U.tw("Place frame", fl)
+    U.panel(im, (cc[0] - lw / 2 - 20, cc[1] + 92, cc[0] + lw / 2 + 20, cc[1] + 144), radius=26, fill=U.INK, alpha=0.84, drop=False)
+    d = ImageDraw.Draw(im)
+    d.text((cc[0], cc[1] + 118), "Place frame", font=fl, fill=U.TEXT_D, anchor="mm")
     # missing material hint
     hint = "Need 10 more planks and 4 stone to finish walls"
-    fh = U.font(21, 500)
+    fh = U.font(34, 500)
     tw = U.tw(hint, fh)
-    U.panel(
-        im,
-        ((W - tw) // 2 - 22, H - M - 130, (W + tw) // 2 + 22, H - M - 86),
-        radius=22,
-        fill=U.INK,
-        alpha=0.7,
-        drop=False,
-    )
+    hx = W // 2 - 120
+    U.panel(im, (hx - tw / 2 - 28, H - M - 170, hx + tw / 2 + 28, H - M - 104), radius=33, fill=U.INK, alpha=0.84, drop=False)
     d = ImageDraw.Draw(im)
-    d.text((W // 2, H - M - 108), hint, font=fh, fill=U.TEXT_D, anchor="mm")
+    d.text((hx, H - M - 137), hint, font=fh, fill=U.TEXT_D, anchor="mm")
     im.convert("RGB").save(out, optimize=True)
     U.report(
         [
-            ("chip text on ink 82%", U.TEXT_D, U.over(U.INK, (120, 130, 110), 0.82)),
+            ("chip text on ink 84% over white", U.TEXT_D, U.over(U.INK, (255, 255, 255), 0.84)),
+            ("sub-line muted on ink 84% over white", U.MUTED_D, U.over(U.INK, (255, 255, 255), 0.84)),
             ("teal check on ink", U.TEAL, U.INK),
             ("clay cross on ink", U.CLAY, U.INK),
             ("white check on teal", U.WHITE, U.TEAL),
-            ("BUILD label teal on ink 80%", U.TEAL, U.over(U.INK, (120, 130, 110), 0.8)),
+            ("BUILD caps teal_l on ink 84% over white", U.TEAL_L, U.over(U.INK, (255, 255, 255), 0.84)),
         ]
     )
 

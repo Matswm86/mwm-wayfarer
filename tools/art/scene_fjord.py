@@ -31,7 +31,7 @@ LIT = {
         ("SUN_ELEV", 30.0),
         ("SUN_ENERGY", 5.0),
         ("FOG_START", 200),
-        ("FOG_MAX", 0.3),
+        ("FOG_MAX", 0.22),  # 10-10 b: 0.3 laid a milky sheet over every wall past 3 km
         ("MIST_ALPHA", 0.15),
         ("EXPOSURE", 0.0),
     )
@@ -173,11 +173,107 @@ def wall(x, y, e2, n1, crest, notch):
     return z
 
 
+def rock_layer(m):
+    """Fjord rock pass (10-10 b, WF_ROCK=1 default): replaces the smooth beige steep faces with dark gneiss.
+    - steep slopes (normal.z < ~0.62, about 52 deg) get the cliff_side scan at two scales (40 m + 7 m, multiplied)
+      so the far wall has big structure and the near wall has grain;
+    - vertical seep/lichen streaks (world noise squashed in Z) break the flat colour like real fjord walls;
+    - a darker, glossier wet band 0-3 m above the waterline;
+    - snow only on flatter ground above ~1250 m.
+    Phone: one splat shader, triplanar on the steep layer only, streaks/wet/snow are 3 cheap world-space masks."""
+    nt = m.node_tree
+    b = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+    base_col = b.inputs["Base Color"].links[0].from_socket
+    base_rough = b.inputs["Roughness"].links[0].from_socket
+    nm = b.inputs["Normal"].links[0].from_node
+    base_nrm = nm.inputs["Color"].links[0].from_socket
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sepn = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Normal"], sepn.inputs["Vector"])
+    sepp = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Position"], sepp.inputs["Vector"])
+    big = A.tex_nodes(nt, "cliff_side", A.mapping(nt, 1 / 40.0, "Object", src=tc.outputs["Object"]), box=True)
+    fine = A.tex_nodes(nt, "cliff_side", A.mapping(nt, 1 / 7.0, "Object", rot=0.6, src=tc.outputs["Object"]), box=True)
+    big_l = nt.nodes.new("ShaderNodeRGBToBW")  # the scan is warm brown: keep its value, drop its hue
+    nt.links.new(big["albedo"], big_l.inputs[0])
+    # albedo about 0.18-0.32 like real sunlit gneiss (first try at 0.6 read as snow at 3 km)
+    gneiss = A.math_col_mul(nt, A.mixc(nt, 0.2, (0.27, 0.28, 0.29, 1.0), big["albedo"]), A.maprange(nt, big_l.outputs[0], 0.0, 0.5, 0.65, 1.3))
+    # a 3rd, 300 m scale breaks the 40 m tile repeat on far walls
+    mac = A.maprange(nt, A.noise(nt, 0.0035, tc.outputs["Object"], detail=3), 0.3, 0.7, 0.7, 1.2)
+    gneiss = A.math_col_mul(nt, gneiss, mac)
+    fine_l = nt.nodes.new("ShaderNodeRGBToBW")
+    nt.links.new(fine["albedo"], fine_l.inputs[0])
+    camd = nt.nodes.new("ShaderNodeCameraData")
+    near_w = A.maprange(nt, camd.outputs["View Distance"], 900.0, 350.0)  # 7 m grain only near: it shimmers as a grid far off
+    detail = A.mixf(nt, near_w, 1.0, A.maprange(nt, fine_l.outputs[0], 0.0, 0.6, 0.6, 1.3))
+    rock = A.math_col_mul(nt, gneiss, detail)
+    # vertical streaks: noise stretched along Z (scale x,y 0.08 / z 0.004)
+    st_vec = A.mapping(nt, (0.08, 0.08, 0.004), "Object", src=tc.outputs["Object"])
+    st = nt.nodes.new("ShaderNodeTexNoise")
+    st.inputs["Scale"].default_value = 3.0
+    st.inputs["Detail"].default_value = 6.0
+    st.inputs["Roughness"].default_value = 0.65
+    nt.links.new(st_vec, st.inputs["Vector"])
+    dark = A.maprange(nt, st.outputs["Fac"], 0.42, 0.62, 0.55, 1.0)
+    rock = A.math_col_mul(nt, rock, dark)
+    lich = A.maprange(nt, A.noise(nt, 0.05, tc.outputs["Object"], detail=4), 0.55, 0.68)
+    rock = A.mixc(nt, A.math_node(nt, "MULTIPLY", lich, 0.45), rock, (0.20, 0.22, 0.14, 1.0))  # olive lichen/moss
+    nz = A.noise(nt, 0.08, tc.outputs["Object"], detail=3)
+    nzs = A.math_node(nt, "ADD", sepn.outputs["Z"], A.math_node(nt, "MULTIPLY", A.math_node(nt, "SUBTRACT", nz, 0.5), 0.25))
+    steep = A.maprange(nt, nzs, 0.74, 0.58)  # 1 on faces steeper than ~48 deg
+    col = A.mixc(nt, steep, base_col, rock)
+    rough = A.mixf(nt, steep, base_rough, 0.82)
+    nrm = A.mixc(nt, steep, base_nrm, A.mixc(nt, A.math_node(nt, "MULTIPLY", near_w, 0.5), big["normal"], fine["normal"]))
+    # far slopes (1.5-5 km fade-in, max 60%: a full fade turned the walls smooth again): fade the tiled scans to a flat green/grey by slope, broken by the 300 m noise.
+    # Two reasons: 40 m tiles repeat into a visible grid at 3-6 km, and the pale grass/rock scans read beige-white
+    # through the haze. Real far fjord walls are dark: forest green-grey low, grey rock high.
+    far_w = A.maprange(nt, camd.outputs["View Distance"], 1500.0, 5000.0, 0.0, 0.85)
+    # gullies: real fjord walls are fluted by rockfall chutes 50-200 m wide; the 10 m DEM on a 50 m far mesh is
+    # smooth, so a noise stretched 8x along Z drives a bump + darkening that reads as chutes and ribs from afar
+    gv = A.mapping(nt, (1 / 160.0, 1 / 160.0, 1 / 1300.0), "Object", src=tc.outputs["Object"])
+    gn = nt.nodes.new("ShaderNodeTexNoise")
+    gn.inputs["Scale"].default_value = 1.0
+    gn.inputs["Detail"].default_value = 5.0
+    gn.inputs["Roughness"].default_value = 0.6
+    nt.links.new(gv, gn.inputs["Vector"])
+    rib = A.math_node(nt, "ABSOLUTE", A.math_node(nt, "SUBTRACT", gn.outputs["Fac"], 0.5))
+    gully_w = A.math_node(nt, "MULTIPLY", steep, A.maprange(nt, camd.outputs["View Distance"], 400.0, 1500.0))
+    far_col = A.math_col_mul(nt, A.mixc(nt, steep, (0.085, 0.11, 0.06, 1.0), (0.13, 0.135, 0.14, 1.0)), mac)
+    col = A.mixc(nt, far_w, col, far_col)
+    col = A.math_col_mul(nt, col, A.mixf(nt, gully_w, 1.0, A.maprange(nt, rib, 0.0, 0.25, 0.55, 1.15)))
+    # snow on flatter high ground only
+    snow_h = A.maprange(nt, A.math_node(nt, "ADD", sepp.outputs["Z"], A.math_node(nt, "MULTIPLY", nz, 120.0)), 1250, 1400)
+    snow_f = A.maprange(nt, sepn.outputs["Z"], 0.72, 0.86)
+    snow = A.math_node(nt, "MULTIPLY", snow_h, snow_f)
+    col = A.mixc(nt, snow, col, (0.80, 0.83, 0.86, 1.0))
+    rough = A.mixf(nt, snow, rough, 0.55)
+    # wet band at the waterline: darker and glossier 0-3 m above the water
+    wet = A.maprange(nt, A.math_node(nt, "ADD", sepp.outputs["Z"], A.math_node(nt, "MULTIPLY", nz, 1.5)), 3.2, 0.4)
+    col = A.mixc(nt, A.math_node(nt, "MULTIPLY", wet, 0.75), col, A.math_col_mul(nt, col, A.maprange(nt, nz, 0, 1, 0.38, 0.38)))
+    rough = A.mixf(nt, wet, rough, 0.25)
+    # far terrain is seen at grazing angles: default specular reflects the bright sky and turns every far slope
+    # pale blue-white whatever its albedo (10-10 b probe: albedo and fog changes did not move the far pixels).
+    # Dry rock and turf are close to matte: low specular, full roughness with distance.
+    rough = A.mixf(nt, far_w, rough, 1.0)
+    if not b.inputs["Specular IOR Level"].is_linked:
+        b.inputs["Specular IOR Level"].default_value = 0.12
+    nt.links.new(col, b.inputs["Base Color"])
+    nt.links.new(rough, b.inputs["Roughness"])
+    nt.links.new(nrm, nm.inputs["Color"])
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Distance"].default_value = 30.0
+    nt.links.new(A.math_node(nt, "MULTIPLY", gully_w, 0.5), bump.inputs["Strength"])
+    nt.links.new(rib, bump.inputs["Height"])
+    nt.links.new(nm.outputs["Normal"], bump.inputs["Normal"])
+    nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+
+
 def terrain():
     layers = dict(
         flat=("leafy_grass", 7.0, (0.62, 0.78, 0.5)),
         steep=("rock_face_03", 26.0, (0.36, 0.40, 0.42)),
-        high=("aerial_grass_rock", 40.0, (0.7, 0.8, 0.62)),
+        high=("aerial_grass_rock", 40.0, (0.58, 0.63, 0.55)),  # 10-10 b: greyer upper slopes (was 0.7/0.8/0.62, read beige)
     )
     m = A.terrain_mat(
         "fjord_terrain",
@@ -188,6 +284,8 @@ def terrain():
         macro=0.004,
         macro_amp=(0.6, 1.2),
     )
+    if os.environ.get("WF_ROCK", "1") == "1":
+        rock_layer(m)
 
     def hmid(x, y):
         d = max(abs(x - P0[0]) - 40, abs(y - P0[1] - 30) - 55)
@@ -618,23 +716,24 @@ def ghost_frame(c, yaw):
 
 
 def talk_setup():
+    """Talk frame (DESIGN 4.6): over the explorer's left shoulder, Ingrid waist-up left of centre, face clear of
+    the subtitle panel (bottom-left) and the replies (right column). The explorer sits under the replies."""
     import wf_mh as M
 
     y = 128.0
     x = xs(y) + 11.0
     P = Vector((x, y, h(x, y)))
-    F = Vector(
-        (x + 2.4, y + 4.0, 0)
-    )  # NPC front-right of the explorer, so the backpack does not hide them
+    F = P + Vector((0.5, 2.1, 0))  # 2.2 m apart: talking distance
     F.z = h(F.x, F.y)
-    M.character("explorer", "stand_look", loc=tuple(P), yaw_deg=-25)
-    M.character("fisher", "talk", loc=tuple(F), yaw_deg=155)
-    right = Vector((1, 0, 0))
-    cam = P + Vector((0, -2.4, 0)) + right * -0.9 + Vector((0, 0, 1.9))
-    tgt = (
-        F + Vector((0, 0, 1.3)) + right * 1.1
-    )  # NPC sits left of centre, clear of the reply buttons
-    A.camera(cam, tgt, lens=35, dof=((F - cam).length, 2.8))
+    d = F - P
+    yaw_p = math.degrees(math.atan2(-d.x, d.y))
+    M.character("explorer", "stand_look", loc=tuple(P), yaw_deg=yaw_p)
+    M.character("ingrid", "talk_calm", loc=tuple(F), yaw_deg=yaw_p + 180.0 - 22.0)
+    fwd = Vector((d.x, d.y, 0)).normalized()
+    left = Vector((-fwd.y, fwd.x, 0))
+    cam = P - fwd * 1.4 + left * 0.95 + Vector((0, 0, 1.66))
+    tgt = F + Vector((0, 0, 1.30)) - left * 0.38  # aim right of her so she sits left of centre
+    A.camera(cam, tgt, lens=60, dof=((F - cam).length, 2.8))
 
 
 def main():
@@ -655,7 +754,10 @@ def main():
             az_width=40.0,
             elev=(16.0, 46.0),
         )
-    A.sun(LIT["SUN_ELEV"], 152, color=(1.0, 0.66, 0.36), energy=LIT["SUN_ENERGY"], angle=1.5)
+    # 10-10 b: the old golden-hour sun colour (1.0, 0.66, 0.36) turned every sunlit face beige at 30 deg; a 30 deg
+    # morning sun is close to white. WF_SUN_WARM=1 restores the old colour.
+    sun_col = (1.0, 0.66, 0.36) if os.environ.get("WF_SUN_WARM") == "1" else (1.0, 0.90, 0.78)
+    A.sun(LIT["SUN_ELEV"], 152, color=sun_col, energy=LIT["SUN_ENERGY"], angle=1.5)
     terrain()
     water()
     falls()

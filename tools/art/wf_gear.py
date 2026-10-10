@@ -99,5 +99,6 @@ def hat(rig, kids, width=0.35, sink=0.115, tilt=-4.0):
 GEAR = {
     "explorer": explorer,
     "fisher": lambda rig, kids: hat(rig, kids),
+    "ingrid": lambda rig, kids: [],
     "trader": lambda rig, kids: [],
 }
