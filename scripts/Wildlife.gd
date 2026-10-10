@@ -46,6 +46,7 @@ func build(t: Terrain) -> void:
 			a.node.name = "%s_%d" % [species, i]
 			add_child(a.node)
 			_fit_size(a.node, float(spec["size"]))
+			_fur(a.node)
 			if not spec.has("fly"):
 				Lighting.contact_shadow(
 					a.node, float(spec["size"]) * 0.42, SpikeConfig.CONTACT_STRENGTH
@@ -203,6 +204,23 @@ func _fit_size(root: Node3D, size: float) -> void:
 	if longest > 0.0:
 		root.scale = Vector3.ONE * (size / longest)
 	print("WILDLIFE %s bones span %.2f -> scale %.4f" % [root.name, longest, root.scale.x])
+
+
+## Rough fur instead of the models' glossy defaults (roughness 0.6, specular 0.5 reflected the
+## sky and tinted the does blue), with a soft rim like light caught in the coat.
+func _fur(root: Node3D) -> void:
+	for mi: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
+		for s in mi.mesh.get_surface_count():
+			var src := mi.mesh.surface_get_material(s) as StandardMaterial3D
+			if src == null:
+				continue
+			var m := src.duplicate() as StandardMaterial3D
+			m.roughness = SpikeConfig.FUR_ROUGHNESS
+			m.metallic_specular = SpikeConfig.FUR_SPECULAR
+			m.rim_enabled = true
+			m.rim = SpikeConfig.FUR_RIM
+			m.rim_tint = 0.7
+			mi.set_surface_override_material(s, m)
 
 
 func _set_ranges(root: Node3D, end: float) -> void:

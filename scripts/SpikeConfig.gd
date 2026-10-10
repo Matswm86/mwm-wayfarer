@@ -23,6 +23,10 @@ const TREE_FAR_END := 7000.0
 ## GRASS_RADIUS of the player.
 const GRASS_RADIUS := 35.0
 const GRASS_SPACING := 0.5
+## Ultra: a second ring of bigger, sparser clumps from about 30 m out to GRASS_FAR_RADIUS.
+const GRASS_FAR_RADIUS := 120.0
+const GRASS_FAR_SPACING := 1.6
+const GRASS_FAR_SCALE := 1.7
 
 const PLAYER_WALK := 4.5
 const PLAYER_RUN := 8.0
@@ -46,14 +50,15 @@ const SKY_TEXTURE := "res://assets/sky/kloofendal_48d_partly_cloudy.jpg"
 const SKY_ENERGY := 1.56
 const SKY_ROTATION_DEG := 180.0
 const EXPOSURE := 0.9
+const GRADE_LUT := "res://assets/luts/grade.png"
 const AMBIENT_ENERGY := 1.0
-## Aerial perspective (DESIGN.md 7.2 rules 3 and 8): depth fog from 200 m, at most 0.22,
-## quadratic falloff, blue-grey, never milky.
+## Aerial perspective (DESIGN.md 7.2 rules 3 and 8): depth fog from 200 m, curve 1.7 to 0.36 at
+## 9 km (about 0.03 at 2 km, 0.12 at 4 km), blue-grey, never milky: far ridges layer.
 const FOG_COLOR := Color(0.62, 0.74, 0.90)
-const FOG_MAX := 0.22
+const FOG_MAX := 0.36
 const FOG_BEGIN := 200.0
-const FOG_END := 7000.0
-const FOG_CURVE := 2.0
+const FOG_END := 9000.0
+const FOG_CURVE := 1.7
 const FOG_AERIAL := 0.5
 const FOG_SUN_SCATTER := 0.08
 
@@ -97,6 +102,7 @@ const WARMUP_FRAMES := 3
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
+		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 0,
 		"fps_cap": 0,
@@ -115,6 +121,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
+		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 1,
 		"fps_cap": 0,
@@ -133,6 +140,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
+		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 1,
 		"fps_cap": 0,
@@ -151,6 +159,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Ultra",
+		"grass_far": true,
 		"shadow_blur": 1.6,
 		"terrain_quality": 2,
 		"fps_cap": 60,
@@ -171,16 +180,21 @@ const PRESETS: Array[Dictionary] = [
 ## Share of the 90 000 placed trees per preset (High keeps the pass 1 count of about 54 000).
 const FOREST_STEPS: Array[float] = [0.2, 0.4, 0.6, 1.0]
 
-## Wildlife (scripts/Wildlife.gd). area = centre x, z; radius in m; size = longest side of the
-## model in m; walk speed m/s; flee = distance at which it runs from the player (0 = ignores);
+## Animal fur (all species): rough, low specular (glossy fur mirrored the blue sky), soft rim.
+const FUR_ROUGHNESS := 0.92
+const FUR_SPECULAR := 0.22
+const FUR_RIM := 0.35
+## Wildlife (scripts/Wildlife.gd). Does and deer graze 45-70 m ahead of the spawn view.
+## area = centre x, z; radius in m; size = longest side of the model in m; walk speed m/s;
+## flee = distance at which it runs from the player (0 = ignores);
 ## range = visibility range in m; low = how many of `count` the Low preset keeps; fly = altitude.
 const WILDLIFE: Array[Dictionary] = [
 	{
 		"species": "doe",
 		"count": 3,
 		"low": 2,
-		"area": [165.0, 30.0],
-		"radius": 40.0,
+		"area": [175.0, -60.0],
+		"radius": 15.0,
 		"size": 1.7,
 		"walk": 1.2,
 		"flee": 30.0,
@@ -190,8 +204,8 @@ const WILDLIFE: Array[Dictionary] = [
 		"species": "deer",
 		"count": 2,
 		"low": 1,
-		"area": [180.0, 10.0],
-		"radius": 40.0,
+		"area": [192.0, -35.0],
+		"radius": 15.0,
 		"size": 1.9,
 		"walk": 1.3,
 		"flee": 30.0,

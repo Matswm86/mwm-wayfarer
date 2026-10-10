@@ -17,15 +17,28 @@ const CARD_GAIN: Array[float] = [1.9, 1.9, 1.0, 1.0, 1.2, 1.0]
 var target: Node3D
 var mat: ShaderMaterial
 var _count: int = 0
+var _spacing: float = SpikeConfig.GRASS_SPACING
 
 
-func build(terrain: Terrain) -> void:
+## radius / spacing: field size and grid step (m); inner: radius where this ring fades in (the far
+## ring starts where the near field thins out); scale: plant size multiplier (far clumps are
+## bigger so a sparser grid still reads as a continuous sward).
+func build(
+	terrain: Terrain,
+	radius: float = SpikeConfig.GRASS_RADIUS,
+	spacing: float = SpikeConfig.GRASS_SPACING,
+	inner: float = 0.0,
+	scale: float = 1.0
+) -> void:
+	_spacing = spacing
 	mat = ShaderMaterial.new()
 	mat.shader = load("res://shaders/ground_cover.gdshader")
 	terrain.apply_height_params(mat)
 	terrain.apply_light_params(mat)
-	mat.set_shader_parameter("grass_radius", SpikeConfig.GRASS_RADIUS)
-	mat.set_shader_parameter("grid_spacing", SpikeConfig.GRASS_SPACING)
+	mat.set_shader_parameter("grass_radius", radius)
+	mat.set_shader_parameter("grid_spacing", spacing)
+	mat.set_shader_parameter("inner_radius", inner)
+	mat.set_shader_parameter("size_mult", scale)
 	mat.set_shader_parameter("cards", load(CARDS + "ground_cards.png"))
 	var info: Dictionary = JSON.parse_string(
 		FileAccess.get_file_as_string(CARDS + "ground_cards.json")
@@ -42,13 +55,13 @@ func build(terrain: Terrain) -> void:
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 	var pts: Array[Vector3] = []
-	var r: float = SpikeConfig.GRASS_RADIUS
-	var s: float = SpikeConfig.GRASS_SPACING
+	var r: float = radius
+	var s: float = spacing
 	var n: int = int(r / s)
 	for j in range(-n, n + 1):
 		for i in range(-n, n + 1):
 			var p := Vector3(i * s, 0.0, j * s)
-			if p.length() <= r:
+			if p.length() <= r and p.length() >= inner * 0.8:
 				pts.append(p)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
@@ -81,7 +94,7 @@ func blade_count() -> int:
 func _process(_delta: float) -> void:
 	if target == null or not visible:
 		return
-	var s: float = SpikeConfig.GRASS_SPACING
+	var s: float = _spacing
 	var p := target.global_position
 	global_position = Vector3(snappedf(p.x, s), 0.0, snappedf(p.z, s))
 	mat.set_shader_parameter("grass_center", p)

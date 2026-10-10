@@ -43,14 +43,14 @@ uniform sampler2D forest_mask : filter_linear_mipmap, repeat_disable;
 uniform int quality = 1;
 uniform vec3 to_sun = vec3(-0.5, 0.5, 0.7);
 // colours are linear values
-uniform vec3 gneiss_dark = vec3(0.075, 0.078, 0.082);
-uniform vec3 gneiss_light = vec3(0.36, 0.36, 0.35);
+uniform vec3 gneiss_dark = vec3(0.06, 0.063, 0.068);
+uniform vec3 gneiss_light = vec3(0.27, 0.275, 0.28);
 uniform vec3 rust_color = vec3(0.24, 0.15, 0.09);
 uniform vec3 lichen_color = vec3(0.21, 0.23, 0.15);
 uniform vec3 moss_color = vec3(0.07, 0.11, 0.035);
 uniform vec3 heather_color = vec3(0.13, 0.095, 0.085);
 uniform vec3 grass_tint = vec3(0.70, 0.84, 0.52);
-uniform vec3 turf_tint = vec3(0.95, 1.0, 0.80);
+uniform vec3 turf_tint = vec3(0.78, 0.95, 0.62);
 uniform vec3 scree_tint = vec3(0.80, 0.82, 0.86);
 uniform vec3 far_green = vec3(0.075, 0.10, 0.05);
 uniform vec3 snow_color = vec3(0.82, 0.85, 0.88);
@@ -199,7 +199,10 @@ void fragment() {
 	vec4 turf = texture(turf_tex, wpos.xz / 9.0);
 	float alp = smoothstep(alpine_height.x, alpine_height.y, wpos.y + 120.0 * (n60 - 0.5));
 	float tw_alp = hblend(grass.a, turf.a, clamp(alp + (n12 - 0.5) * 0.4, 0.0, 1.0), 0.4);
-	vec3 soft = mix(grass.rgb * grass_tint, turf.rgb * turf_tint, tw_alp);
+	// alpine turf: the sparse-grass scan half-blended with the meadow grass, so slopes read
+	// yellow-green in the sun instead of ochre
+	vec3 turf_c = mix(turf.rgb * turf_tint, grass.rgb * grass_tint * vec3(1.0, 0.95, 0.75), 0.5);
+	vec3 soft = mix(grass.rgb * grass_tint, turf_c, tw_alp);
 	// heather: patches on drier, convex ground from 150 m up
 	float heath = maprange(n60 + convex * 0.4 - flow * 0.6, 0.55, 0.72, 0.0, 1.0)
 		* smoothstep(150.0, 300.0, wpos.y) * (1.0 - smoothstep(900.0, 1100.0, wpos.y));

@@ -30,6 +30,9 @@ uniform float card_pick[6];
 uniform vec3 grass_center;
 uniform float grass_radius = 40.0;
 uniform float grid_spacing = 0.6;
+// far ring (Ultra): fades in from inner_radius, bigger clumps
+uniform float inner_radius = 0.0;
+uniform float size_mult = 1.0;
 uniform vec2 size_jitter = vec2(0.8, 1.3);
 uniform vec3 tint = vec3(1.2, 1.3, 1.05);
 uniform float wind_strength = 0.08;
@@ -64,7 +67,10 @@ void vertex() {
 
 	float ground = terrain_height(base_xz, 1.0);
 	vec3 gn = terrain_normal(base_xz, 1.5);
-	float keep = 1.0 - smoothstep(grass_radius * 0.75, grass_radius, distance(base_xz, grass_center.xz));
+	float gd = distance(base_xz, grass_center.xz);
+	float keep = 1.0 - smoothstep(grass_radius * 0.75, grass_radius, gd);
+	keep *= inner_radius > 0.0 ? smoothstep(inner_radius * 0.8, inner_radius, gd) : 1.0;
+	size *= size_mult;
 	keep *= smoothstep(0.4, 1.0, ground) * smoothstep(0.72, 0.82, gn.y) * (1.0 - smoothstep(500.0, 600.0, ground));
 	size *= keep;
 

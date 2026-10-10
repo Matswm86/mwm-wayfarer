@@ -9,6 +9,7 @@ signal warmed_up
 var terrain: Terrain
 var forest: Forest
 var grass: Grass
+var grass_far: Grass
 var player: Player
 var bench: Bench
 var controls: TouchControls
@@ -50,6 +51,17 @@ func _ready() -> void:
 	add_child(grass)
 	grass.build(terrain)
 	grass.target = player
+	grass_far = Grass.new()
+	grass_far.name = "GrassFar"
+	add_child(grass_far)
+	grass_far.build(
+		terrain,
+		SpikeConfig.GRASS_FAR_RADIUS,
+		SpikeConfig.GRASS_FAR_SPACING,
+		SpikeConfig.GRASS_RADIUS * 0.85,
+		SpikeConfig.GRASS_FAR_SCALE
+	)
+	grass_far.target = player
 	wildlife = Wildlife.new()
 	wildlife.name = "Wildlife"
 	add_child(wildlife)
@@ -144,9 +156,10 @@ func _on_vsync() -> void:
 
 
 func _build_environment() -> void:
-	var sky_mat := PanoramaSkyMaterial.new()
-	sky_mat.panorama = load(SpikeConfig.SKY_TEXTURE)
-	sky_mat.energy_multiplier = SpikeConfig.SKY_ENERGY
+	var sky_mat := ShaderMaterial.new()
+	sky_mat.shader = load("res://shaders/sky.gdshader")
+	sky_mat.set_shader_parameter("panorama", load(SpikeConfig.SKY_TEXTURE))
+	sky_mat.set_shader_parameter("energy", SpikeConfig.SKY_ENERGY)
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
 	sky.radiance_size = Sky.RADIANCE_SIZE_128
@@ -159,6 +172,8 @@ func _build_environment() -> void:
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	env.tonemap_mode = Environment.TONE_MAPPER_AGX
 	env.tonemap_exposure = SpikeConfig.EXPOSURE
+	env.adjustment_enabled = true
+	env.adjustment_color_correction = _grade_lut()
 	env.glow_enabled = true
 	env.glow_intensity = 0.35
 	env.glow_bloom = 0.04
@@ -197,6 +212,22 @@ func _build_environment() -> void:
 	sun.directional_shadow_split_1 = 0.08
 	sun.directional_shadow_split_2 = 0.2
 	sun.directional_shadow_split_3 = 0.45
+
+
+## Colour grade toward the key frame (docs/mockups/key_fjord_rock.jpg): a 33^3 LUT fitted by
+## game-studio tools/refmatch/fit_lut.py at strength 0.4 on the Ultra spawn capture, stored as a
+## PNG strip (tools/spike/cube_to_png.py; the .cube stays in assets/_raw/luts/) and rebuilt
+## here as a 3D texture.
+func _grade_lut() -> ImageTexture3D:
+	var strip: Image = (load(SpikeConfig.GRADE_LUT) as Texture2D).get_image()
+	strip.convert(Image.FORMAT_RGB8)
+	var n: int = strip.get_height()
+	var slices: Array[Image] = []
+	for b in n:
+		slices.append(strip.get_region(Rect2i(b * n, 0, n, n)))
+	var tex := ImageTexture3D.new()
+	tex.create(Image.FORMAT_RGB8, n, n, n, false, slices)
+	return tex
 
 
 ## Box probes over the fjord, captured once at boot: the water mirrors the walls and the forest.
@@ -459,6 +490,7 @@ func apply_preset(i: int) -> void:
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
 	grass.set_density(float(p["grass"]))
+	grass_far.set_density(1.0 if bool(p["grass_far"]) else 0.0)
 	wildlife.set_density(i > 0)
 	set_foam(bool(p["foam"]))
 	PerfOverlay.set_button_text("preset", "Preset: %s" % p["name"])
@@ -512,6 +544,7 @@ func run_bench(list: Array[int], seconds: float) -> Array[Dictionary]:
 	PerfOverlay.set_buttons_enabled(false)
 	var grass_target := grass.target
 	grass.target = bench.camera
+	grass_far.target = bench.camera
 	var lines: Array[String] = []
 	var out: Array[Dictionary] = []
 	for i in list:
@@ -523,6 +556,7 @@ func run_bench(list: Array[int], seconds: float) -> Array[Dictionary]:
 		lines.append(line)
 		print("BENCH ", line)
 	grass.target = grass_target
+	grass_far.target = grass_target
 	if list.size() > 1:
 		apply_preset(start_preset)
 	player.camera.current = true
