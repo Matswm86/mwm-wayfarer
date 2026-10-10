@@ -412,7 +412,9 @@ func _on_forest() -> void:
 func _on_bench(all_presets: bool) -> void:
 	if bench.running:
 		return
-	var list: Array[int] = [0, 1, 2] if all_presets else [preset_index]
+	var list: Array[int] = [preset_index]
+	if all_presets:
+		list = [0, 1, 2]
 	run_bench(list, SpikeConfig.BENCH_SECONDS)
 
 
