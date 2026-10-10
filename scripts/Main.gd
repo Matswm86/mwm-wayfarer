@@ -423,6 +423,7 @@ func _build_ingrid() -> void:
 	Lighting.contact_shadow(ingrid, 0.55, SpikeConfig.CONTACT_STRENGTH)
 	var anim := Humans.find_player(ingrid)
 	Humans.loop_all(anim)
+	Humans.skin(ingrid)
 	if anim:
 		anim.play("idle")
 

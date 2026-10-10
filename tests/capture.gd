@@ -60,7 +60,7 @@ func _ready() -> void:
 		await _shot("high_view_%s" % tag)
 		var ing: Node3D = main.get_node("Ingrid")
 		var ip := ing.global_position
-		main.bench.view(ip + Vector3(-5.0, 2.2, 7.0), ip + Vector3(0.0, 1.3, 0.0))
+		main.bench.view(ip + Vector3(-2.2, 1.7, 3.2), ip + Vector3(0.0, 1.35, 0.0))
 		await _frames(45)
 		await _shot("ingrid_dock_%s" % tag)
 

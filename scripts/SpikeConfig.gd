@@ -37,8 +37,13 @@ const GRASS_FAR_RADIUS := 120.0
 const GRASS_FAR_SPACING := 1.6
 const GRASS_FAR_SCALE := 1.7
 
+## Skin shading (Humans.skin): material names that are skin, light through skin.
+const SKIN_MATERIALS: Array[String] = ["body", "skin", "head", "face"]
+const SKIN_BACKLIGHT := Color(0.32, 0.1, 0.06)
 const PLAYER_WALK := 4.5
 const PLAYER_RUN := 8.0
+## Walk clip playback rate at walking speed (feet match the ground).
+const ANIM_WALK_RATE := 1.3
 const GRAVITY := 18.0
 const CAM_DISTANCE := 4.2
 const CAM_HEIGHT := 1.7

@@ -12,6 +12,8 @@ var pitch: float = -0.12
 var bounds: Rect2 = Rect2()
 var model: Node3D
 var anim: AnimationPlayer
+var locomotion: AnimationTree
+var _blend_speed: float = 0.0
 
 
 func build() -> void:
@@ -28,8 +30,8 @@ func build() -> void:
 	add_child(model)
 	anim = Humans.find_player(model)
 	Humans.loop_all(anim)
-	if anim:
-		anim.play("idle")
+	Humans.skin(model)
+	locomotion = Humans.locomotion(anim)
 	camera = Camera3D.new()
 	camera.fov = 60.0
 	camera.near = 0.2
@@ -62,12 +64,11 @@ func _physics_process(delta: float) -> void:
 		global_position = p
 	if wish.length() > 0.1:
 		rotation.y = atan2(-wish.x, -wish.z)
-	if anim:
-		var moving: bool = Vector2(velocity.x, velocity.z).length() > 0.3
-		var want: String = "walk" if moving else "idle"
-		if anim.current_animation != want:
-			anim.play(want, 0.2)
-		anim.speed_scale = (speed / SpikeConfig.PLAYER_WALK) * 1.3 if moving else 1.0
+	if locomotion:
+		# idle -> walk -> run blended by the actual ground speed, eased so starts and stops blend
+		var ground: float = Vector2(velocity.x, velocity.z).length()
+		_blend_speed = move_toward(_blend_speed, ground, delta * 16.0)
+		locomotion.set("parameters/move/blend_position", _blend_speed)
 
 
 func _process(_delta: float) -> void:
