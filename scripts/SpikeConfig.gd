@@ -32,7 +32,33 @@ const COLLISION_SIZE := 1200.0
 
 const SUN_ELEVATION_DEG := 30.0
 const SUN_AZIMUTH_DEG := 215.0
-const SHADOW_DISTANCE := 70.0
+const SUN_ENERGY := 2.0
+## DESIGN.md 7.2 rule 7: a 30 deg morning sun is near white.
+const SUN_COLOR := Color(1.0, 0.90, 0.78)
+
+## Sky: Poly Haven kloofendal_48d_partly_cloudy (CC0) as an LDR panorama with the sun painted
+## out (tools/spike/sky_to_ldr.py); energy restores the HDR level, rotation lines the cloud glow up
+## with the sun azimuth.
+const SKY_TEXTURE := "res://assets/sky/kloofendal_48d_partly_cloudy.jpg"
+const SKY_ENERGY := 1.56
+const SKY_ROTATION_DEG := 180.0
+const EXPOSURE := 1.0
+## Aerial perspective (DESIGN.md 7.2 rules 3 and 8): depth fog from 200 m, at most 0.22,
+## quadratic falloff, blue-grey, never milky.
+const FOG_COLOR := Color(0.62, 0.74, 0.90)
+const FOG_MAX := 0.22
+const FOG_BEGIN := 200.0
+const FOG_END := 7000.0
+const FOG_CURVE := 2.0
+const FOG_AERIAL := 0.5
+const FOG_SUN_SCATTER := 0.08
+
+## Reflection probes over the fjord water: centre x, centre z, size x, size z (metres).
+const WATER_PROBES: Array[Vector4] = [
+	Vector4(150.0, -1300.0, 3600.0, 4200.0),
+	Vector4(0.0, -5400.0, 4200.0, 5200.0),
+]
+const WATER_PROBE_HEIGHT := 40.0
 
 const BENCH_SECONDS := 60.0
 const BENCH_WARMUP := 1.0
@@ -40,7 +66,8 @@ const BENCH_WARMUP := 1.0
 const WARMUP_FRAMES := 3
 
 ## Graphics presets: render scale, sun shadows, forest density, grass density, water depth foam,
-## MSAA sample count (0, 2, 4) and FXAA (screen-space, Mobile renderer supports both in 4.6).
+## MSAA sample count (0, 2, 4) and FXAA (screen-space, Mobile renderer supports both in 4.6),
+## glow (bloom), sun shadow distance, PSSM splits and shadow atlas size.
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
@@ -51,6 +78,10 @@ const PRESETS: Array[Dictionary] = [
 		"foam": false,
 		"msaa": 0,
 		"fxaa": false,
+		"glow": false,
+		"shadow_distance": 0.0,
+		"shadow_splits": 2,
+		"shadow_atlas": 2048,
 	},
 	{
 		"name": "Medium",
@@ -61,6 +92,10 @@ const PRESETS: Array[Dictionary] = [
 		"foam": false,
 		"msaa": 2,
 		"fxaa": false,
+		"glow": true,
+		"shadow_distance": 120.0,
+		"shadow_splits": 2,
+		"shadow_atlas": 2048,
 	},
 	{
 		"name": "High",
@@ -71,6 +106,10 @@ const PRESETS: Array[Dictionary] = [
 		"foam": true,
 		"msaa": 4,
 		"fxaa": false,
+		"glow": true,
+		"shadow_distance": 160.0,
+		"shadow_splits": 4,
+		"shadow_atlas": 4096,
 	},
 ]
 const FOREST_STEPS: Array[float] = [0.35, 0.65, 1.0]

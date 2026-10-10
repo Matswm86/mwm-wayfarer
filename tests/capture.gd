@@ -5,6 +5,7 @@ extends Node
 ## look at a fjord wall (LOD cracks) and the joystick drawn. Then a short bench per preset that
 ## logs draw calls and primitives (laptop fps means nothing for phones).
 ## CAPTURE_BENCH_SECONDS sets the bench length (default 20, 0 = skip).
+## CAPTURE_QUICK=1 shoots only the High preset views and skips the walk (look-dev iterations).
 ## CAPTURE_HIDE_UI=1 hides the readout and buttons (clean frames for look comparisons; the
 ## draw and primitive counts are still printed per shot).
 
@@ -25,7 +26,11 @@ func _ready() -> void:
 	var spawn_look := _v(path[1]) + Vector3(0.0, -60.0, -300.0)
 	var wall_pos := _v(path[4]) + Vector3(120.0, -60.0, 0.0)
 
-	for preset in [2, 0, 1]:
+	var quick: bool = OS.get_environment("CAPTURE_QUICK") == "1"
+	var presets: Array[int] = [2, 0, 1]
+	if quick:
+		presets = [2]
+	for preset in presets:
 		main.apply_preset(preset)
 		var tag: String = str(SpikeConfig.PRESETS[preset]["name"]).to_lower()
 		main.player.camera.current = true
@@ -52,6 +57,10 @@ func _ready() -> void:
 		await _frames(45)
 		await _shot("wall_close_%s" % tag)
 
+	if quick:
+		print("CAPTURE DONE")
+		get_tree().quit()
+		return
 	# walk forward for 2 s with the stick held, to prove movement and collision
 	main.apply_preset(2)
 	main.player.camera.current = true

@@ -13,6 +13,7 @@ var player: Player
 var bench: Bench
 var controls: TouchControls
 var sun: DirectionalLight3D
+var env: Environment
 var water: MeshInstance3D
 var water_foam: ShaderMaterial
 var water_plain: ShaderMaterial
@@ -33,6 +34,7 @@ func _ready() -> void:
 	add_child(terrain)
 	_build_environment()
 	_build_water()
+	_build_probes()
 	_build_village()
 	_build_waterfall()
 	_build_ingrid()
@@ -133,27 +135,35 @@ func _on_vsync() -> void:
 
 
 func _build_environment() -> void:
-	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color(0.25, 0.45, 0.74)
-	sky_mat.sky_horizon_color = Color(0.70, 0.79, 0.87)
-	sky_mat.ground_bottom_color = Color(0.66, 0.74, 0.80)
-	sky_mat.ground_horizon_color = Color(0.70, 0.79, 0.87)
-	sky_mat.sun_angle_max = 20.0
+	var sky_mat := PanoramaSkyMaterial.new()
+	sky_mat.panorama = load(SpikeConfig.SKY_TEXTURE)
+	sky_mat.energy_multiplier = SpikeConfig.SKY_ENERGY
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
-	sky.radiance_size = Sky.RADIANCE_SIZE_64
-	var env := Environment.new()
+	sky.radiance_size = Sky.RADIANCE_SIZE_128
+	env = Environment.new()
 	env.background_mode = Environment.BG_SKY
 	env.sky = sky
+	env.sky_rotation = Vector3(0.0, deg_to_rad(SpikeConfig.SKY_ROTATION_DEG), 0.0)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.ambient_light_energy = 0.9
-	env.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 1.0
+	env.ambient_light_energy = 1.0
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
+	env.tonemap_mode = Environment.TONE_MAPPER_AGX
+	env.tonemap_exposure = SpikeConfig.EXPOSURE
+	env.glow_enabled = true
+	env.glow_intensity = 0.35
+	env.glow_bloom = 0.04
+	env.glow_hdr_threshold = 1.2
+	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
 	env.fog_enabled = true
-	env.fog_light_color = Color(0.70, 0.78, 0.85)
-	env.fog_density = 0.00014
-	env.fog_aerial_perspective = 0.35
+	env.fog_mode = Environment.FOG_MODE_DEPTH
+	env.fog_light_color = SpikeConfig.FOG_COLOR
+	env.fog_density = SpikeConfig.FOG_MAX
+	env.fog_depth_begin = SpikeConfig.FOG_BEGIN
+	env.fog_depth_end = SpikeConfig.FOG_END
+	env.fog_depth_curve = SpikeConfig.FOG_CURVE
+	env.fog_aerial_perspective = SpikeConfig.FOG_AERIAL
+	env.fog_sun_scatter = SpikeConfig.FOG_SUN_SCATTER
 	env.fog_sky_affect = 0.0
 	var we := WorldEnvironment.new()
 	we.environment = env
@@ -165,12 +175,30 @@ func _build_environment() -> void:
 	var to_sun := Vector3(sin(az) * cos(el), sin(el), -cos(az) * cos(el))
 	add_child(sun)
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
-	sun.light_color = Color(1.0, 0.95, 0.86)
-	sun.light_energy = 1.25
+	sun.light_color = SpikeConfig.SUN_COLOR
+	sun.light_energy = SpikeConfig.SUN_ENERGY
 	sun.shadow_enabled = true
-	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
-	sun.directional_shadow_max_distance = SpikeConfig.SHADOW_DISTANCE
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	sun.directional_shadow_blend_splits = true
+	sun.shadow_normal_bias = 1.5
+	sun.shadow_bias = 0.05
 	sun.shadow_blur = 1.0
+
+
+## Box probes over the fjord, captured once at boot: the water mirrors the walls and the forest.
+func _build_probes() -> void:
+	for r: Vector4 in SpikeConfig.WATER_PROBES:
+		var probe := ReflectionProbe.new()
+		probe.update_mode = ReflectionProbe.UPDATE_ONCE
+		probe.size = Vector3(r.z, 2400.0, r.w)
+		probe.position = Vector3(r.x, SpikeConfig.WATER_PROBE_HEIGHT, r.y)
+		probe.origin_offset = Vector3.ZERO
+		probe.max_distance = 12000.0
+		probe.blend_distance = 300.0
+		probe.box_projection = false
+		probe.intensity = 1.0
+		probe.ambient_mode = ReflectionProbe.AMBIENT_DISABLED
+		add_child(probe)
 
 
 func _build_water() -> void:
@@ -182,9 +210,13 @@ func _build_water() -> void:
 	water_foam.shader = load("res://shaders/water_foam.gdshader")
 	water_plain = ShaderMaterial.new()
 	water_plain.shader = load("res://shaders/water_plain.gdshader")
+	var wave_a := _wave_texture(3, 0.9)
+	var wave_b := _wave_texture(17, 0.6)
 	for m: ShaderMaterial in [water_foam, water_plain]:
 		m.set_shader_parameter("depth_map", depth_tex)
 		m.set_shader_parameter("depth_rect", rect)
+		m.set_shader_parameter("wave_a", wave_a)
+		m.set_shader_parameter("wave_b", wave_b)
 	var plane := PlaneMesh.new()
 	plane.size = Vector2(size, size)
 	water = MeshInstance3D.new()
@@ -193,6 +225,24 @@ func _build_water() -> void:
 	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	water.material_override = water_foam
 	add_child(water)
+
+
+## Seamless normal map from noise for the water ripples (generated at boot, no file).
+func _wave_texture(seed_value: int, bump: float) -> NoiseTexture2D:
+	var n := FastNoiseLite.new()
+	n.seed = seed_value
+	n.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	n.frequency = 0.012
+	n.fractal_octaves = 4
+	var t := NoiseTexture2D.new()
+	t.width = 512
+	t.height = 512
+	t.seamless = true
+	t.as_normal_map = true
+	t.bump_strength = bump * 8.0
+	t.generate_mipmaps = true
+	t.noise = n
+	return t
 
 
 ## Simple house blocks at the scene_fjord.py village spots, one mesh for the whole village.
@@ -449,6 +499,14 @@ func apply_preset(i: int) -> void:
 		Viewport.SCREEN_SPACE_AA_FXAA if bool(p["fxaa"]) else Viewport.SCREEN_SPACE_AA_DISABLED
 	)
 	sun.shadow_enabled = bool(p["shadows"])
+	sun.directional_shadow_max_distance = maxf(float(p["shadow_distance"]), 1.0)
+	sun.directional_shadow_mode = (
+		DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+		if int(p["shadow_splits"]) == 4
+		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+	)
+	RenderingServer.directional_shadow_atlas_set_size(int(p["shadow_atlas"]), true)
+	env.glow_enabled = bool(p["glow"])
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
