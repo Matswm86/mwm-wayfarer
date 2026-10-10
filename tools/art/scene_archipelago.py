@@ -8,7 +8,9 @@ turquoise shallows and white limestone cliffs toward the peninsula; a giant marb
 
 BLENDER_USER_RESOURCES=~/MWM/data/tools/blender_user \
 flock ~/MWM/scratch/wayfarer/render.lock blender -b --factory-startup -P tools/art/scene_archipelago.py -- key <out.png> [scale] [samples]
-Env for look-dev: WF_YAW (view bearing, deg from north), WF_PITCH, WF_EXPOSURE, WF_FAST=1 (skip far vegetation).
+Env for look-dev: WF_YAW (view bearing, deg from north), WF_PITCH, WF_EXPOSURE, WF_FAST=1 (skip far vegetation),
+WF_P0="x,y" (player), WF_FOG_START / WF_FOG_MAX / WF_FOG_POW (aerial perspective).
+10-10 b terrace view (docs/mockups/key_archipelago_terraces.jpg): WF_P0="-900,-430" WF_YAW=14 WF_PITCH=-4 WF_FOG_MAX=0.36.
 """
 
 from __future__ import annotations
@@ -33,7 +35,8 @@ FAST = os.environ.get("WF_FAST") == "1"
 R = A.rng(11)
 
 DEM = A.dem_sampler(A.RAW / "dem" / "kefalonia_game.npz")
-P0 = (-1057.0, 12.0)  # player, on the headland's west shoulder
+# player: default on the headland's west shoulder; WF_P0="x,y" moves the look-dev camera (10-10 b uses the slope above)
+P0 = tuple(float(v) for v in os.environ.get("WF_P0", "-1057,12").split(","))
 T = (-760.0, 8.0)  # temple centre, on a podium on the shoulder above the beach
 T_ROT = math.radians(84.0)
 YAW = float(os.environ.get("WF_YAW", 62.0))  # view bearing, degrees east of north
@@ -61,9 +64,15 @@ TR = (190.0, 85.0)
 TSTEP = 3.0
 
 
+# second terrace field (10-10 b): the slope right in front of the player, so terraces read in the foreground too
+TC2 = (P0[0] + VIEW[0] * 165, P0[1] + VIEW[1] * 165)
+TR2 = (150.0, 150.0)
+
+
 def terr_mask(x, y):
     d = math.hypot((x - TC[0]) / TR[0], (y - TC[1]) / TR[1])
-    return 1.0 - B.smoothstep(0.7, 1.0, d)
+    d2 = math.hypot((x - TC2[0]) / TR2[0], (y - TC2[1]) / TR2[1])
+    return 1.0 - B.smoothstep(0.7, 1.0, min(d, d2))
 
 
 def terraces(x, y, z):
@@ -73,7 +82,7 @@ def terraces(x, y, z):
         return z
     k = z / TSTEP
     fr = k - math.floor(k)
-    zt = TSTEP * (math.floor(k) + B.smoothstep(0.7, 1.0, fr))
+    zt = TSTEP * (math.floor(k) + B.smoothstep(0.86, 1.0, fr))  # steep 0.4 m-wide risers = dry-stone walls
     return z * (1 - m) + zt * m
 
 
@@ -116,6 +125,34 @@ def terrain():
         return h(x, y) - 0.9 * (1 - B.smoothstep(-6, 2, dd))
 
     A.grid_mesh("terrain_near", h, nb[0], nb[1], nb[2], nb[3], 140, 140, m)
+    # terrace fields at 0.6 m so the risers become real walls; their own material: dry-stone risers, soil treads
+    tm = A.terrain_mat(
+        "terrace_mat",
+        dict(
+            flat=("rock_ground_02", 4.0, (1.12, 1.02, 0.84)),
+            patch=("aerial_rocks_04", 14.0, (0.8, 0.86, 0.6)),
+            steep=("stone_wall", 2.2, (1.05, 1.0, 0.92)),
+        ),
+        slope=(0.5, 0.66),
+        macro=0.02,
+        macro_amp=(0.85, 1.1),
+        box_all=True,
+        patch=(0.05, 0.45, 0.6),
+    )
+    fields = []
+    for c, r in ((TC, TR), (TC2, TR2)):
+        box = (c[0] - r[0], c[0] + r[0], c[1] - r[1], c[1] + r[1])
+        fields.append(box)
+        A.grid_mesh(
+            "terraces", lambda x, y: h(x, y) + 0.02, box[0], box[1], box[2], box[3], int(2 * r[0] / 0.6), int(2 * r[1] / 0.6), tm
+        )
+
+    def hmid(x, y, _h=hmid):
+        z = _h(x, y)
+        if terr_mask(x, y) > 0.72:  # under a terrace field: sink the coarse mesh out of sight
+            z -= 1.5
+        return z
+
     A.grid_mesh("terrain_mid", hmid, -2600, 900, -700, 2600, 560, 528, m)
     A.grid_mesh("terrain_far", lambda x, y: DEM(x, y) - 2.0, -6000, 6000, -5000, 9000, 400, 467, m)
     return m
@@ -497,9 +534,10 @@ def vegetation():
     rocks = A.proto("boulder_01", tint_rgb=(1.2, 1.18, 1.1))
     n = 0
     # olives in rows on the terraces (trees stand mid-tread), cypresses here and there
-    for _ in range(14000):
-        x = TC[0] + R.uniform(-TR[0], TR[0])
-        y = TC[1] + R.uniform(-TR[1], TR[1])
+    for i in range(22000):
+        c, r = (TC, TR) if i % 3 else (TC2, TR2)
+        x = c[0] + R.uniform(-r[0], r[0])
+        y = c[1] + R.uniform(-r[1], r[1])
         if not in_view(x, y, 60) or terr_mask(x, y) < 0.7:
             continue
         z = h(x, y)
@@ -512,7 +550,10 @@ def vegetation():
         if not (0.25 < k < 0.6):
             continue
         rr = R.random()
-        if rr < 0.08:
+        in2 = math.hypot((x - TC2[0]) / TR2[0], (y - TC2[1]) / TR2[1]) < 1.0
+        if in2 and (math.hypot(x - P0[0], y - P0[1]) < 38 or R.random() < 0.45):
+            continue  # foreground field: keep the first 38 m open and the grove thinner so the walls show
+        if rr < 0.08 and not in2:
             A.inst(cyp, (x, y, z - 0.3), yaw=R.uniform(0, 6.3), scale=R.uniform(0.8, 1.25))
         elif rr < 0.75:
             A.inst(olive, (x, y, z - 0.15), yaw=R.uniform(0, 6.3), scale=R.uniform(0.8, 1.15))
@@ -584,16 +625,16 @@ def vegetation():
             bevel=0.06,
         )
     # dry grass and rocks round the player
-    for _ in range(4500):
+    for _ in range(9000):
         q = P + fwd * R.uniform(-3, 45) + right * R.uniform(-28, 28)
         if (q - P).length < 1.2:
             continue
         A.inst(
             grass, (q.x, q.y, h(q.x, q.y) - 0.03), yaw=R.uniform(0, 6.3), scale=R.uniform(0.5, 1.1)
         )
-    for _ in range(140):
+    for _ in range(420):
         q = P + fwd * R.uniform(6, 90) + right * R.uniform(-45, 45)
-        if (q - P).dot(right) < 6 or not clear(q):  # left half stays open over the bay
+        if (q - P).dot(right) < -8 or not clear(q):  # far left stays open over the bay
             continue
         A.inst(
             R.choice(shrubs),
@@ -654,8 +695,15 @@ def main():
     colossus()
     vegetation()
     player_and_camera()
+    # aerial perspective (10-10 b): stronger blue-grey with distance so headlands separate into layers
     A.compositor_fog(
-        (0.74, 0.82, 0.9), 200, 4500, 0.3, sky_haze=0.04, vignette=0.12, haze_power=2.0
+        (0.62, 0.74, 0.90),
+        float(os.environ.get("WF_FOG_START", 250)),
+        5200,
+        float(os.environ.get("WF_FOG_MAX", 0.36)),
+        sky_haze=0.04,
+        vignette=0.12,
+        haze_power=float(os.environ.get("WF_FOG_POW", 1.4)),
     )
     print("BUILD", round(time.time() - t0, 1))
     bpy.ops.wm.save_as_mainfile(filepath=str(A.BUILD / f"arch_{VARIANT}.blend"))
