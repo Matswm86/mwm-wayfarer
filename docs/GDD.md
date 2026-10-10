@@ -236,6 +236,12 @@ Based on a real object: the Makapansgat pebble, a jasper cobble with natural fac
 ### 4.3 Handing over (era transition)
 A 40-60 s scene at the home hearth: the current character, now older, gives the keepsake to a child of the line; the camera rises over the anchor while time-lapse runs (ice melting, forest growing, houses rising and falling); the new era's title card. No death is shown or named. Skippable after the first viewing.
 
+### 4.3b Opening scene (owner, 2026-10-10; plan only, not in the current build)
+The game opens on a pale blue dot in black space. The camera zooms in on its own, with no input and no text: the dot could be a star, then it is a planet, then it is Earth. Closer, the continents appear as they were about 7-10 million years ago (unverified: coastlines close to today's), with no city lights and no roads. The camera dives onto East Africa: the rift, a lake, forest edge and open grassland, then the canopy of one tree. Our character climbs down from that tree to the ground. Only then does the title card appear: "East Africa, ~7 million years ago". Control passes to the player in the same shot, with no cut and no menu in between.
+- One unbroken camera move, about 60-90 s, skippable after the first viewing.
+- The ending in Era 12 mirrors it: the camera pulls back from the keepsake stone in its museum case out to the pale blue dot.
+- Build cost: a planet render at several detail levels (paleogeography map, cloud layer, atmosphere), a streamed descent onto the Era 1 terrain, and the climb-down animation of the hominin character. It depends on the Era 1 terrain and hominin art, so it is built with Era 1, not with Slice 01.
+
 ### 4.4 The Long Map
 After Era 12, or for any finished era earlier, the player can open any anchor in any finished era from the map. Revisited eras keep their sim running (v1 T3 abstract tick when away). An era slider on an anchor plays the time-lapse of that place across the eras the player has finished.
 
