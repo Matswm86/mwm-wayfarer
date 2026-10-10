@@ -78,10 +78,16 @@ const WARMUP_FRAMES := 3
 ## Graphics presets: render scale, sun shadows, forest density, grass density, water depth foam,
 ## MSAA sample count (0, 2, 4) and FXAA (screen-space, Mobile renderer supports both in 4.6),
 ## glow (bloom), sun shadow distance, PSSM splits and shadow atlas size.
+## terrain_quality: 0 one rock scale, no scan normals; 1 two scales + normals; 2 + 3 m grain.
+## fps_cap: Engine.max_fps (0 = display rate). shadow_quality: soft shadow filter
+## (RenderingServer.ShadowQuality, 1 = very low ... 5 = ultra). Ultra (visual pass 2) spends the
+## 60 fps budget (16.7 ms) of the owner's phone; Low/Medium/High keep the pass 1 costs.
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
-		"rock_detail": false,
+		"terrain_quality": 0,
+		"fps_cap": 0,
+		"shadow_quality": 1,
 		"scale": 0.7,
 		"shadows": false,
 		"forest": 0.35,
@@ -96,7 +102,9 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
-		"rock_detail": true,
+		"terrain_quality": 1,
+		"fps_cap": 0,
+		"shadow_quality": 1,
 		"scale": 0.85,
 		"shadows": true,
 		"forest": 0.65,
@@ -111,7 +119,9 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
-		"rock_detail": true,
+		"terrain_quality": 1,
+		"fps_cap": 0,
+		"shadow_quality": 1,
 		"scale": 1.0,
 		"shadows": true,
 		"forest": 1.0,
@@ -121,6 +131,23 @@ const PRESETS: Array[Dictionary] = [
 		"fxaa": false,
 		"glow": true,
 		"shadow_distance": 160.0,
+		"shadow_splits": 4,
+		"shadow_atlas": 4096,
+	},
+	{
+		"name": "Ultra",
+		"terrain_quality": 2,
+		"fps_cap": 60,
+		"shadow_quality": 3,
+		"scale": 1.0,
+		"shadows": true,
+		"forest": 1.0,
+		"grass": 1.0,
+		"foam": true,
+		"msaa": 4,
+		"fxaa": false,
+		"glow": true,
+		"shadow_distance": 240.0,
 		"shadow_splits": 4,
 		"shadow_atlas": 4096,
 	},

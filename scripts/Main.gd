@@ -90,7 +90,7 @@ func _warm_up() -> void:
 	PerfOverlay.show_result("Loading: preparing shaders")
 	var start: int = preset_index
 	var views: Array[float] = [0.02, 0.12, 0.45, 0.62]
-	for i in [0, 1, 2]:
+	for i in SpikeConfig.PRESETS.size():
 		apply_preset(i)
 		for f: bool in [true, false]:
 			set_foam(f)
@@ -119,7 +119,7 @@ func set_vsync(on: bool) -> void:
 	DisplayServer.window_set_vsync_mode(
 		DisplayServer.VSYNC_ENABLED if on else DisplayServer.VSYNC_DISABLED
 	)
-	Engine.max_fps = 0
+	Engine.max_fps = int(SpikeConfig.PRESETS[preset_index]["fps_cap"])
 	PerfOverlay.set_button_text("vsync", "VSync: %s" % ("on" if on else "off"))
 	_update_status()
 
@@ -134,7 +134,9 @@ func _update_status() -> void:
 	var aa: String = "MSAA %dx" % int(p["msaa"]) if int(p["msaa"]) > 0 else "no MSAA"
 	if bool(p["fxaa"]):
 		aa += " + FXAA"
-	PerfOverlay.status_line = "VSync %s   %s" % [vsync_mode_name(), aa]
+	var cap: int = int(p["fps_cap"])
+	var cap_text: String = "cap %d fps" % cap if cap > 0 else "no cap"
+	PerfOverlay.status_line = "VSync %s   %s   %s" % [vsync_mode_name(), aa, cap_text]
 
 
 func _on_vsync() -> void:
@@ -182,6 +184,7 @@ func _build_environment() -> void:
 	var to_sun := Vector3(sin(az) * cos(el), sin(el), -cos(az) * cos(el))
 	add_child(sun)
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
+	terrain.material.set_shader_parameter("to_sun", to_sun)
 	sun.light_color = SpikeConfig.SUN_COLOR
 	sun.light_energy = SpikeConfig.SUN_ENERGY
 	sun.shadow_enabled = true
@@ -426,6 +429,10 @@ func apply_preset(i: int) -> void:
 	vp.screen_space_aa = (
 		Viewport.SCREEN_SPACE_AA_FXAA if bool(p["fxaa"]) else Viewport.SCREEN_SPACE_AA_DISABLED
 	)
+	Engine.max_fps = int(p["fps_cap"])
+	RenderingServer.directional_soft_shadow_filter_set_quality(
+		int(p["shadow_quality"]) as RenderingServer.ShadowQuality
+	)
 	sun.shadow_enabled = bool(p["shadows"])
 	sun.directional_shadow_max_distance = maxf(float(p["shadow_distance"]), 1.0)
 	sun.directional_shadow_mode = (
@@ -435,7 +442,7 @@ func apply_preset(i: int) -> void:
 	)
 	RenderingServer.directional_shadow_atlas_set_size(int(p["shadow_atlas"]), true)
 	env.glow_enabled = bool(p["glow"])
-	terrain.material.set_shader_parameter("detail_7m", bool(p["rock_detail"]))
+	terrain.material.set_shader_parameter("quality", int(p["terrain_quality"]))
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
@@ -478,7 +485,9 @@ func _on_bench(all_presets: bool) -> void:
 		return
 	var list: Array[int] = [preset_index]
 	if all_presets:
-		list = [0, 1, 2]
+		list.clear()
+		for k in SpikeConfig.PRESETS.size():
+			list.append(k)
 	run_bench(list, SpikeConfig.BENCH_SECONDS)
 
 

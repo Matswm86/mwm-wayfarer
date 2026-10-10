@@ -5,6 +5,9 @@ extends CanvasLayer
 ## spike buttons (graphics preset, water foam, forest density, benchmark). Buttons only emit
 ## signals; scripts/Main.gd does the work and writes button captions back.
 ## A three-finger tap still hides and shows everything.
+## GPU time: Android pins the frame rate to the display (120 Hz on the owner's phone) even with
+## vsync off, so fps cannot show headroom. The viewport's measured GPU render time (timestamp
+## queries) can: it is shown with its own p95 and is what the bench reports as headroom.
 
 signal preset_pressed
 signal foam_pressed
@@ -31,12 +34,20 @@ var _cursor: int = 0
 var _filled: int = 0
 var _p95_ms: float = 0.0
 var _since_sort: int = 0
+var _gpu: PackedFloat32Array = PackedFloat32Array()
+var _gpu_ms: float = 0.0
+var _cpu_ms: float = 0.0
+var _gpu_p95_ms: float = 0.0
+var _vp_rid: RID
 
 
 func _ready() -> void:
 	layer = 128
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_frames.resize(WINDOW)
+	_gpu.resize(WINDOW)
+	_vp_rid = get_viewport().get_viewport_rid()
+	RenderingServer.viewport_set_measure_render_time(_vp_rid, true)
 	_panel = Control.new()
 	_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -78,7 +89,7 @@ func _ready() -> void:
 	_add_button(grid, "forest", "Forest", func() -> void: forest_pressed.emit())
 	_add_button(grid, "result", "Hide result", func() -> void: _result_box.visible = false)
 	_add_button(grid, "bench", "Bench 60 s", func() -> void: bench_pressed.emit(false))
-	_add_button(grid, "bench_all", "Bench L/M/H", func() -> void: bench_pressed.emit(true))
+	_add_button(grid, "bench_all", "Bench all", func() -> void: bench_pressed.emit(true))
 	_add_button(grid, "vsync", "VSync: on", func() -> void: vsync_pressed.emit())
 
 
@@ -145,6 +156,15 @@ func p95_ms() -> float:
 	return _p95_ms
 
 
+## GPU render time of the last measured frame in ms (0 where the driver gives no timestamps).
+func gpu_ms() -> float:
+	return _gpu_ms
+
+
+func gpu_p95_ms() -> float:
+	return _gpu_p95_ms
+
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
@@ -159,6 +179,12 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	_frames[_cursor] = delta * 1000.0
+	_gpu_ms = RenderingServer.viewport_get_measured_render_time_gpu(_vp_rid)
+	_cpu_ms = (
+		RenderingServer.viewport_get_measured_render_time_cpu(_vp_rid)
+		+ RenderingServer.get_frame_setup_time_cpu()
+	)
+	_gpu[_cursor] = _gpu_ms
 	_cursor = (_cursor + 1) % WINDOW
 	_filled = mini(_filled + 1, WINDOW)
 	_since_sort += 1
@@ -167,6 +193,9 @@ func _process(delta: float) -> void:
 		var s := _frames.slice(0, _filled)
 		s.sort()
 		_p95_ms = s[int(floor((_filled - 1) * 0.95))]
+		var g := _gpu.slice(0, _filled)
+		g.sort()
+		_gpu_p95_ms = g[int(floor((_filled - 1) * 0.95))]
 	if not _panel.visible:
 		return
 	var fps := Engine.get_frames_per_second()
@@ -175,6 +204,20 @@ func _process(delta: float) -> void:
 	var vram := Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
 	var ram := Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 	_label.text = (
-		"%d fps   p95 %.1f ms (300 fr)\n%d draws   %dk prims\nVRAM %.0f MB   RAM %.0f MB\n%s"
-		% [fps, _p95_ms, int(draws), int(tris / 1000.0), vram, ram, status_line]
+		(
+			"%d fps   p95 %.1f ms (300 fr)\nGPU %.1f ms (p95 %.1f)   CPU %.1f ms\n"
+			+ "%d draws   %dk prims\nVRAM %.0f MB   RAM %.0f MB\n%s"
+		)
+		% [
+			fps,
+			_p95_ms,
+			_gpu_ms,
+			_gpu_p95_ms,
+			_cpu_ms,
+			int(draws),
+			int(tris / 1000.0),
+			vram,
+			ram,
+			status_line
+		]
 	)

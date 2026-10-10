@@ -1,15 +1,21 @@
 extends Node
 
 ## Dev-only screenshot bot. Run under Xvfb with CAPTURE_DIR set (see game-studio CLAUDE.md).
-## Shots: spawn view and a high view over the fjord at the Low and High presets, plus a close
-## look at a fjord wall (LOD cracks) and the joystick drawn. Then a short bench per preset that
-## logs draw calls and primitives (laptop fps means nothing for phones).
-## CAPTURE_BENCH_SECONDS sets the bench length (default 20, 0 = skip).
-## CAPTURE_QUICK=1 shoots only the High preset views and skips the walk (look-dev iterations).
-## CAPTURE_HIDE_UI=1 hides the readout and buttons (clean frames for look comparisons; the
-## draw and primitive counts are still printed per shot).
+## Fixed cameras (visual pass 2): spawn, village street, meadow animals, cliff close, forest
+## slope, high view and Ingrid at the dock, for each preset in CAPTURE_PRESETS (indices into
+## SpikeConfig.PRESETS, default "0,3" = Low and Ultra). Every shot prints draws, primitives and
+## VRAM. Then a 2 s walk and an optional bench (laptop fps means nothing for phones).
+## CAPTURE_BENCH_SECONDS sets the bench length (default 0 = skip).
+## CAPTURE_HIDE_UI=1 hides the readout and buttons (clean frames for look comparisons).
+## CAPTURE_SUFFIX is appended to every file name (e.g. "_before").
+
+const CLIFF_TARGET := Vector3(-425.0, 0.0, -295.0)
+const CLIFF_CAMERA := Vector3(-235.0, 0.0, -230.0)
+const FOREST_TARGET := Vector3(-430.0, 0.0, 775.0)
+const FOREST_CAMERA := Vector3(-215.0, 0.0, 545.0)
 
 var out_dir: String = OS.get_environment("CAPTURE_DIR")
+var suffix: String = OS.get_environment("CAPTURE_SUFFIX")
 var main: Node3D
 
 
@@ -24,46 +30,34 @@ func _ready() -> void:
 	var path: Array = main.terrain.meta["bench_path"]
 	var high := _v(path[7])
 	var spawn_look := _v(path[1]) + Vector3(0.0, -60.0, -300.0)
-	var wall_pos := _v(path[4]) + Vector3(120.0, -60.0, 0.0)
 
-	var quick: bool = OS.get_environment("CAPTURE_QUICK") == "1"
-	var presets: Array[int] = [2, 0, 1]
-	if quick:
-		presets = [2]
+	var presets: Array[int] = [0, SpikeConfig.PRESETS.size() - 1]
+	var env_p: String = OS.get_environment("CAPTURE_PRESETS")
+	if env_p != "":
+		presets.clear()
+		for s: String in env_p.split(","):
+			presets.append(int(s))
 	for preset in presets:
 		main.apply_preset(preset)
 		var tag: String = str(SpikeConfig.PRESETS[preset]["name"]).to_lower()
 		main.player.camera.current = true
 		await _frames(45)
 		await _shot("spawn_%s" % tag)
-		if preset == 1:
-			continue
 		await _village_street(tag)
+		await _animals(tag)
+		await _view(CLIFF_CAMERA, 6.0, CLIFF_TARGET, 10.0, "cliff_close_%s" % tag)
+		await _view(FOREST_CAMERA, 45.0, FOREST_TARGET, 20.0, "forest_slope_%s" % tag)
+		main.bench.view(high, spawn_look)
+		await _frames(45)
+		await _shot("high_view_%s" % tag)
 		var ing: Node3D = main.get_node("Ingrid")
 		var ip := ing.global_position
 		main.bench.view(ip + Vector3(-5.0, 2.2, 7.0), ip + Vector3(0.0, 1.3, 0.0))
 		await _frames(45)
 		await _shot("ingrid_dock_%s" % tag)
-		if preset == 2:
-			var fall: Array = main.terrain.meta["waterfall"]
-			var top := _v(fall[0])
-			main.bench.view(Vector3(250.0, 12.0, -230.0), top.lerp(_v(fall[fall.size() - 1]), 0.6))
-			await _frames(60)
-			await _shot("waterfall_from_village_high")
-			await _wildlife_shots()
-		main.bench.view(high, spawn_look)
-		await _frames(45)
-		await _shot("fjord_high_view_%s" % tag)
-		main.bench.view(wall_pos, wall_pos + Vector3(500.0, 120.0, -200.0))
-		await _frames(45)
-		await _shot("wall_close_%s" % tag)
 
-	if quick:
-		print("CAPTURE DONE")
-		get_tree().quit()
-		return
 	# walk forward for 2 s with the stick held, to prove movement and collision
-	main.apply_preset(2)
+	main.apply_preset(presets[presets.size() - 1])
 	main.player.camera.current = true
 	var start: Vector3 = main.player.global_position
 	main.controls.move = Vector2(0.0, -1.0)
@@ -82,13 +76,12 @@ func _ready() -> void:
 			]
 		)
 	)
-	await _shot("after_walk_high")
 
 	var secs := float(OS.get_environment("CAPTURE_BENCH_SECONDS"))
-	if OS.get_environment("CAPTURE_BENCH_SECONDS") == "":
-		secs = 20.0
 	if secs > 0.0:
-		var list: Array[int] = [0, 1, 2]
+		var list: Array[int] = []
+		for i in SpikeConfig.PRESETS.size():
+			list.append(i)
 		await main.run_bench(list, secs)
 		await _frames(10)
 		await _shot("bench_result")
@@ -96,18 +89,24 @@ func _ready() -> void:
 	get_tree().quit()
 
 
-## The grazing deer on the meadow, then the gulls over the fjord with the walls behind.
-func _wildlife_shots() -> void:
+## Camera `up_cam` m above the ground at `cam`, looking at a point `up_tgt` m above `tgt`.
+func _view(cam: Vector3, up_cam: float, tgt: Vector3, up_tgt: float, shot_name: String) -> void:
+	var c := Vector3(cam.x, maxf(main.terrain.height_at(cam.x, cam.z), 0.0) + up_cam, cam.z)
+	var t := Vector3(tgt.x, main.terrain.height_at(tgt.x, tgt.z) + up_tgt, tgt.z)
+	main.bench.view(c, t)
+	await _frames(45)
+	await _shot(shot_name)
+
+
+## The nearest grazing deer at eye height, a few metres off.
+func _animals(tag: String) -> void:
 	var doe: Node3D = main.wildlife.animals[0].node
 	var dp := doe.global_position
-	main.bench.view(dp + Vector3(9.0, 2.2, 12.0), dp + Vector3(0.0, 0.8, 0.0))
+	var cam := dp + Vector3(6.0, 0.0, 8.0)
+	cam.y = main.terrain.height_at(cam.x, cam.z) + 1.6
+	main.bench.view(cam, dp + Vector3(0.0, 0.8, 0.0))
 	await _frames(45)
-	await _shot("animals_meadow_high")
-	var gull: Node3D = main.wildlife.animals[main.wildlife.animals.size() - 1].node
-	var gp := gull.global_position
-	main.bench.view(gp + Vector3(-6.0, -2.0, 8.0), gp)
-	await _frames(2)
-	await _shot("birds_fjord_high")
+	await _shot("meadow_animals_%s" % tag)
 
 
 ## Eye height in the village street between the houses, looking down the row of houses.
@@ -136,6 +135,6 @@ func _shot(shot_name: String) -> void:
 	var dc := Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	var pr := Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 	var vram := Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
-	var path := out_dir.path_join(shot_name + ".png")
+	var path := out_dir.path_join(shot_name + suffix + ".png")
 	img.save_png(path)
 	print("SHOT %-24s draws %4d  prims %7d  vram %.0f MB  -> %s" % [shot_name, dc, pr, vram, path])

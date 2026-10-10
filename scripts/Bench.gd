@@ -51,6 +51,7 @@ func run(seconds: float) -> Dictionary:
 	running = true
 	camera.current = true
 	var frames := PackedFloat32Array()
+	var gpu := PackedFloat32Array()
 	var draws_sum: float = 0.0
 	var draws_max: float = 0.0
 	var prims_sum: float = 0.0
@@ -65,6 +66,7 @@ func run(seconds: float) -> Dictionary:
 		if t <= 0.0:
 			continue
 		frames.append(dt * 1000.0)
+		gpu.append(PerfOverlay.gpu_ms())
 		var dc: float = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		var pr: float = Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 		draws_sum += dc
@@ -77,11 +79,17 @@ func run(seconds: float) -> Dictionary:
 	for f in frames:
 		total_ms += f
 	frames.sort()
+	var gpu_total: float = 0.0
+	for g in gpu:
+		gpu_total += g
+	gpu.sort()
 	var stats := {
 		"frames": frames.size(),
 		"avg_fps": 1000.0 * n / maxf(total_ms, 0.001),
 		"p95_ms": frames[int(floor((n - 1) * 0.95))] if frames.size() > 0 else 0.0,
 		"max_ms": frames[frames.size() - 1] if frames.size() > 0 else 0.0,
+		"gpu_avg_ms": gpu_total / n,
+		"gpu_p95_ms": gpu[int(floor((n - 1) * 0.95))] if gpu.size() > 0 else 0.0,
 		"avg_draws": draws_sum / n,
 		"max_draws": draws_max,
 		"avg_prims": prims_sum / n,
@@ -95,12 +103,17 @@ func run(seconds: float) -> Dictionary:
 
 static func format(name: String, s: Dictionary) -> String:
 	return (
-		"%-6s avg %5.1f fps  p95 %5.1f ms  max %5.1f ms  draws avg %d max %d  prims max %dk"
+		(
+			"%-6s %5.1f fps  p95 %4.1f  max %4.1f ms  GPU %4.1f / p95 %4.1f ms"
+			+ "  draws %d/%d  %dk prims"
+		)
 		% [
 			name,
 			s["avg_fps"],
 			s["p95_ms"],
 			s["max_ms"],
+			s["gpu_avg_ms"],
+			s["gpu_p95_ms"],
 			int(s["avg_draws"]),
 			int(s["max_draws"]),
 			int(s["max_prims"] / 1000.0),
