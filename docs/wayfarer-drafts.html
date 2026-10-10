@@ -1,0 +1,212 @@
+<title>Wayfarer Design Drafts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an expedition logbook. One reading column, wide image plates that break out of it, region chapters marked by their own palette strip. */
+:root{
+  --bg:#f2f4f3; --surface:#ffffff; --ink:#18232a; --muted:#56656e; --line:#d5dcdf;
+  --sea:#1d6470; --amber:#b9761f; --sea-soft:#e2eeef; --amber-soft:#f6ecdc;
+  --ok:#2f7d4a; --warn:#a0621b; --bad:#a83a32;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#10171b; --surface:#172126; --ink:#e6ecee; --muted:#9aabb3; --line:#2a3840;
+  --sea:#6fb7c2; --amber:#e0a456; --sea-soft:#17323a; --amber-soft:#3a2b17;
+  --ok:#6cc48a; --warn:#e0a456; --bad:#e57d73; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#10171b; --surface:#172126; --ink:#e6ecee; --muted:#9aabb3; --line:#2a3840;
+  --sea:#6fb7c2; --amber:#e0a456; --sea-soft:#17323a; --amber-soft:#3a2b17;
+  --ok:#6cc48a; --warn:#e0a456; --bad:#e57d73; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:40px 80px}
+.col{max-width:760px}
+h1,h2,h3{font-family:var(--display);font-weight:650;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,3vw,2.2rem);margin-top:72px}
+h3{font-size:1.25rem;font-weight:500}
+p{margin:.6em 0}
+.eyebrow{font:500 .78rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--sea)}
+.lede{font-size:1.2rem;color:var(--muted);max-width:62ch}
+.coords{font:400 .8rem var(--mono);color:var(--muted);margin-top:14px}
+figure{margin:24px 0}
+figure img{display:block;width:100%;height:auto;border-radius:6px;background:var(--line)}
+figcaption{font-size:.92rem;color:var(--muted);margin-top:8px;max-width:75ch}
+figcaption b{color:var(--ink);font-weight:600}
+.hero{margin-top:28px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px}
+.grid2>*{min-width:0}
+.regions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:16px;margin-top:20px}
+.region{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.region h3{font-size:1.1rem}
+.region .tag{font:400 .75rem var(--mono);color:var(--muted)}
+.region p{font-size:.93rem}
+.swatches{display:flex;height:14px;border-radius:3px;overflow:hidden;margin:10px 0 8px}
+.swatches span{flex:1}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .75rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sea-soft)}
+tr:last-child td{border-bottom:0}
+.loop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:16px 0;font:500 .9rem var(--mono)}
+.loop span{background:var(--sea-soft);color:var(--ink);padding:6px 10px;border-radius:4px}
+.loop i{color:var(--muted);font-style:normal}
+.pill{display:inline-block;font:500 .72rem var(--mono);padding:2px 8px;border-radius:99px;white-space:nowrap}
+.v{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.c{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.u{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
+.quote{border-left:3px solid var(--amber);background:var(--amber-soft);padding:12px 16px;border-radius:0 6px 6px 0;margin:10px 0;font-family:var(--display);font-size:1.05rem}
+.quote small{display:block;font:400 .78rem var(--mono);color:var(--muted);margin-bottom:4px}
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--sea);border-radius:6px;padding:18px 20px;margin:20px 0}
+.verdict strong{font-family:var(--display);font-size:1.15rem}
+pre{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;font:400 .85rem/1.55 var(--mono);color:var(--ink)}
+ol.q li,ul.l li{margin:.35em 0}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font:500 .82rem var(--mono)}
+nav.toc a{color:var(--sea);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.note{font-size:.88rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+<header class="col">
+  <div class="eyebrow">MWM Game Studio · design drafts v1 · 7 Oct 2026</div>
+  <h1 style="margin-top:12px">Wayfarer</h1>
+  <p class="lede">An open-world Android game with no fighting. You walk, climb, swim and sail across five regions, gather and trade what each place has, build homes and docks that make villages grow, and follow rumors from the people you meet to wonders no map shows.</p>
+  <p class="coords">Working title · landscape 1920×1080 · third person · offline · voiced English NPCs · youth and adults</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#look">Look</a><a href="#worlds">Worlds</a><a href="#loop">Loop</a><a href="#people">People and voices</a><a href="#ui">Screens</a><a href="#engine">Engine</a><a href="#roadmap">Roadmap</a><a href="#decide">Your decisions</a>
+  </nav>
+</header>
+
+<!--KEYFRAMES-->
+<section id="look">
+  <h2>First look: Skarvik Fjord</h2>
+  <figure class="hero"><img src="mockups/key_fjord.jpg" alt="Third-person view of a hiker with a large backpack on a grassy shore path, looking down a steep fjord with timber turf-roof houses, a jetty and grey granite cliffs fading into haze" width="1600" height="900"><figcaption><b>Draft 1, rendered in Blender from scanned CC0 materials.</b> The composition works: player over the shoulder, path leading to the hamlet and jetty, cliffs framing the fjord. The finish is not there yet: cliff textures smear on the steep faces, the haze washes out the far fjord, and the water reads as flat lavender.</figcaption></figure>
+  <div class="verdict"><strong>Graphics bar: this draft is below Race Riders.</strong><p>Race Riders reaches its look with tuned light, real ground textures and sharp riders. This first fjord frame has the right layout but softer, flatter surfaces. The fix list is concrete: triplanar rock on cliffs, a water shader with reflections and depth colour, less fog, warmer low sun. Nothing here suggests the engine or phone cannot reach the Race Riders level; the art pass is not finished.</p></div>
+  <div class="grid2">
+    <figure><img src="mockups/racerriders_ref.jpg" alt="Race Riders screenshot: riders in numbered jerseys on a dirt trail through pine forest" width="540" height="960" style="max-height:520px;object-fit:cover"><figcaption><b>The bar.</b> Race Riders, World 1, a real in-game frame.</figcaption></figure>
+    <figure><img src="mockups/build_draft.jpg" alt="Same fjord view with a pale blue ghost outline of a house frame placed on the slope" width="1600" height="900"><figcaption><b>Build mode draft.</b> A ghost timber frame placed on the slope before you commit materials. The ghost reads clearly; buttons and cost chips come next.</figcaption></figure>
+  </div>
+</section>
+
+<section id="worlds">
+  <h2>Five worlds that need each other</h2>
+  <div class="col"><p>Each region is a dense, hand-built area of about 2×2 km. Every region lacks something it needs daily, so trade between them is the spine of the economy. The player starts in the fjord; ships, caravans, barges and a mountain pass open the others.</p></div>
+  <div class="regions">
+    <!--REGIONS-->
+    <div class="region"><span class="tag">Start · Nordic fjord coast</span><h3>Skarvik Fjord</h3><div class="swatches" role="img" aria-label="Skarvik Fjord palette: #1C2B2E, #3F4C4A, #5E7044, #8A2E22, #E3B27A, #7FD6A6"><span style="background:#1C2B2E"></span><span style="background:#3F4C4A"></span><span style="background:#5E7044"></span><span style="background:#8A2E22"></span><span style="background:#E3B27A"></span><span style="background:#7FD6A6"></span></div><p>Granite walls, waterfalls, turf-roof timber houses, northern lights. Timber, fish, wool, bog iron. Wonders: the Singing Cavern behind Bluewater Falls, the Whale Graveyard.</p></div>
+    <div class="region"><span class="tag">By sea · lost-age archipelago</span><h3>Amberline Isles</h3><div class="swatches" role="img" aria-label="Amberline Isles palette: #F1ECE0, #CFC3A8, #7E8A5A, #1FB3B0, #0B6E8C, #E8A85C"><span style="background:#F1ECE0"></span><span style="background:#CFC3A8"></span><span style="background:#7E8A5A"></span><span style="background:#1FB3B0"></span><span style="background:#0B6E8C"></span><span style="background:#E8A85C"></span></div><p>White limestone, olive terraces, marble ruins of an older age, turquoise shallows. Olives, salt, marble. Wonders: the Forgotten Observatory, the Sunken Colonnade, the Sky Bridge.</p></div>
+    <div class="region"><span class="tag">By caravan · desert canyon oasis</span><h3>Redwall Oasis</h3><div class="swatches" role="img" aria-label="Redwall Oasis palette: #7A3A24, #B5653E, #D9A273, #4F6B3A, #24476E, #E9DCC6"><span style="background:#7A3A24"></span><span style="background:#B5653E"></span><span style="background:#D9A273"></span><span style="background:#4F6B3A"></span><span style="background:#24476E"></span><span style="background:#E9DCC6"></span></div><p>Red slot canyons, cliff dwellings, palm oasis, the biggest market. Glass, copper, dates, spices. Wonders: the Glass Forest, Echo Canyon, meteor showers over the Star Well.</p></div>
+    <div class="region"><span class="tag">By river barge · rainforest delta</span><h3>Greenmouth Delta</h3><div class="swatches" role="img" aria-label="Greenmouth Delta palette: #13261C, #2F5530, #6E8C3A, #6B5A3A, #3E7F86, #E7C45A"><span style="background:#13261C"></span><span style="background:#2F5530"></span><span style="background:#6E8C3A"></span><span style="background:#6B5A3A"></span><span style="background:#3E7F86"></span><span style="background:#E7C45A"></span></div><p>Mangroves, stilt villages, mist, glowing fungi at night. Hardwood, cacao, pearls, herbs. Wonders: the Floating Isles, the Glowworm Grotto, the Thousand-Root Tree.</p></div>
+    <div class="region"><span class="tag">Over the pass · glacier highlands</span><h3>Frostspine Highlands</h3><div class="swatches" role="img" aria-label="Frostspine Highlands palette: #E9EEF2, #A9C4D6, #4F7A99, #3A3F44, #8C8F86, #D97B4A"><span style="background:#E9EEF2"></span><span style="background:#A9C4D6"></span><span style="background:#4F7A99"></span><span style="background:#3A3F44"></span><span style="background:#8C8F86"></span><span style="background:#D97B4A"></span></div><p>Blue glacier tongues, ice caves, hot springs steaming in snow. Felt, rock crystal, barley. Wonders: the Ice Cathedral, the Hot Spring Terraces, the Frozen Falls.</p></div>
+  </div>
+  <h3 style="margin-top:32px">What flows where</h3>
+  <p class="note">Rows export to columns, once that route is open.</p>
+  <div class="tablewrap"><table>
+    <tr><th>From \ To</th><th>Fjord</th><th>Isles</th><th>Oasis</th><th>Delta</th><th>Highlands</th></tr>
+    <tr><td><b>Fjord</b></td><td>·</td><td>Timber, tar, stockfish, wool</td><td>Stockfish, iron</td><td>Iron tools, tar</td><td>Timber, stockfish, iron</td></tr>
+    <tr><td><b>Isles</b></td><td>Olive oil, salt, wine, marble</td><td>·</td><td>Oil, wine, shell dye</td><td>Salt, wine</td><td>Oil, dried figs</td></tr>
+    <tr><td><b>Oasis</b></td><td>Glass, spices, copper</td><td>Glass, copper, dates</td><td>·</td><td>Glass, indigo, copper</td><td>Glass, spices, dates</td></tr>
+    <tr><td><b>Delta</b></td><td>Cacao, hardwood, herbs</td><td>Hardwood, pearls</td><td>Cacao, pearls, herbs</td><td>·</td><td>Herbs, cacao</td></tr>
+    <tr><td><b>Highlands</b></td><td>Felt, crystal</td><td>Crystal, spring salts</td><td>Felt, crystal</td><td>Felt, barley</td><td>·</td></tr>
+  </table></div>
+</section>
+
+<section id="loop" class="col">
+  <h2>What you do all day</h2>
+  <div class="loop"><span>Explore</span><i>→</i><span>Discover</span><i>→</i><span>Gather</span><i>→</i><span>Process</span><i>→</i><span>Trade</span><i>→</i><span>Build</span><i>→</i><span>Connect</span><i>→</i><span>Unlock</span><i>→</i><span>Explore further</span></div>
+  <p>One in-game day lasts 24 real minutes, which is one phone session. A typical day in the fjord: the river runs brown after rain, so fresh fish is scarce and dear at 8.7 coins. You sell the 12 smoked fish you put by for 104 coins, buy nails, raise the walls of a new house, and hear at supper that the falls sing at first light. Over a week the house fills with a fishing family, the hamlet becomes a village, a trader's boat starts calling, and the rumor leads to the Singing Cavern.</p>
+  <h3 style="margin-top:28px">Pressure without enemies</h3>
+  <p>Cold, hunger, rest, darkness, steep terrain, carrying weight and weather push back. Nothing kills you: running out of warmth puts you back in the nearest bed at 6 in the morning. Three presets set how much that costs.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Preset</th><th>Meters drain</th><th>Cost of a setback</th><th>For</th></tr>
+    <tr><td><b>Gentle</b></td><td>×0.5</td><td>Nothing lost, climbing never tires</td><td>Younger players, first launch</td></tr>
+    <tr><td><b>Wayfarer</b></td><td>×1.0</td><td>Fresh food spoils, half a day passes</td><td>Most players</td></tr>
+    <tr><td><b>Hardy</b></td><td>×1.5</td><td>10% of carried goods left where you fell, marked to recover</td><td>Adults who want tension</td></tr>
+  </table></div>
+  <h3 style="margin-top:28px">A world that reacts</h3>
+  <pre>Rain for 3 days → river rises 1.2 m → boats stay in → fish stock 85 → 58 → 32 → 6
+→ fish price 4.8 → 6.0 → 8.7 → 15.0 coins → smoked fish sells fast
+→ Ingrid the fisher remembers who built the smokehouse</pre>
+  <p class="note">Prices follow <code>base × clamp((target ÷ stock)^0.6, 0.4, 3.0)</code>. The flood numbers come from the designer's price script (their calc).</p>
+</section>
+
+<section id="people" class="col">
+  <h2>People who remember you</h2>
+  <p>Every NPC has needs, a daily schedule, a personality, relationships and a short list of memories of what you did (helped, traded fairly, stayed away, built something for them). Far away, people run on a cheap daily tick; up close they walk, work and talk in full.</p>
+  <p>All dialogue is written before release and voiced on the build machine, so the game runs fully offline with no AI service behind it. At runtime the game picks the line that fits the moment: who you are to this person, what they remember, today's weather and prices, the rumors they hold.</p>
+  <div class="quote"><small>Ingrid, fisher · stranger</small>"You're not from the fjord. Mind the nets on the rocks."</div>
+  <div class="quote"><small>Ingrid · trusted · live fact: river up 1.2 m</small>"River's brown as tea. No fish today. If you've any smoked put by, the stall will pay well."</div>
+  <div class="quote"><small>Ingrid · after you built her smokehouse</small>"The smokehouse you built has fed my family through the whole flood. Sit, eat with us."</div>
+  <div class="quote"><small>Ingrid · close friend · holds a true rumor</small>"My grandmother swore the falls sing at first light. I never had the nerve to look behind them. You would."</div>
+  <pre>World facts → line templates with fixed slots → written variants (2–4 per case)
+→ voiced per NPC voice on the build machine → cached audio → picked by rules at runtime</pre>
+  <div class="tablewrap"><table>
+    <tr><th>Voice budget</th><th>Clips</th><th>Size</th></tr>
+    <tr><td>First test valley: 20 NPCs × 148 lines</td><td>2,960</td><td>about 28 MB</td></tr>
+    <tr><td>Full game: 5 regions × 60 NPCs × 180 lines</td><td>54,000</td><td>0.5 to 0.7 GB, as region downloads</td></tr>
+  </table></div>
+  <p class="note"><b>Voice licences are the open risk.</b> The common free Piper English voices (lessac, ryan) forbid commercial use; ljspeech is public domain but is one voice. Picking the voice source is a decision below.</p>
+</section>
+
+<!--UI-->
+<section id="ui">
+  <h2>On screen</h2>
+  <figure><img src="mockups/ui_hud.jpg" alt="Exploration HUD over the fjord: compass strip at top with markers for Bluewater Falls 1.2 km, a Blue moss rumor and Skarvik dock; time and weather chip and a 18.4 of 30 kg bag meter top right; move stick bottom left; Gather, jump and hand buttons bottom right; a Cloudberries x6 label in the world" width="1600" height="900"><figcaption><b>Exploration HUD, landscape.</b> Compass strip with a wonder (Bluewater Falls 1.2 km), a rumor (Blue moss?) and a place (Skarvik dock). Bag weight 18.4 of 30 kg. Left thumb moves; the amber Gather button changes with what is in front of you. Text contrast measured 7.0:1 over bright sky and 9.1:1 on the amber button (my calc). One fix owed: the clock says 21:40 over a daylight scene.</figcaption></figure>
+  <h3 style="margin-top:28px">Not ready, shown so you can see where the art stands</h3>
+  <div class="grid2">
+    <figure><img src="mockups/arch_key_rejected.jpg" alt="Rejected render: hiker facing a bare brown hillside under blue sky" width="960" height="540"><figcaption><b>Archipelago: rejected.</b> The camera points at a bare hill; the ruins, bay and colossus are built but out of frame.</figcaption></figure>
+    <figure><img src="mockups/canyon_key_rejected.jpg" alt="Rejected render: dark red canyon with silhouetted palms and market stalls" width="960" height="540"><figcaption><b>Canyon oasis: rejected.</b> Under-lit, the market and palms read as silhouettes.</figcaption></figure>
+    <figure><img src="mockups/fjord_talk_rejected.jpg" alt="Rejected render: hiker's backpack blocks the view of the NPC in front of a turf-roof house" width="960" height="540"><figcaption><b>Conversation: rejected.</b> The player's backpack hides the fisher you are talking to.</figcaption></figure>
+  </div>
+  <p class="note">Still to draw: the market and trade screen, the wonder discovery card and the conversation subtitle bar.</p>
+</section>
+
+<!--BAR-->
+
+<section id="engine" class="col">
+  <h2>Godot or Unity</h2>
+  <div class="verdict"><strong>My pick: Godot 4.7, after a two-week phone test.</strong>
+  <p>Build one 1 km valley with 20 walking NPCs and measure it on your phone. At 30 fps or better, stay with the pipeline that made Race Riders. Below that, switch to Unity before any real content exists. Unity's asset store is the real argument for it; its cost is a new toolchain, a licence in CI, and scene files Claude edits less reliably.</p></div>
+  <div class="tablewrap"><table>
+    <tr><th>Question</th><th>Godot</th><th>Unity</th></tr>
+    <tr><td>Current version</td><td>4.7.2 (Aug 2026). Studio runs 4.6.2 <span class="pill v">verified</span></td><td>6.3 LTS, 6000.3.25f1 (Sep 2026) <span class="pill v">verified</span></td></tr>
+    <tr><td>Big terrain</td><td>Terrain3D add-on; Android "still a bit experimental" per its docs <span class="pill v">verified</span></td><td>Built-in Terrain <span class="pill u">not checked</span></td></tr>
+    <tr><td>Runs on this Linux laptop</td><td>Yes, in use today</td><td>Ubuntu 22.04 / 24.04 supported <span class="pill v">verified</span></td></tr>
+    <tr><td>APK builds in GitHub</td><td>Studio workflow already builds Race Riders and the other studio games</td><td>GameCI; needs licence file + Unity login as secrets <span class="pill v">verified</span></td></tr>
+    <tr><td>Cost</td><td>Free, MIT</td><td>Free under $200K revenue a year; splash screen optional <span class="pill v">verified</span></td></tr>
+    <tr><td>Claude drives the editor</td><td>Scenes are text files Claude edits directly</td><td>Community bridge unity-mcp, 14.7k stars, active <span class="pill v">verified</span></td></tr>
+    <tr><td>NPC brains</td><td>LimboAI behaviour trees, built for 4.7.2 <span class="pill v">verified</span></td><td>Unity Behavior + AI Navigation <span class="pill u">not checked</span></td></tr>
+    <tr><td>Characters and animation</td><td colspan="2">Mixamo is royalty-free for commercial games in both (no reselling raw files, no ML training) <span class="pill v">verified</span></td></tr>
+  </table></div>
+  <p class="note">Each row was checked against vendor pages on 7 Oct 2026. Rows marked "not checked" ran out of time and are unconfirmed.</p>
+</section>
+
+<section id="roadmap" class="col">
+  <h2>Start small</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Step</th><th>Content</th><th>What it proves</th></tr>
+    <tr><td><b>Engine test</b><br><span class="note">2 weeks</span></td><td>1 km valley, 20 walking NPCs, your phone</td><td>The engine holds 30 fps with the realistic look</td></tr>
+    <tr><td><b>Slice 01</b></td><td>Skarvik valley: 1 hamlet, 20 NPCs, 10 resources, 5 buildings, 1 market, trader boat, weather, day and night, the Singing Cavern</td><td>Walking feels good, the world's chains are readable, voiced lines feel alive</td></tr>
+    <tr><td><b>Slice 02</b></td><td>Amberline Isles town, 30 NPCs, boat building, first sea crossing</td><td>Two economies with different shortages make trade worth doing</td></tr>
+    <tr><td><b>Beta</b></td><td>All 5 regions, 30 wonders, 8 sky events, 4 trade routes</td><td>The week loop holds for 20+ hours and fits on a phone</td></tr>
+  </table></div>
+</section>
+
+<section id="decide" class="col">
+  <h2>Your decisions</h2>
+  <ol class="q">
+    <li><b>Which setting first.</b> The plan says the fjord for slice 01; the key frames above are the three candidates.</li>
+    <li><b>Engine.</b> Godot with the two-week phone test, or Unity from the start.</li>
+    <li><b>Voices.</b> Local text-to-speech for everyone, or recorded human voices for the main characters. I will render samples from licence-clean voices before you choose.</li>
+    <li><b>Target phones.</b> Which phone must hit 60 fps and which is the 30 fps floor.</li>
+    <li><b>Youth age band and default preset.</b> Assumed 10–15 and Gentle.</li>
+    <li><b>Name.</b> Hearthroads, Far Harbours, Tidewright, The Wonder Roads, Saltwind Crossing, or Lanterns of the Long Coast. None are trademark-checked.</li>
+  </ol>
+  <p class="note">Full design doc: <code>projects/mwm-wayfarer/docs/GDD.md</code> (552 lines). Visual spec: <code>docs/DESIGN.md</code>.</p>
+</section>
+</div>

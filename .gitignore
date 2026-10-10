@@ -1,0 +1,19 @@
+# Godot
+.godot/
+.import/
+*.import
+*.translation
+*.apk
+*.aab
+build/
+android/build/
+
+# Raw downloads and Blender build files (22 GB, re-fetched by tools/art/fetch_assets.py and tools/terrain)
+assets/_raw/*
+!assets/_raw/dem/
+assets/_raw/dem/*
+!assets/_raw/dem/SOURCE.md
+
+__pycache__/
+*.pyc
+.DS_Store
