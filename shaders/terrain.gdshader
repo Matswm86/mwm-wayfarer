@@ -24,6 +24,7 @@ shader_type spatial;
 render_mode world_vertex_coords, cull_back;
 
 #include "res://shaders/terrain_height.gdshaderinc"
+#include "res://shaders/terrain_light.gdshaderinc"
 
 uniform sampler2D grass_tex : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D cliff_tex : source_color, filter_linear_mipmap, repeat_enable;
@@ -31,10 +32,6 @@ uniform sampler2D cliff_nrm : hint_normal, filter_linear_mipmap, repeat_enable;
 uniform sampler2D scree_tex : source_color, filter_linear_mipmap, repeat_enable;
 // generated seamless value noise (scripts/Terrain.gd), red channel, 512 px per tile
 uniform sampler2D noise_tex : filter_linear_mipmap, repeat_enable;
-// baked light: R sun, G sky, B concavity, A scree; same rects as the height textures
-uniform sampler2D coarse_light : filter_linear_mipmap, repeat_disable;
-uniform sampler2D fine_light : filter_linear_mipmap, repeat_disable;
-
 // colours are linear values, copied from the Blender look-dev material (no sRGB hint)
 uniform bool detail_7m = true;
 uniform float grass_scale = 0.14;
@@ -58,20 +55,6 @@ varying vec3 wpos;
 varying vec3 wnor;
 varying float sun_vis;
 varying float spec_k;
-
-vec4 light_sample(vec2 p) {
-	vec2 uvc = clamp((p - coarse_rect.xy) / coarse_rect.zw, vec2(0.0), vec2(1.0));
-	uvc = uvc * (1.0 - coarse_texel) + 0.5 * coarse_texel;
-	vec4 lc = texture(coarse_light, uvc);
-	vec2 d = min(p - fine_rect.xy, fine_rect.xy + fine_rect.zw - p);
-	float inner = min(d.x, d.y);
-	if (inner <= 0.0) {
-		return lc;
-	}
-	vec2 uvf = (p - fine_rect.xy) / fine_rect.zw;
-	uvf = uvf * (1.0 - fine_texel) + 0.5 * fine_texel;
-	return mix(lc, texture(fine_light, uvf), smoothstep(0.0, fine_feather, inner));
-}
 
 float lum(vec3 c) {
 	return dot(c, vec3(0.2126, 0.7152, 0.0722));
