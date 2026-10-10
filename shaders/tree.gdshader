@@ -27,6 +27,7 @@ uniform float lod_radius = 320.0;
 uniform bool is_far = false;
 uniform float elev_low = 5.0;
 uniform float elev_high = 40.0;
+uniform float wind_strength = 0.012;
 
 varying vec4 uv_a;  // low row: nearest two directions
 varying vec4 uv_b;  // high row
@@ -65,10 +66,19 @@ void vertex() {
 		a0 = blend.x < 0.5 ? a0 : a1;
 		blend.x = 0.0;
 	}
+	// near trees turn round the vertical axis only, so a close quad never tilts into the slope
+	// or toward a camera above it (that cut a hard straight edge through crowns at spawn)
+	vec3 vflat = normalize(vec3(v.x, 0.0, v.z) + vec3(1e-4, 0.0, 0.0));
+	float upright = PROJECTION_MATRIX[3][3] > 0.5 ? 0.0 : 1.0 - smoothstep(60.0, 140.0, d);
 	vec3 right = normalize(cross(vec3(0.0, 1.0, 0.0), v));
-	vec3 up = cross(v, right);
+	right = normalize(mix(right, normalize(cross(vec3(0.0, 1.0, 0.0), vflat)), upright));
+	vec3 up = normalize(mix(cross(v, right), vec3(0.0, 1.0, 0.0), upright));
 	vec2 q = UV;
 	VERTEX = centre + right * (q.x - 0.5) * fi.x * 0.5 + up * (0.5 - q.y) * fi.x;
+	// wind: the crown sways, the trunk foot stays put
+	float bend = (1.0 - q.y) * (1.0 - q.y);
+	float gust = sin(TIME * 0.9 + root.x * 0.05 + root.z * 0.03) * 0.6 + sin(TIME * 2.3 + root.z * 0.2) * 0.25;
+	VERTEX += right * gust * bend * fi.x * wind_strength;
 	uv_a = vec4(frame_uv(row, 0.0, a0, q), frame_uv(row, 0.0, a1, q));
 	uv_b = vec4(frame_uv(row, 1.0, a0, q), frame_uv(row, 1.0, a1, q));
 	tint = tints[int(row)] * (0.85 + 0.3 * INSTANCE_CUSTOM.g);
@@ -111,15 +121,21 @@ void fragment() {
 	NORMAL = normalize((VIEW_MATRIX * vec4(nw, 0.0)).xyz);
 	ROUGHNESS = 0.9;
 	SPECULAR = 0.15;
-	AO = mix(1.0, sky_vis, 0.8);
-	AO_LIGHT_AFFECT = 0.0;
+	// crown occlusion: the lower and inner crown sees less sky (the impostor bake has no AO)
+	float crown = mix(0.6, 1.0, smoothstep(0.95, 0.3, UV.y)) * mix(0.82, 1.0, abs(UV.x - 0.5) * 2.0);
+	AO = mix(1.0, sky_vis, 0.8) * crown;
+	AO_LIGHT_AFFECT = 0.25;
+	// sky rim on the crown silhouette (fresnel), cool and faint
+	float rim = pow(1.0 - clamp(abs(dot(NORMAL, VIEW)), 0.0, 1.0), 3.0);
+	EMISSION = vec3(0.10, 0.13, 0.16) * rim * sky_vis * 0.35;
 }
 
-// Wrapped diffuse (needles and leaves are not a hard surface) plus a little light through the
-// crown when the sun is behind it.
+// Wrapped diffuse (needles and leaves are not a hard surface) plus translucency: sun shining
+// through the crown toward the camera, tinted by the leaf colour (Mobile has no subsurface).
 void light() {
 	float vis = LIGHT_IS_DIRECTIONAL ? min(ATTENUATION, sun_vis) : ATTENUATION;
 	float wrap = clamp((dot(NORMAL, LIGHT) + 0.35) / 1.35, 0.0, 1.0);
-	float back = clamp(-dot(VIEW, LIGHT), 0.0, 1.0) * 0.2;
-	DIFFUSE_LIGHT += (wrap + back) * vis * LIGHT_COLOR / PI;
+	float through = pow(clamp(-dot(VIEW, LIGHT), 0.0, 1.0), 4.0) * 0.7;
+	vec3 leaf = clamp(ALBEDO * 2.2, vec3(0.0), vec3(1.0));
+	DIFFUSE_LIGHT += (wrap * vis * LIGHT_COLOR + through * vis * LIGHT_COLOR * leaf) / PI;
 }

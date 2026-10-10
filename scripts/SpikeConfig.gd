@@ -35,7 +35,7 @@ const COLLISION_SIZE := 1200.0
 
 const SUN_ELEVATION_DEG := 30.0
 const SUN_AZIMUTH_DEG := 215.0
-const SUN_ENERGY := 2.0
+const SUN_ENERGY := 2.5
 ## DESIGN.md 7.2 rule 7: a 30 deg morning sun is near white.
 const SUN_COLOR := Color(1.0, 0.90, 0.78)
 
@@ -45,8 +45,8 @@ const SUN_COLOR := Color(1.0, 0.90, 0.78)
 const SKY_TEXTURE := "res://assets/sky/kloofendal_48d_partly_cloudy.jpg"
 const SKY_ENERGY := 1.56
 const SKY_ROTATION_DEG := 180.0
-const EXPOSURE := 0.85
-const AMBIENT_ENERGY := 1.5
+const EXPOSURE := 0.9
+const AMBIENT_ENERGY := 1.0
 ## Aerial perspective (DESIGN.md 7.2 rules 3 and 8): depth fog from 200 m, at most 0.22,
 ## quadratic falloff, blue-grey, never milky.
 const FOG_COLOR := Color(0.62, 0.74, 0.90)
@@ -64,6 +64,17 @@ const WATER_PROBES: Array[Vector4] = [
 ]
 const WATER_PROBE_HEIGHT := 40.0
 
+## Box reflection probe over the village street: centre x, centre z, size x, size z (metres).
+const VILLAGE_PROBE := Vector4(270.0, -195.0, 200.0, 220.0)
+const VILLAGE_PROBE_HEIGHT := 12.0
+## Contact shadows (scripts/Lighting.gd): soft dark decals under animals and characters and round
+## house footprints, the ambient occlusion the Mobile renderer cannot compute.
+const CONTACT_FADE_BEGIN := 45.0
+## Render layer of animals and characters (bit 2), so ground decals skip them.
+const ACTOR_LAYER := 2
+const CONTACT_STRENGTH := 0.55
+const HOUSE_AO_STRENGTH := 0.5
+
 ## Waterfall: ribbon half-width at the top and the foot (m), height above the gully floor (m),
 ## mist puff size (m). Wide and bright enough to read from the village about 1.1 km away.
 const FALLS_WIDTH := Vector2(15.0, 28.0)
@@ -79,18 +90,20 @@ const WARMUP_FRAMES := 3
 ## MSAA sample count (0, 2, 4) and FXAA (screen-space, Mobile renderer supports both in 4.6),
 ## glow (bloom), sun shadow distance, PSSM splits and shadow atlas size.
 ## terrain_quality: 0 one rock scale, no scan normals; 1 two scales + normals; 2 + 3 m grain.
+## shadow_blur: sun shadow softening radius (Ultra, with the softer filter, kills stair-steps).
 ## fps_cap: Engine.max_fps (0 = display rate). shadow_quality: soft shadow filter
 ## (RenderingServer.ShadowQuality, 1 = very low ... 5 = ultra). Ultra (visual pass 2) spends the
 ## 60 fps budget (16.7 ms) of the owner's phone; Low/Medium/High keep the pass 1 costs.
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
+		"shadow_blur": 1.0,
 		"terrain_quality": 0,
 		"fps_cap": 0,
 		"shadow_quality": 1,
 		"scale": 0.7,
 		"shadows": false,
-		"forest": 0.35,
+		"forest": 0.2,
 		"grass": 0.0,
 		"foam": false,
 		"msaa": 0,
@@ -102,12 +115,13 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
+		"shadow_blur": 1.0,
 		"terrain_quality": 1,
 		"fps_cap": 0,
 		"shadow_quality": 1,
 		"scale": 0.85,
 		"shadows": true,
-		"forest": 0.65,
+		"forest": 0.4,
 		"grass": 0.5,
 		"foam": false,
 		"msaa": 2,
@@ -119,12 +133,13 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
+		"shadow_blur": 1.0,
 		"terrain_quality": 1,
 		"fps_cap": 0,
 		"shadow_quality": 1,
 		"scale": 1.0,
 		"shadows": true,
-		"forest": 1.0,
+		"forest": 0.6,
 		"grass": 1.0,
 		"foam": true,
 		"msaa": 4,
@@ -136,6 +151,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Ultra",
+		"shadow_blur": 1.6,
 		"terrain_quality": 2,
 		"fps_cap": 60,
 		"shadow_quality": 3,
@@ -152,7 +168,8 @@ const PRESETS: Array[Dictionary] = [
 		"shadow_atlas": 4096,
 	},
 ]
-const FOREST_STEPS: Array[float] = [0.35, 0.65, 1.0]
+## Share of the 90 000 placed trees per preset (High keeps the pass 1 count of about 54 000).
+const FOREST_STEPS: Array[float] = [0.2, 0.4, 0.6, 1.0]
 
 ## Wildlife (scripts/Wildlife.gd). area = centre x, z; radius in m; size = longest side of the
 ## model in m; walk speed m/s; flee = distance at which it runs from the player (0 = ignores);

@@ -24,6 +24,8 @@ import zlib
 from pathlib import Path
 
 import numpy as np
+from PIL import Image
+from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "assets" / "_raw" / "dem" / "naeroy_game.npz"
@@ -40,7 +42,9 @@ CN = int(SIZE / CSTEP) + 1  # 1281 samples per side
 # the 2.5 m fine data.
 LEVELS = [(2560.0, 32), (1280.0, 32), (640.0, 32), (320.0, 32), (160.0, 64)]
 FOREST_CHUNK = 640.0
-TREES_HIGH = 55000
+TREES_HIGH = 90000
+# tree line (m) before noise; Naeroyfjord birch and pine thin out at about 500-650 m
+TREE_LINE = 560.0
 BIRCH_BELOW = 320.0  # birch mixes in on the lower slopes, pine above
 SEED = 7
 
@@ -169,13 +173,36 @@ def main() -> None:
                 tiles.append([ti, tj, round(lo - 2.0, 1), round(hi + 2.0, 1)])
         levels.append({"size": ts, "cells": cells, "tiles": tiles})
 
-    # ---- forest: pines on 5-40 deg slopes between 5 m and ~500 m, clumped by a low-res noise field
+    # ---- forest (visual pass 2): dense stands with clearings, not scattered single trees.
+    # Density = altitude below a noisy tree line x slope (none on cliffs) x stand noise at
+    # ~150 m and ~45 m with a sharp threshold; wet ground (DEM flow, coarse_detail.png B) is
+    # denser and holds more birch. The same density field is saved as forest_mask.png so the
+    # terrain draws forest floor under the stands.
     rng = np.random.default_rng(SEED)
-    noise = rng.random((48, 48))
-    top_noise = rng.random((24, 24))
+
+    def smooth_noise(cells: int, sigma: float) -> np.ndarray:
+        return ndimage.gaussian_filter(rng.random((cells, cells)), sigma, mode="wrap")
+
+    n150 = smooth_noise(int(SIZE / 50), 3.0)
+    n45 = smooth_noise(int(SIZE / 15), 3.0)
+    n_line = smooth_noise(64, 2.0)
+    for n in (n150, n45, n_line):
+        n -= n.min()
+        n /= n.max()
+    wet_img = Image.open(OUT / "coarse_detail.png").getchannel("B")
+    wet_grid = np.asarray(wet_img, dtype=np.float32) / 255.0
 
     def field(f, x, z):
         return bil(f, CX0, CZ0, SIZE / (f.shape[0] - 1), x, z)
+
+    def density(x, z, hgt, slope):
+        line = TREE_LINE + 160.0 * (field(n_line, x, z) - 0.5)
+        alt = (1.0 - smoothstep(line - 90.0, line, hgt)) * smoothstep(3.0, 8.0, hgt)
+        steep = 1.0 - smoothstep(33.0, 43.0, slope)
+        wet = field(wet_grid, x, z)
+        stand = 0.7 * field(n150, x, z) + 0.3 * field(n45, x, z) + 0.25 * wet
+        stand = smoothstep(0.42, 0.56, stand)
+        return alt * steep * stand, wet
 
     trees = []
     want = TREES_HIGH
@@ -187,28 +214,27 @@ def main() -> None:
         dx = (height(x + 5, z) - height(x - 5, z)) / 10.0
         dz = (height(x, z + 5) - height(x, z - 5)) / 10.0
         slope = np.degrees(np.arctan(np.hypot(dx, dz)))
-        top = 500.0 - 60.0 * field(top_noise, x, z)
         sy = -z
         e = x - xs(sy)
         village = (sy > 90) & (sy < 300) & (e < 85) & (e > -40)
         spawn = np.hypot(x - p0[0], sy - p0[1]) < 16.0
-        clump = 0.25 + 0.75 * smoothstep(0.2, 0.55, field(noise, x, z))
-        ok = (
-            (hgt > 5.0)
-            & (hgt < top)
-            & (slope > 5.0)
-            & (slope < 40.0)
-            & ~village
-            & ~spawn
-            & (rng.random(m) < clump)
-        )
-        for xx, zz, hh in zip(x[ok], z[ok], hgt[ok]):
-            birch = rng.random() < 0.45 * (1.0 - smoothstep(BIRCH_BELOW * 0.5, BIRCH_BELOW, hh))
+        dens, wet = density(x, z, hgt, slope)
+        ok = ~village & ~spawn & (rng.random(m) < dens**1.5)
+        for xx, zz, hh, ww in zip(x[ok], z[ok], hgt[ok], wet[ok]):
+            p_birch = (0.35 + 0.4 * ww) * (1.0 - smoothstep(BIRCH_BELOW * 0.5, BIRCH_BELOW, hh))
+            birch = rng.random() < p_birch
             trees.append(
                 (xx, hh - 0.3, zz, rng.uniform(0, math.tau), rng.uniform(0.7, 1.3), float(birch))
             )
             if len(trees) >= want:
                 break
+    # forest floor mask over the coarse grid
+    slope_c = np.degrees(np.arctan(np.hypot(*np.gradient(coarse, CSTEP))))
+    mask, _ = density(X, Z, coarse, slope_c)
+    mask = ndimage.gaussian_filter(mask, 1.0)
+    Image.fromarray(np.clip(mask * 255.0 + 0.5, 0, 255).astype(np.uint8), "L").save(
+        OUT / "forest_mask.png", optimize=True
+    )
     tr = np.array(trees, dtype=np.float32)
     nck = int(SIZE / FOREST_CHUNK)
     ci = np.clip(((tr[:, 0] - CX0) / FOREST_CHUNK).astype(int), 0, nck - 1)

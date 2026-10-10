@@ -114,6 +114,7 @@ func build() -> void:
 		"coarse_detail", load(SpikeConfig.TERRAIN_DIR + "coarse_detail.png")
 	)
 	material.set_shader_parameter("fine_detail", load(SpikeConfig.TERRAIN_DIR + "fine_detail.png"))
+	material.set_shader_parameter("forest_mask", load(SpikeConfig.TERRAIN_DIR + "forest_mask.png"))
 	material.set_shader_parameter("skirt_depth", SpikeConfig.SKIRT_DEPTH)
 
 	var levels: Array = meta["levels"]
@@ -122,6 +123,7 @@ func build() -> void:
 	var meshes: Dictionary = {}
 	var prev: Dictionary = {}  # Vector2i -> MeshInstance3D of the previous level
 	var prev_size: float = 0.0
+	var complete: Dictionary = {}  # previous-level tiles that hide for all four children
 	for li in levels.size():
 		var lv: Dictionary = levels[li]
 		var size: float = float(lv["size"])
@@ -129,16 +131,25 @@ func build() -> void:
 		if not meshes.has(cells):
 			meshes[cells] = _grid_mesh(cells)
 		var leaf: bool = li == levels.size() - 1
+		# a tile hides for its children only when all four exist (the 160 m level covers the
+		# fine data only; a parent on its edge with some children missing left a hole)
 		var has_children: Dictionary = {}
 		if not leaf:
 			var nxt: Dictionary = levels[li + 1]
 			var ratio: int = int(size / float(nxt["size"]))
+			var count: Dictionary = {}
 			for t: Array in nxt["tiles"]:
-				has_children[Vector2i(int(t[0]) / ratio, int(t[1]) / ratio)] = true
+				var key := Vector2i(int(t[0]) / ratio, int(t[1]) / ratio)
+				count[key] = int(count.get(key, 0)) + 1
+			for key: Vector2i in count:
+				if int(count[key]) == ratio * ratio:
+					has_children[key] = true
 		var cur: Dictionary = {}
 		for t: Array in lv["tiles"]:
 			var ti: int = int(t[0])
 			var tj: int = int(t[1])
+			if li > 0 and not complete.has(Vector2i(ti, tj) / int(prev_size / size)):
+				continue
 			var lo: float = float(t[2]) - SpikeConfig.SKIRT_DEPTH - size / float(cells)
 			var hi: float = float(t[3])
 			var mi := MeshInstance3D.new()
@@ -166,6 +177,7 @@ func build() -> void:
 			tile_count += 1
 		prev = cur
 		prev_size = size
+		complete = has_children
 
 
 ## Unit grid -0.5..0.5 with a skirt round the edge. UV2 = (cells, skirt flag).

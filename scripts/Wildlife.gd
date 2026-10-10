@@ -46,6 +46,10 @@ func build(t: Terrain) -> void:
 			a.node.name = "%s_%d" % [species, i]
 			add_child(a.node)
 			_fit_size(a.node, float(spec["size"]))
+			if not spec.has("fly"):
+				Lighting.contact_shadow(
+					a.node, float(spec["size"]) * 0.42, SpikeConfig.CONTACT_STRENGTH
+				)
 			_set_ranges(a.node, float(spec["range"]))
 			a.anim = Humans.find_player(a.node)
 			Humans.loop_all(a.anim)

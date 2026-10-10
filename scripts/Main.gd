@@ -193,6 +193,10 @@ func _build_environment() -> void:
 	sun.shadow_normal_bias = 1.5
 	sun.shadow_bias = 0.05
 	sun.shadow_blur = 1.0
+	# cascades: most texels near the player (with 240 m on Ultra: 19, 48, 108, 240 m)
+	sun.directional_shadow_split_1 = 0.08
+	sun.directional_shadow_split_2 = 0.2
+	sun.directional_shadow_split_3 = 0.45
 
 
 ## Box probes over the fjord, captured once at boot: the water mirrors the walls and the forest.
@@ -261,6 +265,11 @@ func _build_village() -> void:
 	village.name = "Village"
 	add_child(village)
 	village.build()
+	for h: Dictionary in terrain.meta["village"]:
+		var p: Array = h["pos"]
+		var pos := Vector3(float(p[0]), float(p[1]), float(p[2]))
+		Lighting.footprint_shadow(village, pos, float(h["w"]), float(h["d"]), float(h["yaw"]))
+	Lighting.village_probe(self)
 
 
 ## Waterfall down the real gully near scene y=1300 (path from terrain.json, traced like
@@ -370,6 +379,7 @@ func _build_ingrid() -> void:
 	pos.y = terrain.height_at(pos.x, pos.z)
 	ingrid.global_position = pos
 	ingrid.rotation.y = deg_to_rad(float(info["yaw_deg"]))
+	Lighting.contact_shadow(ingrid, 0.55, SpikeConfig.CONTACT_STRENGTH)
 	var anim := Humans.find_player(ingrid)
 	Humans.loop_all(anim)
 	if anim:
@@ -415,6 +425,7 @@ func _build_player() -> void:
 	var half: float = SpikeConfig.COLLISION_SIZE * 0.5 - 5.0
 	player.bounds = Rect2(cx - half, cz - half, 2.0 * half, 2.0 * half)
 	player.camera.current = true
+	Lighting.contact_shadow(player, 0.55, SpikeConfig.CONTACT_STRENGTH)
 
 
 func apply_preset(i: int) -> void:
@@ -434,6 +445,7 @@ func apply_preset(i: int) -> void:
 		int(p["shadow_quality"]) as RenderingServer.ShadowQuality
 	)
 	sun.shadow_enabled = bool(p["shadows"])
+	sun.shadow_blur = float(p["shadow_blur"])
 	sun.directional_shadow_max_distance = maxf(float(p["shadow_distance"]), 1.0)
 	sun.directional_shadow_mode = (
 		DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS

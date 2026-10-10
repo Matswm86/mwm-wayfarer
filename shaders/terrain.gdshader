@@ -38,6 +38,8 @@ uniform sampler2D soil_tex : source_color, filter_linear_mipmap_anisotropic, rep
 uniform sampler2D scree_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 // generated seamless value noise (scripts/Terrain.gd), red channel
 uniform sampler2D noise_tex : filter_linear_mipmap, repeat_enable;
+// forest stand density over the coarse grid (npz_to_godot.py): forest floor under the trees
+uniform sampler2D forest_mask : filter_linear_mipmap, repeat_disable;
 uniform int quality = 1;
 uniform vec3 to_sun = vec3(-0.5, 0.5, 0.7);
 // colours are linear values
@@ -205,9 +207,11 @@ void fragment() {
 	// lush, darker, mossier in the wet hollows
 	soft = mix(soft, moss_color * (0.9 + 0.5 * grass.a), clamp(concave * 0.5 + flow * 0.45, 0.0, 0.7));
 	soft *= mac;
-	// soil and forest floor on steeper soft ground and along the drainage
+	// soil and forest floor on steeper soft ground, along the drainage and under the stands
+	vec2 fuv = clamp((wpos.xz - coarse_rect.xy) / coarse_rect.zw, vec2(0.0), vec2(1.0));
+	float forest = texture(forest_mask, fuv * (1.0 - coarse_texel) + 0.5 * coarse_texel).r;
 	vec4 soil = texture(soil_tex, wpos.xz / 7.0);
-	float bare = maprange(an.y, 0.86, 0.74, 0.0, 0.7) + flow * 0.2;
+	float bare = maprange(an.y, 0.86, 0.74, 0.0, 0.7) + flow * 0.2 + forest * 0.8;
 	soft = mix(soft, soil.rgb * 0.75, hblend(grass.a, soil.a, clamp(bare, 0.0, 1.0), 0.35) * 0.8);
 
 	// steep = 1 on faces steeper than about 50 deg, rock from about 38 deg; rock outcrops on
@@ -226,7 +230,8 @@ void fragment() {
 	// far: the tiled detail fades toward flat forest green on soft ground (rock keeps its
 	// macro scan: at 64 m it does not tile visibly)
 	float far_w = maprange(dist, 1800.0, 6000.0, 0.0, 0.7);
-	col = mix(col, mix(far_green * mac, col, steep), far_w);
+	vec3 far_soft = far_green * mac * mix(1.0, 0.6, forest);
+	col = mix(col, mix(far_soft, col, steep), far_w);
 
 	// snow: high, flatter, and more on faces turned away from the sun
 	float shade_aspect = 0.5 - 0.5 * dot(normalize(n.xz + vec2(1e-4)), normalize(to_sun.xz));

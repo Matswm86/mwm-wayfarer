@@ -9,8 +9,8 @@ extends Node
 ## CAPTURE_HIDE_UI=1 hides the readout and buttons (clean frames for look comparisons).
 ## CAPTURE_SUFFIX is appended to every file name (e.g. "_before").
 
-const CLIFF_TARGET := Vector3(-425.0, 0.0, -295.0)
-const CLIFF_CAMERA := Vector3(-235.0, 0.0, -230.0)
+const CLIFF_TARGET := Vector3(420.0, 0.0, -500.0)
+const CLIFF_CAMERA := Vector3(320.0, 0.0, -540.0)
 const FOREST_TARGET := Vector3(-430.0, 0.0, 775.0)
 const FOREST_CAMERA := Vector3(-215.0, 0.0, 545.0)
 
@@ -26,6 +26,8 @@ func _ready() -> void:
 		await main.warmed_up
 	if OS.get_environment("CAPTURE_HIDE_UI") == "1":
 		PerfOverlay.set_ui_visible(false)
+	if OS.get_environment("CAPTURE_NO_WATER") == "1":
+		main.water.visible = false
 	await _frames(30)
 	var path: Array = main.terrain.meta["bench_path"]
 	var high := _v(path[7])
@@ -45,7 +47,7 @@ func _ready() -> void:
 		await _shot("spawn_%s" % tag)
 		await _village_street(tag)
 		await _animals(tag)
-		await _view(CLIFF_CAMERA, 6.0, CLIFF_TARGET, 10.0, "cliff_close_%s" % tag)
+		await _view(CLIFF_CAMERA, 5.0, CLIFF_TARGET, 5.0, "cliff_close_%s" % tag)
 		await _view(FOREST_CAMERA, 45.0, FOREST_TARGET, 20.0, "forest_slope_%s" % tag)
 		main.bench.view(high, spawn_look)
 		await _frames(45)

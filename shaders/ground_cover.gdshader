@@ -99,13 +99,16 @@ void fragment() {
 	ALPHA_TEXTURE_COORDINATE = UV * vec2(512.0 * card_count, 512.0);
 	ROUGHNESS = 0.85;
 	SPECULAR = 0.2;
-	AO = mix(1.0, sky_vis, 0.8);
-	AO_LIGHT_AFFECT = 0.0;
+	// darker at the root, where the clump shades itself
+	AO = mix(1.0, sky_vis, 0.8) * mix(0.45, 1.0, smoothstep(1.0, 0.35, UV.y));
+	AO_LIGHT_AFFECT = 0.35;
 }
 
 void light() {
 	float vis = LIGHT_IS_DIRECTIONAL ? min(ATTENUATION, sun_vis) : ATTENUATION;
 	float wrap = clamp((dot(NORMAL, LIGHT) + 0.4) / 1.4, 0.0, 1.0);
-	float back = clamp(-dot(VIEW, LIGHT), 0.0, 1.0) * 0.25;
-	DIFFUSE_LIGHT += (wrap + back) * vis * LIGHT_COLOR / PI;
+	// thin blades glow when the sun is behind them
+	float through = pow(clamp(-dot(VIEW, LIGHT), 0.0, 1.0), 3.0) * 0.8;
+	vec3 leaf = clamp(ALBEDO * 2.0, vec3(0.0), vec3(1.0));
+	DIFFUSE_LIGHT += (wrap * vis * LIGHT_COLOR + through * vis * LIGHT_COLOR * leaf) / PI;
 }
