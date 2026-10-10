@@ -22,6 +22,7 @@ HDRIS = {
     "qwantani_dusk_2_puresky": "4k",  # fjord: clear dusk, aurora sky
     "kloofendal_48d_partly_cloudy_puresky": "4k",  # archipelago: cumulus, blue
     "syferfontein_18d_clear_puresky": "4k",  # canyon: clear, warm afternoon
+    "kloofendal_43d_clear_puresky": "4k",  # canyon (10-10): clear, 43 deg midday sun reaches the valley floor
     "evening_road_01_puresky": "4k",  # talk frame / alt fjord
 }
 TEXTURES = {
@@ -57,6 +58,12 @@ TEXTURES = {
     "palm_tree_bark": "1k",
     "clay_plaster": "1k",
     "patterned_clay_plaster": "1k",
+    # 10-10 art pass: real limestone for R2, layered sandstone for R3
+    "marble_cliff_05": "2k",
+    "rock_ground_02": "2k",
+    "aerial_rocks_04": "1k",
+    "cliff_side": "2k",
+    "rock_boulder_cracked": "2k",
     # cloth and character
     "rough_linen": "1k",
     "hessian_230": "1k",

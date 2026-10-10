@@ -25,16 +25,21 @@ MUTED_D = (184, 191, 199)  # #B8BFC7  secondary text on dark
 TEXT_L = (27, 31, 36)  # #1B1F24  text on paper
 MUTED_L = (92, 86, 78)  # #5C564E  secondary text on paper
 AMBER = (240, 168, 60)  # #F0A83C  wonders, rumours, discovery
-AMBER_D = (150, 96, 20)  # #966014  amber text on paper
+AMBER_D = (
+    130,
+    84,
+    16,
+)  # #825410  amber text on paper (was #966014: 4.03:1 on the row stripe, failed)
 TEAL = (47, 163, 150)  # #2FA396  confirm, price up, valid placement
+TEAL_L = (72, 186, 172)  # #48BAAC  teal TEXT on dark panels (TEAL is 4.37:1 there, fails)
 TEAL_D = (20, 110, 100)  # #146E64  teal text on paper
-CLAY = (210, 85, 63)  # #D2553F  price down, missing material
+CLAY = (224, 102, 80)  # #E06650  price down, missing material (was #D2553F: 4.46:1 on ink, failed)
 CLAY_D = (168, 52, 34)  # #A83422  clay text on paper
 WHITE = (255, 255, 255)
 
 
 def hexs(c):
-    return "#%02X%02X%02X" % c[:3]
+    return "#{:02X}{:02X}{:02X}".format(*c[:3])
 
 
 def lum(c):
@@ -64,7 +69,9 @@ def font(size, weight=500, serif=False, italic=False):
     if key in _FC:
         return _FC[key]
     if serif:
-        p = FONTS / ("SourceSerif4-Italic[opsz,wght].ttf" if italic else "SourceSerif4[opsz,wght].ttf")
+        p = FONTS / (
+            "SourceSerif4-Italic[opsz,wght].ttf" if italic else "SourceSerif4[opsz,wght].ttf"
+        )
     else:
         p = FONTS / "Inter[opsz,wght].ttf"
     f = ImageFont.truetype(str(p), size)
@@ -108,7 +115,13 @@ def panel(base, box, radius=18, fill=INK, alpha=0.84, outline=None, ow=2, drop=T
         shadow(base, box, radius)
     L = layer(base.size)
     d = ImageDraw.Draw(L)
-    d.rounded_rectangle(box, radius, fill=(*fill, int(255 * alpha)), outline=(*outline, 255) if outline else None, width=ow)
+    d.rounded_rectangle(
+        box,
+        radius,
+        fill=(*fill, int(255 * alpha)),
+        outline=(*outline, 255) if outline else None,
+        width=ow,
+    )
     base.alpha_composite(L)
 
 
@@ -150,22 +163,48 @@ def ic_leaf(d, c, s, col):
     for i in range(40):
         t = i / 39 * math.pi
         pts.append((x + math.cos(t) * s * 0.9 * 0.5 - s * 0.0, y - math.sin(t) * s * 0.42))
-    d.polygon([(x - s * 0.55, y + s * 0.35), (x + s * 0.55, y - s * 0.45), (x + s * 0.2, y + s * 0.25)], fill=col)
+    d.polygon(
+        [(x - s * 0.55, y + s * 0.35), (x + s * 0.55, y - s * 0.45), (x + s * 0.2, y + s * 0.25)],
+        fill=col,
+    )
     d.ellipse((x - s * 0.55, y - s * 0.45, x + s * 0.55, y + s * 0.35), fill=col)
-    d.line((x - s * 0.7, y + s * 0.55, x + s * 0.35, y - s * 0.25), fill=INK, width=max(2, int(s * 0.09)))
+    d.line(
+        (x - s * 0.7, y + s * 0.55, x + s * 0.35, y - s * 0.25),
+        fill=INK,
+        width=max(2, int(s * 0.09)),
+    )
 
 
 def ic_hand(d, c, s, col):
     x, y = c
-    d.rounded_rectangle((x - s * 0.42, y - s * 0.05, x + s * 0.38, y + s * 0.6), int(s * 0.18), fill=col)
+    d.rounded_rectangle(
+        (x - s * 0.42, y - s * 0.05, x + s * 0.38, y + s * 0.6), int(s * 0.18), fill=col
+    )
     for i, (dx, hh) in enumerate(((-0.32, 0.55), (-0.11, 0.7), (0.1, 0.66), (0.29, 0.5))):
-        d.rounded_rectangle((x + s * dx - s * 0.085, y - s * hh, x + s * dx + s * 0.085, y + s * 0.1), max(1, int(s * 0.05)), fill=col)
-    d.rounded_rectangle((x - s * 0.62, y + s * 0.0, x - s * 0.36, y + s * 0.38), int(s * 0.1), fill=col)
+        d.rounded_rectangle(
+            (x + s * dx - s * 0.085, y - s * hh, x + s * dx + s * 0.085, y + s * 0.1),
+            max(1, int(s * 0.05)),
+            fill=col,
+        )
+    d.rounded_rectangle(
+        (x - s * 0.62, y + s * 0.0, x - s * 0.36, y + s * 0.38), int(s * 0.1), fill=col
+    )
 
 
 def ic_jump(d, c, s, col):
     x, y = c
-    d.polygon([(x, y - s * 0.6), (x - s * 0.5, y), (x - s * 0.18, y), (x - s * 0.18, y + s * 0.55), (x + s * 0.18, y + s * 0.55), (x + s * 0.18, y), (x + s * 0.5, y)], fill=col)
+    d.polygon(
+        [
+            (x, y - s * 0.6),
+            (x - s * 0.5, y),
+            (x - s * 0.18, y),
+            (x - s * 0.18, y + s * 0.55),
+            (x + s * 0.18, y + s * 0.55),
+            (x + s * 0.18, y),
+            (x + s * 0.5, y),
+        ],
+        fill=col,
+    )
 
 
 def ic_star(d, c, s, col):
@@ -186,7 +225,10 @@ def ic_diamond(d, c, s, fill, ring=None):
 def ic_bubble(d, c, s, fill, mark=INK):
     x, y = c
     d.rounded_rectangle((x - s, y - s * 0.75, x + s, y + s * 0.55), int(s * 0.45), fill=fill)
-    d.polygon([(x - s * 0.35, y + s * 0.4), (x - s * 0.55, y + s * 1.0), (x + s * 0.05, y + s * 0.45)], fill=fill)
+    d.polygon(
+        [(x - s * 0.35, y + s * 0.4), (x - s * 0.55, y + s * 1.0), (x + s * 0.05, y + s * 0.45)],
+        fill=fill,
+    )
     f = font(int(s * 1.25), 800)
     d.text((x, y - s * 0.1), "?", font=f, fill=mark, anchor="mm")
 
@@ -204,7 +246,16 @@ def ic_sun(d, c, s, col):
     d.ellipse((x - s * 0.45, y - s * 0.45, x + s * 0.45, y + s * 0.45), fill=col)
     for i in range(8):
         a = i * math.pi / 4
-        d.line((x + math.cos(a) * s * 0.65, y + math.sin(a) * s * 0.65, x + math.cos(a) * s * 0.95, y + math.sin(a) * s * 0.95), fill=col, width=max(2, int(s * 0.14)))
+        d.line(
+            (
+                x + math.cos(a) * s * 0.65,
+                y + math.sin(a) * s * 0.65,
+                x + math.cos(a) * s * 0.95,
+                y + math.sin(a) * s * 0.95,
+            ),
+            fill=col,
+            width=max(2, int(s * 0.14)),
+        )
 
 
 def ic_moon(d, c, s, col, bg):
@@ -215,15 +266,26 @@ def ic_moon(d, c, s, col, bg):
 
 def ic_pack(d, c, s, col):
     x, y = c
-    d.rounded_rectangle((x - s * 0.55, y - s * 0.55, x + s * 0.55, y + s * 0.8), int(s * 0.25), fill=col)
-    d.rounded_rectangle((x - s * 0.3, y - s * 0.85, x + s * 0.3, y - s * 0.45), int(s * 0.12), outline=col, width=max(2, int(s * 0.14)))
+    d.rounded_rectangle(
+        (x - s * 0.55, y - s * 0.55, x + s * 0.55, y + s * 0.8), int(s * 0.25), fill=col
+    )
+    d.rounded_rectangle(
+        (x - s * 0.3, y - s * 0.85, x + s * 0.3, y - s * 0.45),
+        int(s * 0.12),
+        outline=col,
+        width=max(2, int(s * 0.14)),
+    )
     d.rectangle((x - s * 0.55, y - s * 0.05, x + s * 0.55, y + s * 0.05), fill=INK)
 
 
 def ic_coin(d, c, s):
     x, y = c
     d.ellipse((x - s, y - s, x + s, y + s), fill=(214, 160, 52))
-    d.ellipse((x - s * 0.72, y - s * 0.72, x + s * 0.72, y + s * 0.72), outline=(250, 214, 120), width=max(2, int(s * 0.14)))
+    d.ellipse(
+        (x - s * 0.72, y - s * 0.72, x + s * 0.72, y + s * 0.72),
+        outline=(250, 214, 120),
+        width=max(2, int(s * 0.14)),
+    )
 
 
 def ic_gear(d, c, r, col, hole):
@@ -240,9 +302,25 @@ def ic_gear(d, c, r, col, hole):
 
 def ic_map(d, c, s, col):
     x, y = c
-    d.polygon([(x - s, y - s * 0.7), (x - s * 0.33, y - s * 0.9), (x + s * 0.33, y - s * 0.7), (x + s, y - s * 0.9), (x + s, y + s * 0.7), (x + s * 0.33, y + s * 0.9), (x - s * 0.33, y + s * 0.7), (x - s, y + s * 0.9)], fill=col)
+    d.polygon(
+        [
+            (x - s, y - s * 0.7),
+            (x - s * 0.33, y - s * 0.9),
+            (x + s * 0.33, y - s * 0.7),
+            (x + s, y - s * 0.9),
+            (x + s, y + s * 0.7),
+            (x + s * 0.33, y + s * 0.9),
+            (x - s * 0.33, y + s * 0.7),
+            (x - s, y + s * 0.9),
+        ],
+        fill=col,
+    )
     for xx in (-0.33, 0.33):
-        d.line((x + s * xx, y - s * 0.8 + (0.2 * s if xx > 0 else 0), x + s * xx, y + s * 0.8), fill=INK, width=max(2, int(s * 0.1)))
+        d.line(
+            (x + s * xx, y - s * 0.8 + (0.2 * s if xx > 0 else 0), x + s * xx, y + s * 0.8),
+            fill=INK,
+            width=max(2, int(s * 0.1)),
+        )
 
 
 def ic_rotate(d, c, s, col, w=6, flip=False):
@@ -254,12 +332,24 @@ def ic_rotate(d, c, s, col, w=6, flip=False):
     dirv = (-math.sin(a), math.cos(a)) if not flip else (math.sin(a), -math.cos(a))
     p1 = (tip[0] + dirv[0] * s * 0.45, tip[1] + dirv[1] * s * 0.45)
     nrm = (math.cos(a), math.sin(a))
-    d.polygon([p1, (tip[0] + nrm[0] * s * 0.32, tip[1] + nrm[1] * s * 0.32), (tip[0] - nrm[0] * s * 0.32, tip[1] - nrm[1] * s * 0.32)], fill=col)
+    d.polygon(
+        [
+            p1,
+            (tip[0] + nrm[0] * s * 0.32, tip[1] + nrm[1] * s * 0.32),
+            (tip[0] - nrm[0] * s * 0.32, tip[1] - nrm[1] * s * 0.32),
+        ],
+        fill=col,
+    )
 
 
 def ic_check(d, c, s, col, w=10):
     x, y = c
-    d.line((x - s * 0.55, y, x - s * 0.15, y + s * 0.4, x + s * 0.6, y - s * 0.45), fill=col, width=w, joint="curve")
+    d.line(
+        (x - s * 0.55, y, x - s * 0.15, y + s * 0.4, x + s * 0.6, y - s * 0.45),
+        fill=col,
+        width=w,
+        joint="curve",
+    )
 
 
 def ic_cross(d, c, s, col, w=8):
@@ -285,7 +375,9 @@ def waveform(d, x, y, w, h, col, seed=3, bars=14):
         a = 0.25 + 0.75 * abs(math.sin(i * 0.9 + 0.4)) * r.uniform(0.6, 1.0)
         bh = h * a
         bx = x + i * bw * 1.7
-        d.rounded_rectangle((bx, y + (h - bh) / 2, bx + bw, y + (h + bh) / 2), int(bw / 2), fill=col)
+        d.rounded_rectangle(
+            (bx, y + (h - bh) / 2, bx + bw, y + (h + bh) / 2), int(bw / 2), fill=col
+        )
 
 
 def report(pairs):
@@ -305,3 +397,55 @@ def _safe_rr(self, xy, radius=0, *a, **k):
 
 
 ImageDraw.ImageDraw.rounded_rectangle = _safe_rr
+
+
+# ---------------------------------------------------------------- type scale (DESIGN.md section 3)
+# px on the 1920x1080 mock; sp = px / 2.625. Body never below 40 px (15 sp), secondary never below 32 px (12 sp).
+T_DISPLAY = 64  # serif, screen titles, wonder names (24 sp)
+T_TITLE = 48  # serif, panel titles, NPC line on talk (18 sp)
+T_BODY = 40  # sans, rows, replies, lore (15 sp)
+T_NUM = 44  # sans bold, prices, counts (17 sp)
+T_LABEL = 34  # sans, secondary lines (13 sp)
+T_CAPTION = 32  # sans bold caps labels, captions: the floor (12 sp)
+HIT = 130  # minimum touch target, px (48 dp = 126 px, rounded up)
+
+
+def caps(d, xy, s, size, fill, anchor="la", track=0.08):
+    """Upper-case label with letter spacing (Pillow has no tracking)."""
+    f = font(size, 700)
+    s = s.upper()
+    x, y = xy
+    total = sum(tw(ch, f) if ch != " " else size * 0.3 for ch in s) + size * track * (len(s) - 1)
+    if anchor[0] == "r":
+        x -= total
+    elif anchor[0] == "m":
+        x -= total / 2
+    va = "l" + anchor[1]
+    for ch in s:
+        d.text((x, y), ch, font=f, fill=fill, anchor=va)
+        x += (tw(ch, f) if ch != " " else size * 0.3) + size * track
+    return total
+
+
+def wrap(s, f, width):
+    out, line = [], ""
+    for w in s.split():
+        t = (line + " " + w).strip()
+        if tw(t, f) <= width:
+            line = t
+        else:
+            out.append(line)
+            line = w
+    if line:
+        out.append(line)
+    return out
+
+
+def fit_icon(path, box):
+    """Load a transparent icon and fit it inside box=(w, h), keeping aspect."""
+    im = Image.open(path).convert("RGBA")
+    bb = im.getbbox()
+    if bb:
+        im = im.crop(bb)
+    r = min(box[0] / im.width, box[1] / im.height)
+    return im.resize((max(1, int(im.width * r)), max(1, int(im.height * r))), Image.LANCZOS)

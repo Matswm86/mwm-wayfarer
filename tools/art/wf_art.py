@@ -170,7 +170,17 @@ def tint(nt, col, rgb):
     return mixc(nt, 1.0, col, (*rgb, 1.0), blend="MULTIPLY")
 
 
-def pbr(name, tex, scale=1.0, coords="UV", box=False, tint_rgb=None, nstrength=1.0, rough_add=0.0, hue=None):
+def pbr(
+    name,
+    tex,
+    scale=1.0,
+    coords="UV",
+    box=False,
+    tint_rgb=None,
+    nstrength=1.0,
+    rough_add=0.0,
+    hue=None,
+):
     """Material from one Poly Haven set. coords 'Object' + box=True for meshes without good UVs."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -256,12 +266,20 @@ def proto(name: str, sub: str | None = None, tint_rgb=None, hue=None) -> bpy.typ
         o.parent = None
         o.matrix_world = mw
     if sub is not None and objs:
-        lo = Vector((min(min((o.matrix_world @ Vector(b)).x for b in o.bound_box) for o in objs),
-                     min(min((o.matrix_world @ Vector(b)).y for b in o.bound_box) for o in objs),
-                     min(min((o.matrix_world @ Vector(b)).z for b in o.bound_box) for o in objs)))
-        hi = Vector((max(max((o.matrix_world @ Vector(b)).x for b in o.bound_box) for o in objs),
-                     max(max((o.matrix_world @ Vector(b)).y for b in o.bound_box) for o in objs),
-                     0))
+        lo = Vector(
+            (
+                min(min((o.matrix_world @ Vector(b)).x for b in o.bound_box) for o in objs),
+                min(min((o.matrix_world @ Vector(b)).y for b in o.bound_box) for o in objs),
+                min(min((o.matrix_world @ Vector(b)).z for b in o.bound_box) for o in objs),
+            )
+        )
+        hi = Vector(
+            (
+                max(max((o.matrix_world @ Vector(b)).x for b in o.bound_box) for o in objs),
+                max(max((o.matrix_world @ Vector(b)).y for b in o.bound_box) for o in objs),
+                0,
+            )
+        )
         off = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
         for o in objs:
             o.location -= off
@@ -373,10 +391,22 @@ def grid_mesh(name, fn, x0, x1, y0, y1, nx, ny, mat=None):
     return o
 
 
-def terrain_mat(name, layers, slope=(0.55, 0.8), height=None, macro=0.012, macro_amp=(0.78, 1.15), extra=None, box_all=False):
+def terrain_mat(
+    name,
+    layers,
+    slope=(0.55, 0.8),
+    height=None,
+    macro=0.012,
+    macro_amp=(0.78, 1.15),
+    extra=None,
+    box_all=False,
+    patch=None,
+):
     """Slope/height blended terrain: layers = dict(flat=(tex, tile, tint), steep=(tex, tile, tint),
     high=(tex, tile, tint) optional). Godot/Unity: one splat shader, slope from the normal, triplanar steep layer.
-    slope: (start, end) of normal.z where the flat layer takes over from the steep one."""
+    slope: (start, end) of normal.z where the flat layer takes over from the steep one.
+    patch: optional (noise_scale, lo, hi): layers["patch"] is laid over the flat layer where a world-space noise
+    passes lo..hi (scrub vs bare ground); None = no patch layer."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -389,12 +419,19 @@ def terrain_mat(name, layers, slope=(0.55, 0.8), height=None, macro=0.012, macro
     nt.links.new(geo.outputs["Position"], sepp.inputs["Vector"])
     nz = noise(nt, 0.08, tc.outputs["Object"], detail=3)
     # break the slope line with noise
-    nzs = math_node(nt, "ADD", sepn.outputs["Z"], math_node(nt, "MULTIPLY", math_node(nt, "SUBTRACT", nz, 0.5), 0.35))
+    nzs = math_node(
+        nt,
+        "ADD",
+        sepn.outputs["Z"],
+        math_node(nt, "MULTIPLY", math_node(nt, "SUBTRACT", nz, 0.5), 0.35),
+    )
     flatw = maprange(nt, nzs, slope[0], slope[1])
     L = {}
     for key, (tex, tile, tnt) in layers.items():
         box = box_all or key == "steep"
-        vec = mapping(nt, 1.0 / tile, "Object" if box else "UV", src=tc.outputs["Object"] if box else None)
+        vec = mapping(
+            nt, 1.0 / tile, "Object" if box else "UV", src=tc.outputs["Object"] if box else None
+        )
         T = tex_nodes(nt, tex, vec, box=box)
         if tnt is not None:
             T["albedo"] = tint(nt, T["albedo"], tnt)
@@ -402,14 +439,32 @@ def terrain_mat(name, layers, slope=(0.55, 0.8), height=None, macro=0.012, macro
     col = mixc(nt, flatw, L["steep"]["albedo"], L["flat"]["albedo"])
     rough = mixf(nt, flatw, L["steep"]["rough"], L["flat"]["rough"])
     nrm = mixc(nt, flatw, L["steep"]["normal"], L["flat"]["normal"])
+    if "patch" in L and patch is not None:  # noise-masked patches on the flat layer
+        pw = maprange(
+            nt, noise(nt, patch[0], tc.outputs["Object"], detail=5, rough=0.6), patch[1], patch[2]
+        )
+        pw = math_node(nt, "MULTIPLY", pw, flatw)
+        col = mixc(nt, pw, col, L["patch"]["albedo"])
+        rough = mixf(nt, pw, rough, L["patch"]["rough"])
+        nrm = mixc(nt, pw, nrm, L["patch"]["normal"])
     if "high" in L and height is not None:
-        hw = maprange(nt, math_node(nt, "ADD", sepp.outputs["Z"], math_node(nt, "MULTIPLY", nz, 6.0)), height[0], height[1])
+        hw = maprange(
+            nt,
+            math_node(nt, "ADD", sepp.outputs["Z"], math_node(nt, "MULTIPLY", nz, 6.0)),
+            height[0],
+            height[1],
+        )
         hw = math_node(nt, "MULTIPLY", hw, flatw)
         col = mixc(nt, hw, col, L["high"]["albedo"])
         rough = mixf(nt, hw, rough, L["high"]["rough"])
         nrm = mixc(nt, hw, nrm, L["high"]["normal"])
     if "low" in L and extra is not None:  # shore band (beach) by height
-        lw = maprange(nt, math_node(nt, "ADD", sepp.outputs["Z"], math_node(nt, "MULTIPLY", nz, extra[2])), extra[1], extra[0])
+        lw = maprange(
+            nt,
+            math_node(nt, "ADD", sepp.outputs["Z"], math_node(nt, "MULTIPLY", nz, extra[2])),
+            extra[1],
+            extra[0],
+        )
         col = mixc(nt, lw, col, L["low"]["albedo"])
         rough = mixf(nt, lw, rough, L["low"]["rough"])
         nrm = mixc(nt, lw, nrm, L["low"]["normal"])
@@ -433,7 +488,9 @@ def math_col_mul(nt, col, f):
     return v.outputs[0]
 
 
-def water_mat(name, deep, shallow, rough=0.03, wave_scale=0.6, wave_strength=0.25, depth_obj=None, foam=None):
+def water_mat(
+    name, deep, shallow, rough=0.03, wave_scale=0.6, wave_strength=0.25, depth_obj=None, foam=None
+):
     """Water: dark reflective surface, colour from a deep/shallow blend fed by a fresnel-ish term.
     Godot/Unity: one water shader, scrolling normal maps, screen depth for the shallow tint."""
     m = bpy.data.materials.new(name)
@@ -498,9 +555,15 @@ def sun(elev_deg, azim_deg, color=(1.0, 0.92, 0.8), energy=4.0, angle=1.0):
     o = link(bpy.data.objects.new("sun", ld))
     e = math.radians(elev_deg)
     a = math.radians(azim_deg)
-    d = Vector((math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e)))  # towards the sun
+    d = Vector(
+        (math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e))
+    )  # towards the sun
     o.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
-    for attr, v in (("use_shadow", True), ("shadow_maximum_resolution", 0.001), ("use_contact_shadow", True)):
+    for attr, v in (
+        ("use_shadow", True),
+        ("shadow_maximum_resolution", 0.001),
+        ("use_contact_shadow", True),
+    ):
         if hasattr(ld, attr):
             try:
                 setattr(ld, attr, v)
@@ -509,7 +572,9 @@ def sun(elev_deg, azim_deg, color=(1.0, 0.92, 0.8), energy=4.0, angle=1.0):
     return o
 
 
-def eevee(samples=64, res=(1920, 1080), exposure=0.0, look="AgX - Medium High Contrast", raytrace=False):
+def eevee(
+    samples=64, res=(1920, 1080), exposure=0.0, look="AgX - Medium High Contrast", raytrace=False
+):
     sc = bpy.context.scene
     try:
         sc.render.engine = "BLENDER_EEVEE_NEXT"
@@ -569,7 +634,9 @@ def camera(loc, target, lens=32.0, sensor=36.0, clip_end=25000.0, dof=None):
     return o
 
 
-def compositor_fog(fog_rgb, start, depth, fog_max, sky_haze=0.1, glare=False, vignette=0.0, haze_power=1.0):
+def compositor_fog(
+    fog_rgb, start, depth, fog_max, sky_haze=0.1, glare=False, vignette=0.0, haze_power=1.0
+):
     """Depth fog on geometry (mist pass, quadratic), sky gets a light horizon haze. Mirrors the Race Riders mock."""
     sc = bpy.context.scene
     w = sc.world
@@ -687,7 +754,14 @@ def mat_rot(axis, deg):
 
 
 # ---------------------------------------------------------------- impostor cards (distant trees)
-def impostor(c, res=512, name=None, hdri="qwantani_dusk_2_puresky_4k.hdr", sun_dir=(0.4, -0.6, 0.7), tint=(1, 1, 1)):
+def impostor(
+    c,
+    res=512,
+    name=None,
+    hdri="qwantani_dusk_2_puresky_4k.hdr",
+    sun_dir=(0.4, -0.6, 0.7),
+    tint=(1, 1, 1),
+):
     """Render a prototype collection from the side (orthographic, transparent) and return a collection with a
     crossed-quad card using that image (alpha clip). The phone approach for anything past ~60 m.
     Race Riders tree_pine_*.glb are made the same way."""
@@ -752,7 +826,16 @@ def impostor(c, res=512, name=None, hdri="qwantani_dusk_2_puresky_4k.hdr", sun_d
     except Exception:  # noqa: BLE001
         pass
     hw = wdt / 2
-    verts = [(-hw, 0, 0), (hw, 0, 0), (hw, 0, size.z), (-hw, 0, size.z), (0, -hw, 0), (0, hw, 0), (0, hw, size.z), (0, -hw, size.z)]
+    verts = [
+        (-hw, 0, 0),
+        (hw, 0, 0),
+        (hw, 0, size.z),
+        (-hw, 0, size.z),
+        (0, -hw, 0),
+        (0, hw, 0),
+        (0, hw, size.z),
+        (0, -hw, size.z),
+    ]
     faces = [(0, 1, 2, 3), (4, 5, 6, 7)]
     me = bpy.data.meshes.new(name)
     me.from_pydata(verts, [], faces)
@@ -783,7 +866,14 @@ def world_fog(density=0.0004, color=(0.6, 0.66, 0.75), anisotropy=0.6, end=6000.
     pv.inputs["Anisotropy"].default_value = anisotropy
     nt.links.new(pv.outputs[0], out.inputs["Volume"])
     ee = sc.eevee
-    for attr, val in (("volumetric_end", end), ("volumetric_start", 1.0), ("volumetric_tile_size", "8"), ("volumetric_samples", 96), ("volumetric_sample_distribution", 0.95), ("use_volumetric_shadows", True)):
+    for attr, val in (
+        ("volumetric_end", end),
+        ("volumetric_start", 1.0),
+        ("volumetric_tile_size", "8"),
+        ("volumetric_samples", 96),
+        ("volumetric_sample_distribution", 0.95),
+        ("use_volumetric_shadows", True),
+    ):
         if hasattr(ee, attr):
             try:
                 setattr(ee, attr, val)
@@ -791,7 +881,15 @@ def world_fog(density=0.0004, color=(0.6, 0.66, 0.75), anisotropy=0.6, end=6000.
                 pass
 
 
-def fog_box(center, size, density=0.0002, color=(0.6, 0.66, 0.75), anisotropy=0.5, end=9000.0, falloff_top=None):
+def fog_box(
+    center,
+    size,
+    density=0.0002,
+    color=(0.6, 0.66, 0.75),
+    anisotropy=0.5,
+    end=9000.0,
+    falloff_top=None,
+):
     """Finite haze volume (a box), no volumetric shadows, so the low sun is not eaten by the fog.
     falloff_top: (z0, z1) density fades out between these heights (ground haze)."""
     bpy.ops.mesh.primitive_cube_add(size=1.0, location=center)
@@ -819,10 +917,71 @@ def fog_box(center, size, density=0.0002, color=(0.6, 0.66, 0.75), anisotropy=0.
     o.data.materials.append(m)
     o.visible_shadow = False
     ee = bpy.context.scene.eevee
-    for attr, val in (("volumetric_end", end), ("volumetric_start", 0.5), ("volumetric_tile_size", "16"), ("volumetric_samples", 48), ("volumetric_sample_distribution", 0.95), ("use_volumetric_shadows", False)):
+    for attr, val in (
+        ("volumetric_end", end),
+        ("volumetric_start", 0.5),
+        ("volumetric_tile_size", "16"),
+        ("volumetric_samples", 48),
+        ("volumetric_sample_distribution", 0.95),
+        ("use_volumetric_shadows", False),
+    ):
         if hasattr(ee, attr):
             try:
                 setattr(ee, attr, val)
             except Exception:  # noqa: BLE001
                 pass
     return o
+
+
+# ---------------------------------------------------------------- added 2026-10-10 (archipelago/canyon pass)
+def dem_sampler(npz_path):
+    """Bilinear height sampler over a resampled DEM npz (grid, x0, y0, step); clamps at the grid edge."""
+    import numpy as np
+
+    d = np.load(npz_path)
+    g = d["grid"].astype(np.float64)
+    x0, y0, st = float(d["x0"]), float(d["y0"]), float(d["step"])
+    ny, nx = g.shape
+
+    def f(x, y):
+        fx = min(max((x - x0) / st, 0.0), nx - 1.001)
+        fy = min(max((y - y0) / st, 0.0), ny - 1.001)
+        i, j = int(fy), int(fx)
+        ty, tx = fy - i, fx - j
+        top = g[i, j] * (1 - tx) + g[i, j + 1] * tx
+        bot = g[i + 1, j] * (1 - tx) + g[i + 1, j + 1] * tx
+        return float(top * (1 - ty) + bot * ty)
+
+    f.grid, f.x0, f.y0, f.step = g, x0, y0, st
+    return f
+
+
+def hdri_sun(env_image, rot_deg=0.0):
+    """(elev_deg, azim_deg) of the brightest pixel of an equirect HDRI after the world_hdri Z rotation.
+    azim uses the sun() convention: degrees from +Y towards +X."""
+    import numpy as np
+
+    w, hh = env_image.size
+    px = np.empty(w * hh * 4, np.float32)
+    env_image.pixels.foreach_get(px)
+    lum = px.reshape(hh, w, 4)[..., :3].sum(-1)
+    j, i = np.unravel_index(int(np.argmax(lum)), lum.shape)
+    u, v = (i + 0.5) / w, (j + 0.5) / hh
+    phi = (0.5 - u) * 2 * math.pi - math.radians(rot_deg)
+    return math.degrees((v - 0.5) * math.pi), (90.0 - math.degrees(phi)) % 360.0
+
+
+def world_hdri_sun(hdri: str, sun_azim_deg: float, strength=1.0):
+    """world_hdri rotated so the HDRI's own sun comes from sun_azim_deg; the sky and the sun light then match.
+    Returns (world, node_tree, env_node, sun_elev_deg)."""
+    w, nt, env = world_hdri(hdri, 0.0, strength=strength)
+    el, az = hdri_sun(env.image, 0.0)
+    rot = sun_azim_deg - az
+    next(n for n in nt.nodes if n.type == "MAPPING").inputs["Rotation"].default_value = (
+        0,
+        0,
+        math.radians(rot),
+    )
+    el2, az2 = hdri_sun(env.image, rot)
+    print(f"HDRI sun {hdri}: elev {el2:.1f} azim {az2:.1f} (rot {rot:.1f})")
+    return w, nt, env, el2

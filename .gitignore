@@ -13,6 +13,9 @@ assets/_raw/*
 !assets/_raw/dem/
 assets/_raw/dem/*
 !assets/_raw/dem/SOURCE.md
+!assets/_raw/dem/cop30/
+assets/_raw/dem/cop30/*
+!assets/_raw/dem/cop30/SOURCE.md
 
 __pycache__/
 *.pyc

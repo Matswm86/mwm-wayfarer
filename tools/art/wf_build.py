@@ -7,11 +7,9 @@ from __future__ import annotations
 import math
 import random
 
-import bmesh
 import bpy
-from mathutils import Matrix, Vector, noise
-
 import wf_art as A
+from mathutils import Vector, noise
 
 
 def _obj(name, verts, faces, mat=None, smooth=False, uv_fn=None):
@@ -67,9 +65,27 @@ _MATS: dict[str, bpy.types.Material] = {}
 def mats_nordic():
     if _MATS:
         return _MATS
-    _MATS["red"] = A.pbr("wall_red", "weathered_plank_siding", 0.45, tint_rgb=(0.62, 0.20, 0.13), hue=(0.5, 0.35, 1.0))
-    _MATS["ochre"] = A.pbr("wall_ochre", "weathered_plank_siding", 0.45, tint_rgb=(0.85, 0.55, 0.22), hue=(0.5, 0.4, 1.0))
-    _MATS["white"] = A.pbr("wall_white", "weathered_plank_siding", 0.45, tint_rgb=(1.0, 0.97, 0.9), hue=(0.5, 0.15, 1.15))
+    _MATS["red"] = A.pbr(
+        "wall_red",
+        "weathered_plank_siding",
+        0.45,
+        tint_rgb=(0.62, 0.20, 0.13),
+        hue=(0.5, 0.35, 1.0),
+    )
+    _MATS["ochre"] = A.pbr(
+        "wall_ochre",
+        "weathered_plank_siding",
+        0.45,
+        tint_rgb=(0.85, 0.55, 0.22),
+        hue=(0.5, 0.4, 1.0),
+    )
+    _MATS["white"] = A.pbr(
+        "wall_white",
+        "weathered_plank_siding",
+        0.45,
+        tint_rgb=(1.0, 0.97, 0.9),
+        hue=(0.5, 0.15, 1.15),
+    )
     _MATS["tar"] = A.pbr("wall_tar", "wood_trunk_wall", 0.7, tint_rgb=(0.55, 0.42, 0.33))
     _MATS["turf"] = A.pbr("turf", "leafy_grass", 0.35, tint_rgb=(0.85, 0.95, 0.6), nstrength=1.4)
     _MATS["stone"] = A.pbr("found_stone", "stone_wall", 0.5)
@@ -87,7 +103,9 @@ def mats_nordic():
     return _MATS
 
 
-def nordic_house(loc, yaw, w=6.0, d=8.0, h=3.0, pitch=27.0, wall="red", lit=0.6, seed=0, chimney=True):
+def nordic_house(
+    loc, yaw, w=6.0, d=8.0, h=3.0, pitch=27.0, wall="red", lit=0.6, seed=0, chimney=True
+):
     """Timber house with stone footing, gable turf roof (overhang, birch-bark edge boards), windows, door."""
     M = mats_nordic()
     r = random.Random(seed)
@@ -109,8 +127,15 @@ def nordic_house(loc, yaw, w=6.0, d=8.0, h=3.0, pitch=27.0, wall="red", lit=0.6,
     for sx in (-1, 1):
         x0, z0 = sx * (w / 2 + ov), 0.4 + h - ov * math.tan(math.radians(pitch))
         x1, z1 = 0.0, 0.4 + h + rh
-        v = [(x0, -d / 2 - ov, z0), (x1, -d / 2 - ov, z1), (x1, d / 2 + ov, z1), (x0, d / 2 + ov, z0)]
-        sl = _obj("roof", v, [(0, 1, 2, 3)], M["turf"], uv_fn=lambda co, n: (co.x * 1.2 + co.z, co.y))
+        v = [
+            (x0, -d / 2 - ov, z0),
+            (x1, -d / 2 - ov, z1),
+            (x1, d / 2 + ov, z1),
+            (x0, d / 2 + ov, z0),
+        ]
+        sl = _obj(
+            "roof", v, [(0, 1, 2, 3)], M["turf"], uv_fn=lambda co, n: (co.x * 1.2 + co.z, co.y)
+        )
         sl.data.polygons[0].use_smooth = True
         sub = sl.modifiers.new("sub", "SUBSURF")
         sub.subdivision_type = "SIMPLE"
@@ -135,17 +160,29 @@ def nordic_house(loc, yaw, w=6.0, d=8.0, h=3.0, pitch=27.0, wall="red", lit=0.6,
         for i in range(n):
             y = -d / 2 + (i + 0.5) * d / n
             if sx == 1 and i == n // 2:
-                objs.append(cube("door", (0.08, 1.0, 2.0), (sx * (w / 2 + 0.02), y, 0.4 + 1.0), M["tar"]))
+                objs.append(
+                    cube("door", (0.08, 1.0, 2.0), (sx * (w / 2 + 0.02), y, 0.4 + 1.0), M["tar"])
+                )
                 continue
             m = M["win_lit"] if r.random() < lit else M["win_dark"]
             objs.append(cube("win", (0.06, 0.8, 1.0), (sx * (w / 2 + 0.03), y, 0.4 + h * 0.55), m))
-            objs.append(cube("frame", (0.07, 1.0, 1.2), (sx * (w / 2 + 0.01), y, 0.4 + h * 0.55), M["trim"]))
+            objs.append(
+                cube("frame", (0.07, 1.0, 1.2), (sx * (w / 2 + 0.01), y, 0.4 + h * 0.55), M["trim"])
+            )
     for sy in (-1, 1):
         m = M["win_lit"] if r.random() < lit else M["win_dark"]
-        objs.append(cube("gwin", (0.7, 0.06, 0.8), (0, sy * (d / 2 + 0.06), 0.4 + h + rh * 0.35), m))
-        objs.append(cube("gframe", (0.9, 0.07, 1.0), (0, sy * (d / 2 + 0.04), 0.4 + h + rh * 0.35), M["trim"]))
+        objs.append(
+            cube("gwin", (0.7, 0.06, 0.8), (0, sy * (d / 2 + 0.06), 0.4 + h + rh * 0.35), m)
+        )
+        objs.append(
+            cube(
+                "gframe", (0.9, 0.07, 1.0), (0, sy * (d / 2 + 0.04), 0.4 + h + rh * 0.35), M["trim"]
+            )
+        )
     if chimney:
-        objs.append(cube("chim", (0.6, 0.6, 1.4), (w * 0.15, d * 0.25, 0.4 + h + rh * 0.7), M["stone"]))
+        objs.append(
+            cube("chim", (0.6, 0.6, 1.4), (w * 0.15, d * 0.25, 0.4 + h + rh * 0.7), M["stone"])
+        )
     root = bpy.data.objects.new("house", None)
     A.link(root)
     for o in objs:
@@ -158,7 +195,14 @@ def nordic_house(loc, yaw, w=6.0, d=8.0, h=3.0, pitch=27.0, wall="red", lit=0.6,
 # ---------------------------------------------------------------- clinker boat
 def boat(loc, yaw, L=6.0, B=1.8, D=0.75, color="#E9E4DA", seed=0, cabin=False):
     """Clinker-built wooden boat (faering / snekke): lofted U sections with plank steps, sheer rising at the ends."""
-    planks = A.pbr(f"hull{seed}", "wood_planks_dirt", 0.6, tint_rgb=A.hexc(color)[:3], hue=(0.5, 0.3, 1.1), rough_add=0.05)
+    planks = A.pbr(
+        f"hull{seed}",
+        "wood_planks_dirt",
+        0.6,
+        tint_rgb=A.hexc(color)[:3],
+        hue=(0.5, 0.3, 1.1),
+        rough_add=0.05,
+    )
     inner = A.pbr(f"hull_in{seed}", "weathered_brown_planks", 0.5, tint_rgb=(0.75, 0.62, 0.48))
     nu, nv = 40, 12
     verts, faces = [], []
@@ -183,7 +227,14 @@ def boat(loc, yaw, L=6.0, B=1.8, D=0.75, color="#E9E4DA", seed=0, cabin=False):
     n0 = len(verts)
     verts += [(x, -y, z) for (x, y, z) in verts]
     faces += [tuple(reversed([v + n0 for v in f])) for f in faces]
-    o = _obj("hull", verts, faces, planks, smooth=True, uv_fn=lambda co, n: (co.x * 0.5, co.z * 2.5 + abs(co.y)))
+    o = _obj(
+        "hull",
+        verts,
+        faces,
+        planks,
+        smooth=True,
+        uv_fn=lambda co, n: (co.x * 0.5, co.z * 2.5 + abs(co.y)),
+    )
     o.data.materials.append(inner)
     sol = o.modifiers.new("s", "SOLIDIFY")
     sol.thickness = 0.04
@@ -191,12 +242,33 @@ def boat(loc, yaw, L=6.0, B=1.8, D=0.75, color="#E9E4DA", seed=0, cabin=False):
     objs = [o]
     # thwarts
     for tx in (-0.2, 0.15, 0.32):
-        objs.append(cube("thwart", (0.22, B * 0.85 * math.sin(math.pi * (tx + 0.5)) ** 0.6, 0.04), (tx * L, 0, D * 0.62), inner))
+        objs.append(
+            cube(
+                "thwart",
+                (0.22, B * 0.85 * math.sin(math.pi * (tx + 0.5)) ** 0.6, 0.04),
+                (tx * L, 0, D * 0.62),
+                inner,
+            )
+        )
     if cabin:
         wh = A.pbr(f"cabin{seed}", "weathered_plank_siding", 0.4, tint_rgb=(0.9, 0.9, 0.86))
         objs.append(cube("wheelhouse", (1.3, B * 0.7, 1.3), (-0.12 * L, 0, D + 0.55), wh))
-        objs.append(cube("cabroof", (1.45, B * 0.78, 0.08), (-0.12 * L, 0, D + 1.24), A.flat_mat("cabroof", A.hexc("#2B2F33"), 0.5)))
-        objs.append(cube("cabwin", (0.05, B * 0.5, 0.4), (-0.12 * L + 0.66, 0, D + 0.85), mats_nordic()["win_dark"]))
+        objs.append(
+            cube(
+                "cabroof",
+                (1.45, B * 0.78, 0.08),
+                (-0.12 * L, 0, D + 1.24),
+                A.flat_mat("cabroof", A.hexc("#2B2F33"), 0.5),
+            )
+        )
+        objs.append(
+            cube(
+                "cabwin",
+                (0.05, B * 0.5, 0.4),
+                (-0.12 * L + 0.66, 0, D + 0.85),
+                mats_nordic()["win_dark"],
+            )
+        )
     root = bpy.data.objects.new("boat", None)
     A.link(root)
     for b in objs:
@@ -241,7 +313,12 @@ def waterfall(path_pts, width, name="falls", strength=3.0):
     nz = A.noise(nt, 1.0, mp, detail=6, rough=0.6)
     sep = nt.nodes.new("ShaderNodeSeparateXYZ")
     nt.links.new(tc.outputs["UV"], sep.inputs["Vector"])
-    edge = A.math_node(nt, "MULTIPLY", A.maprange(nt, sep.outputs["X"], 0.0, 0.25), A.maprange(nt, sep.outputs["X"], 1.0, 0.75))
+    edge = A.math_node(
+        nt,
+        "MULTIPLY",
+        A.maprange(nt, sep.outputs["X"], 0.0, 0.25),
+        A.maprange(nt, sep.outputs["X"], 1.0, 0.75),
+    )
     a = A.math_node(nt, "MULTIPLY", edge, A.maprange(nt, nz, 0.35, 0.65, 0.15, 1.0))
     a = A.math_node(nt, "MULTIPLY", a, A.maprange(nt, sep.outputs["Y"], 0.0, 0.08))
     em = nt.nodes.new("ShaderNodeEmission")
@@ -307,24 +384,49 @@ def mist(loc, size, alpha=0.35, color=(0.85, 0.88, 0.92), name="mist", face=None
     return o
 
 
-def aurora(world_nt, bg_node, strength=1.2, az_center=120.0, az_width=70.0, elev=(22.0, 50.0), color=(0.25, 1.0, 0.55)):
+def aurora(
+    world_nt,
+    bg_node,
+    strength=1.2,
+    az_center=120.0,
+    az_width=70.0,
+    elev=(22.0, 50.0),
+    color=(0.25, 1.0, 0.55),
+):
     """Aurora band added to the sky shader by view direction: curtain folds (noise on azimuth), bright lower
     edge, fades up. Sky-only, so the depth fog never touches it. Godot: a few lines in the sky shader."""
     nt = world_nt
     tc = nt.nodes.new("ShaderNodeTexCoord")
     sep = nt.nodes.new("ShaderNodeSeparateXYZ")
     nt.links.new(tc.outputs["Generated"], sep.inputs["Vector"])
-    az = A.math_node(nt, "MULTIPLY", A.math_node(nt, "ARCTAN2", sep.outputs["Y"], sep.outputs["X"]), 180.0 / math.pi)
+    az = A.math_node(
+        nt,
+        "MULTIPLY",
+        A.math_node(nt, "ARCTAN2", sep.outputs["Y"], sep.outputs["X"]),
+        180.0 / math.pi,
+    )
     el = A.math_node(nt, "MULTIPLY", A.math_node(nt, "ARCSINE", sep.outputs["Z"]), 180.0 / math.pi)
     # curtain base elevation wanders with azimuth
-    wv = A.math_node(nt, "MULTIPLY", A.math_node(nt, "SINE", A.math_node(nt, "MULTIPLY", az, 0.09)), 6.0)
+    wv = A.math_node(
+        nt, "MULTIPLY", A.math_node(nt, "SINE", A.math_node(nt, "MULTIPLY", az, 0.09)), 6.0
+    )
     base = A.math_node(nt, "ADD", wv, elev[0])
     rel = A.math_node(nt, "SUBTRACT", el, base)
     lower = A.maprange(nt, rel, -1.0, 1.5)
     upper = A.maprange(nt, rel, elev[1] - elev[0], 2.0)
     vert = A.math_node(nt, "MULTIPLY", lower, upper)
     vert = A.math_node(nt, "MULTIPLY", vert, A.maprange(nt, rel, 18.0, 0.0, 0.25, 1.0))
-    azm = A.math_node(nt, "MULTIPLY", A.maprange(nt, A.math_node(nt, "ABSOLUTE", A.math_node(nt, "SUBTRACT", az, az_center)), az_width, az_width * 0.4), 1.0)
+    azm = A.math_node(
+        nt,
+        "MULTIPLY",
+        A.maprange(
+            nt,
+            A.math_node(nt, "ABSOLUTE", A.math_node(nt, "SUBTRACT", az, az_center)),
+            az_width,
+            az_width * 0.4,
+        ),
+        1.0,
+    )
     cmb = nt.nodes.new("ShaderNodeCombineXYZ")
     nt.links.new(A.math_node(nt, "MULTIPLY", az, 0.6), cmb.inputs["X"])
     nt.links.new(A.math_node(nt, "MULTIPLY", el, 0.02), cmb.inputs["Y"])
@@ -347,7 +449,9 @@ def fbm(x, y, octaves=5, basis="PERLIN_ORIGINAL"):
 
 
 def ridged(x, y, octaves=5):
-    return noise.ridged_multi_fractal((x, y, 0.0), 1.0, 2.0, octaves, 1.0, 2.0, noise_basis="PERLIN_ORIGINAL")
+    return noise.ridged_multi_fractal(
+        (x, y, 0.0), 1.0, 2.0, octaves, 1.0, 2.0, noise_basis="PERLIN_ORIGINAL"
+    )
 
 
 def smoothstep(a, b, x):
@@ -383,7 +487,7 @@ def palm_mats():
     return _PALM
 
 
-def palm(loc, height=11.0, lean=(0.0, 0.0), seed=0, nfr=16):
+def palm(loc, height=11.0, lean=(0.0, 0.0), seed=0, nfr=16, frond_w=1.1):
     M = palm_mats()
     r = random.Random(seed)
     seg, rings = 14, 30
@@ -392,7 +496,7 @@ def palm(loc, height=11.0, lean=(0.0, 0.0), seed=0, nfr=16):
     for j in range(rings + 1):
         t = j / rings
         z = height * t
-        off = Vector((lean[0], lean[1], 0)) * (t ** 1.6) * height
+        off = Vector((lean[0], lean[1], 0)) * (t**1.6) * height
         rad = 0.24 * (1.0 - 0.25 * t) * (1 + 0.06 * math.sin(j * 2.2))
         for i in range(seg):
             a = 2 * math.pi * i / seg
@@ -403,8 +507,14 @@ def palm(loc, height=11.0, lean=(0.0, 0.0), seed=0, nfr=16):
             a = j * seg + i
             b2 = j * seg + (i + 1) % seg
             faces.append((a, b2, b2 + seg, a + seg))
-    tr = _obj("palm_trunk", verts, faces, M["bark"], smooth=True,
-              uv_fn=lambda co, n: (math.atan2(co.y, co.x) / math.pi, co.z / 1.2))
+    tr = _obj(
+        "palm_trunk",
+        verts,
+        faces,
+        M["bark"],
+        smooth=True,
+        uv_fn=lambda co, n: (math.atan2(co.y, co.x) / math.pi, co.z / 1.2),
+    )
     tr.location = loc
     objs = [tr]
     # fronds: curved strips, UV u along the frond
@@ -420,7 +530,7 @@ def palm(loc, height=11.0, lean=(0.0, 0.0), seed=0, nfr=16):
             s = i / n
             ang = math.radians(55 * up) - s * s * math.radians(80)
             p = dirv * (L * s * math.cos(ang * 0.6)) + Vector((0, 0, L * s * math.sin(ang) * 0.6))
-            wv = 1.1 * math.sin(math.pi * min(1, s * 0.95 + 0.08)) ** 0.5
+            wv = frond_w * math.sin(math.pi * min(1, s * 0.95 + 0.08)) ** 0.5
             droop = Vector((0, 0, -0.25 * wv))
             vv += [tuple(top + p - side * wv / 2 + droop), tuple(top + p + side * wv / 2 + droop)]
             uvs += [(s, 0.0), (s, 1.0)]
@@ -483,17 +593,37 @@ def stall(loc, yaw, w=4.0, d=3.0, hgt=2.6, cloth=None, seed=0):
             u, v = i / nx, j / ny
             x = (u - 0.5) * (w + 0.6)
             y = (v - 0.5) * (d + 0.8)
-            z = hgt + 0.4 - 0.55 * v - 0.18 * math.sin(math.pi * u) * math.sin(math.pi * v) + (0.06 * math.sin(u * 30 + seed) if j == ny else 0)
+            z = (
+                hgt
+                + 0.4
+                - 0.55 * v
+                - 0.18 * math.sin(math.pi * u) * math.sin(math.pi * v)
+                + (0.06 * math.sin(u * 30 + seed) if j == ny else 0)
+            )
             vv.append((x, y, z))
     for j in range(ny):
         for i in range(nx):
             a = j * (nx + 1) + i
             ff.append((a, a + 1, a + nx + 2, a + nx + 1))
-    aw = _obj("awning", vv, ff, cloth, smooth=True, uv_fn=lambda co, n: ((co.x + w) / (w + 0.6), (co.y + d) / (d + 0.8)))
+    aw = _obj(
+        "awning",
+        vv,
+        ff,
+        cloth,
+        smooth=True,
+        uv_fn=lambda co, n: ((co.x + w) / (w + 0.6), (co.y + d) / (d + 0.8)),
+    )
     objs.append(aw)
     # valance flap at the front
-    vv2 = [(-(w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.15), ((w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.15), ((w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.5), (-(w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.5)]
-    fl = _obj("valance", vv2, [(0, 1, 2, 3)], cloth, uv_fn=lambda co, n: ((co.x + w) / (w + 0.6), co.z))
+    vv2 = [
+        (-(w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.15),
+        ((w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.15),
+        ((w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.5),
+        (-(w + 0.6) / 2, (d + 0.8) / 2, hgt - 0.5),
+    ]
+    fl = _obj(
+        "valance", vv2, [(0, 1, 2, 3)], cloth, uv_fn=lambda co, n: ((co.x + w) / (w + 0.6), co.z)
+    )
     objs.append(fl)
     root = bpy.data.objects.new("stall", None)
     A.link(root)

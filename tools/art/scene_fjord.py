@@ -14,10 +14,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import bpy  # noqa: E402
-from mathutils import Vector  # noqa: E402
-
 import wf_art as A  # noqa: E402
 import wf_build as B  # noqa: E402
+from mathutils import Vector  # noqa: E402
 
 argv = sys.argv[sys.argv.index("--") + 1 :]
 VARIANT = argv[0]
@@ -25,8 +24,19 @@ OUT = argv[1]
 SCALE = float(argv[2]) if len(argv) > 2 else 1.0
 SAMPLES = int(argv[3]) if len(argv) > 3 else 64
 # Lighting overrides for A/B renders; unset = the original key-frame values.
-LIT = {k: float(os.environ.get(f"WF_{k}", d)) for k, d in (("SUN_ELEV", 7.0), ("SUN_ENERGY", 4.5), ("FOG_START", 80), ("FOG_MAX", 0.7), ("MIST_ALPHA", 0.4), ("EXPOSURE", -0.2))}
-SCREEN_RT = os.environ.get("WF_SCREEN_RT") == "1"
+# Approved look (owner 2026-10-10): real terrain, daytime sky, sun 30 deg, light fog. Each value can be overridden.
+LIT = {
+    k: float(os.environ.get(f"WF_{k}", d))
+    for k, d in (
+        ("SUN_ELEV", 30.0),
+        ("SUN_ENERGY", 5.0),
+        ("FOG_START", 200),
+        ("FOG_MAX", 0.3),
+        ("MIST_ALPHA", 0.15),
+        ("EXPOSURE", 0.0),
+    )
+}
+SCREEN_RT = os.environ.get("WF_SCREEN_RT", "1") == "1"
 # Mountain relief: spurs, bays, gullies, uneven crests and a scree apron instead of one smooth wall.
 RELIEF = os.environ.get("WF_RELIEF") == "1"
 R = A.rng(7)
@@ -34,10 +44,12 @@ R = A.rng(7)
 
 # Real terrain: Naeroyfjord, Kartverket DTM 10 (© Kartverket, CC BY 4.0), resampled by tools/terrain/dem_to_game.py.
 DEM = None
-if os.environ.get("WF_DEM") == "1":
+if os.environ.get("WF_DEM", "1") == "1":
     import numpy as np
 
-    DEM = np.load(Path(__file__).resolve().parents[2] / "assets" / "_raw" / "dem" / "naeroy_game.npz")
+    DEM = np.load(
+        Path(__file__).resolve().parents[2] / "assets" / "_raw" / "dem" / "naeroy_game.npz"
+    )
     DEM = {k: DEM[k] for k in DEM.files}
 
 
@@ -54,16 +66,26 @@ def W(y):
     return 380 + 0.08 * max(y, 0)
 
 
-def dem_h(x, y):
-    """Bilinear height from the resampled DTM grid; clamps at the grid edge."""
-    g, st = DEM["grid"], float(DEM["step"])
-    fx = min(max((x - float(DEM["x0"])) / st, 0.0), g.shape[1] - 1.001)
-    fy = min(max((y - float(DEM["y0"])) / st, 0.0), g.shape[0] - 1.001)
+def _bilinear(g, x0, y0, st, x, y):
+    fx = min(max((x - x0) / st, 0.0), g.shape[1] - 1.001)
+    fy = min(max((y - y0) / st, 0.0), g.shape[0] - 1.001)
     i, j = int(fy), int(fx)
     ty, tx = fy - i, fx - j
     top = g[i, j] * (1 - tx) + g[i, j + 1] * tx
     bot = g[i + 1, j] * (1 - tx) + g[i + 1, j + 1] * tx
     return float(top * (1 - ty) + bot * ty)
+
+
+def dem_h(x, y):
+    """Terrain height: 2 m data near the camera, 10 m data beyond, feathered over 60 m."""
+    zc = _bilinear(DEM["grid"], float(DEM["x0"]), float(DEM["y0"]), float(DEM["step"]), x, y)
+    fx0, fy0, fs = float(DEM["fx0"]), float(DEM["fy0"]), float(DEM["fstep"])
+    fx1, fy1 = fx0 + fs * (DEM["fine"].shape[1] - 1), fy0 + fs * (DEM["fine"].shape[0] - 1)
+    inner = min(x - fx0, fx1 - x, y - fy0, fy1 - y)
+    if inner <= 0:
+        return zc
+    k = B.smoothstep(0, 60, inner)
+    return zc * (1 - k) + _bilinear(DEM["fine"], fx0, fy0, fs, x, y) * k
 
 
 P0 = (xs(25.0) + 16.0, 25.0, 5.5) if DEM is not None else (-10.0, 25.0, 5.5)
@@ -86,7 +108,13 @@ def h_raw(x, y):
         z = dem_h(x, y)
         e = x - xs(y)
         # village shelf on the east shore: ease the real 15-25 % slope toward a gentle bench
-        m = 0.75 * (1 - B.smoothstep(90, 170, e)) * B.smoothstep(-5, 15, e) * B.smoothstep(-150, -50, y) * (1 - B.smoothstep(380, 480, y))
+        m = (
+            0.75
+            * (1 - B.smoothstep(90, 170, e))
+            * B.smoothstep(-5, 15, e)
+            * B.smoothstep(-150, -50, y)
+            * (1 - B.smoothstep(380, 480, y))
+        )
         if m > 0:
             z = z * (1 - m) + (1.0 + 0.045 * min(e, 95) + 0.5 * B.fbm(x / 30, y / 30)) * m
         return z
@@ -94,8 +122,13 @@ def h_raw(x, y):
     n1 = B.fbm(x / 260, y / 260)
     if e >= 0:
         shelf = B.smoothstep(40, 100, y) * (1 - B.smoothstep(270, 340, y))
-        z0 = 0.30 * min(e, 110) + 620 * (1 - math.exp(-((max(0.0, e - 110)) / 220) ** 1.6))
-        z1 = 1.0 + 0.045 * min(e, 95) + 0.5 * B.fbm(x / 30, y / 30) + 650 * (1 - math.exp(-((max(0.0, e - 95)) / 200) ** 1.6))
+        z0 = 0.30 * min(e, 110) + 620 * (1 - math.exp(-(((max(0.0, e - 110)) / 220) ** 1.6)))
+        z1 = (
+            1.0
+            + 0.045 * min(e, 95)
+            + 0.5 * B.fbm(x / 30, y / 30)
+            + 650 * (1 - math.exp(-(((max(0.0, e - 95)) / 200) ** 1.6)))
+        )
         z = z0 * (1 - shelf) + z1 * shelf
         steep = B.smoothstep(100, 160, e)
         z += n1 * 22 * B.smoothstep(0, 60, e) + steep * 40 * B.ridged(x / 45, y / 170, 4)
@@ -110,8 +143,10 @@ def h_raw(x, y):
         return wall(x, y, e2, n1, crest=720 + 380 * B.fbm(y / 520, 3.3, 4), notch=True)
     if e2 >= 0:
         hl = 780 + 220 * B.fbm(y / 900, 3.3, 3)
-        z = hl * (1 - math.exp(-(e2 / 70) ** 1.45))
-        z += n1 * 30 * B.smoothstep(0, 40, e2) + B.smoothstep(15, 80, e2) * 55 * B.ridged(x / 50, y / 140, 4)
+        z = hl * (1 - math.exp(-((e2 / 70) ** 1.45)))
+        z += n1 * 30 * B.smoothstep(0, 40, e2) + B.smoothstep(15, 80, e2) * 55 * B.ridged(
+            x / 50, y / 140, 4
+        )
         # hanging valley notch where the waterfall leaves the plateau
         z -= 120 * math.exp(-(((y - 1150) / 90) ** 2)) * B.smoothstep(40, 200, e2)
         return z
@@ -127,7 +162,7 @@ def gullies(x, y):
 def wall(x, y, e2, n1, crest, notch):
     """Fjord wall profile: scree apron, steep face, then a rounded shoulder to an uneven crest."""
     apron = 28 * B.smoothstep(0, 45, e2)
-    face = crest * (1 - math.exp(-(max(0.0, e2 - 25) / 85) ** 1.6))
+    face = crest * (1 - math.exp(-((max(0.0, e2 - 25) / 85) ** 1.6)))
     z = apron + face
     up = B.smoothstep(40, 160, e2)
     z += n1 * 30 * B.smoothstep(0, 40, e2) + up * 95 * B.ridged(x / 70, y / 110, 5)
@@ -144,13 +179,25 @@ def terrain():
         steep=("rock_face_03", 26.0, (0.36, 0.40, 0.42)),
         high=("aerial_grass_rock", 40.0, (0.7, 0.8, 0.62)),
     )
-    m = A.terrain_mat("fjord_terrain", layers, slope=(0.5, 0.72) if (RELIEF or DEM is not None) else (0.32, 0.58), box_all=RELIEF or DEM is not None, height=(560, 760), macro=0.004, macro_amp=(0.6, 1.2))
+    m = A.terrain_mat(
+        "fjord_terrain",
+        layers,
+        slope=(0.5, 0.72) if (RELIEF or DEM is not None) else (0.32, 0.58),
+        box_all=RELIEF or DEM is not None,
+        height=(560, 760),
+        macro=0.004,
+        macro_amp=(0.6, 1.2),
+    )
+
     def hmid(x, y):
         d = max(abs(x - P0[0]) - 40, abs(y - P0[1] - 30) - 55)
         return h(x, y) - 0.9 * (1 - B.smoothstep(-5, 5, d))
 
-    mid = A.grid_mesh("terrain_mid", hmid, -1500, 1500, -300, 3600, 420, 520, m)
-    far = A.grid_mesh("terrain_far", lambda x, y: h(x, y) - 3.0, -7000, 7000, -4000, 11000, 280, 300, m)
+    res = (900, 1170) if DEM is not None else (420, 520)
+    mid = A.grid_mesh("terrain_mid", hmid, -1500, 1500, -300, 3600, res[0], res[1], m)
+    far = A.grid_mesh(
+        "terrain_far", lambda x, y: h(x, y) - 3.0, -7000, 7000, -4000, 11000, 280, 300, m
+    )
     return mid, far
 
 
@@ -167,7 +214,17 @@ def near_patch(P):
     attr = nt.nodes.new("ShaderNodeVertexColor")
     attr.layer_name = "path"
     nz = A.noise(nt, 0.6, detail=4)
-    pm = A.maprange(nt, A.math_node(nt, "ADD", attr.outputs["Color"], A.math_node(nt, "MULTIPLY", A.math_node(nt, "SUBTRACT", nz, 0.5), 0.25)), 0.45, 0.7)
+    pm = A.maprange(
+        nt,
+        A.math_node(
+            nt,
+            "ADD",
+            attr.outputs["Color"],
+            A.math_node(nt, "MULTIPLY", A.math_node(nt, "SUBTRACT", nz, 0.5), 0.25),
+        ),
+        0.45,
+        0.7,
+    )
     gcol = A.tint(nt, G["albedo"], (0.9, 1.0, 0.75))
     col = A.mixc(nt, pm, gcol, T["albedo"])
     nt.links.new(col, b.inputs["Base Color"])
@@ -219,30 +276,44 @@ def scatter_near(P, hn):
         px = P.x + 0.3 + 1.6 * math.sin((y - P.y) / 14.0) - 0.08 * (y - P.y)
         if abs(x - px) < 2.5 or abs(x - P.x) < 6 and y < P.y + 20:
             continue
-        A.inst(R.choice(rocks), (x, y, hn(x, y) - 0.25), yaw=R.uniform(0, 6.3), scale=R.uniform(0.35, 0.9))
+        A.inst(
+            R.choice(rocks),
+            (x, y, hn(x, y) - 0.25),
+            yaw=R.uniform(0, 6.3),
+            scale=R.uniform(0.35, 0.9),
+        )
 
 
 def shore_rocks():
-    rocks = A.proto_variants("rock_moss_set_01") + [A.proto("coast_rocks_01", tint_rgb=(0.7, 0.72, 0.7)), A.proto("boulder_01", tint_rgb=(0.75, 0.78, 0.76))]
+    rocks = A.proto_variants("rock_moss_set_01") + [
+        A.proto("coast_rocks_01", tint_rgb=(0.7, 0.72, 0.7)),
+        A.proto("boulder_01", tint_rgb=(0.75, 0.78, 0.76)),
+    ]
     for i in range(70):
         y = R.uniform(-60, 90)
         x = xs(y) + R.uniform(-4, 5)
         if abs(x - P0[0]) < 4 and abs(y - P0[1]) < 6:
             continue
-        A.inst(R.choice(rocks), (x, y, h(x, y) - 0.6), yaw=R.uniform(0, 6.3), scale=R.uniform(0.5, 1.6))
+        A.inst(
+            R.choice(rocks), (x, y, h(x, y) - 0.6), yaw=R.uniform(0, 6.3), scale=R.uniform(0.5, 1.6)
+        )
 
 
 def trees():
     firs = A.proto_variants("fir_tree_01")
     pines = A.proto_variants("pine_tree_01")
-    imps = [A.impostor(c, 512, tint=(0.9, 0.95, 0.85)) for c in firs] + [A.impostor(c, 512, tint=(0.9, 0.95, 0.85)) for c in pines[:2]]
+    imps = [A.impostor(c, 512, tint=(0.9, 0.95, 0.85)) for c in firs] + [
+        A.impostor(c, 512, tint=(0.9, 0.95, 0.85)) for c in pines[:2]
+    ]
     n = 0
     nfull = 0
-    for _ in range(2600):
-        y = R.uniform(-80, 1400)
-        x = xs(y) + R.uniform(12, 520)
+    real = DEM is not None
+    for _ in range(9000 if real else 2600):
+        y = R.uniform(-80, 3000 if real else 1400)
+        x = xs(y) + R.uniform(12, 950 if real else 520)
         z = h(x, y)
-        if z > 360 or z < 2.5:
+        top = 520 - 60 * B.fbm(x / 150, y / 150) if real else 360
+        if z > top or z < 2.5:
             continue
         if 90 < y < 300 and x < xs(y) + 85:
             continue
@@ -259,11 +330,11 @@ def trees():
             c = R.choice(imps)
         A.inst(c, (x, y, z - 0.3), yaw=R.uniform(0, 6.3), scale=R.uniform(0.7, 1.25))
         n += 1
-    for _ in range(900):
+    for _ in range(4000 if real else 900):
         y = R.uniform(150, 3000)
-        x = xs(y) - W(y) - R.uniform(4, 160)
+        x = xs(y) - W(y) - R.uniform(4, 600 if real else 160)
         z = h(x, y)
-        if z > 300 or z < 2.5:
+        if z > (480 if real else 300) or z < 2.5:
             continue
         nx = (h(x + 3, y) - h(x - 3, y)) / 6
         if abs(nx) > 1.3 and R.random() < 0.85:
@@ -273,13 +344,18 @@ def trees():
     # village garden trees
     for y in (110, 150, 196, 236, 280):
         x = xs(y) + R.uniform(40, 80)
-        A.inst(R.choice(imps), (x, y, h(x, y) - 0.2), yaw=R.uniform(0, 6.3), scale=R.uniform(0.6, 0.9))
+        A.inst(
+            R.choice(imps), (x, y, h(x, y) - 0.2), yaw=R.uniform(0, 6.3), scale=R.uniform(0.6, 0.9)
+        )
     print("TREES", n)
 
 
 def cliffs():
     """Scaled rock-face scans (Poly Haven mountainside, rock_face_01) dress the steep walls with real relief."""
-    faces = [A.proto("mountainside", tint_rgb=(0.78, 0.86, 0.88), hue=(0.5, 0.35, 0.8)), A.proto("rock_face_01", tint_rgb=(0.78, 0.86, 0.86), hue=(0.5, 0.35, 0.8))]
+    faces = [
+        A.proto("mountainside", tint_rgb=(0.78, 0.86, 0.88), hue=(0.5, 0.35, 0.8)),
+        A.proto("rock_face_01", tint_rgb=(0.78, 0.86, 0.86), hue=(0.5, 0.35, 0.8)),
+    ]
     y = 260.0
     while y < 3200:
         xo = xs(y) - W(y)
@@ -288,17 +364,29 @@ def cliffs():
         sz = A.proto_size(c)
         sc = s if c is faces[0] else s * 2.0
         e2 = R.uniform(6, 30)
-        A.inst(c, (xo - e2, y, h(xo - e2, y) - 25), yaw=math.radians(90 + R.uniform(-12, 12)), scale=sc)
+        A.inst(
+            c, (xo - e2, y, h(xo - e2, y) - 25), yaw=math.radians(90 + R.uniform(-12, 12)), scale=sc
+        )
         if R.random() < 0.7:
             e3 = e2 + R.uniform(60, 120)
-            A.inst(faces[0], (xo - e3, y + R.uniform(-60, 60), h(xo - e3, y) - 40), yaw=math.radians(90 + R.uniform(-15, 15)), scale=s * 1.1)
+            A.inst(
+                faces[0],
+                (xo - e3, y + R.uniform(-60, 60), h(xo - e3, y) - 40),
+                yaw=math.radians(90 + R.uniform(-15, 15)),
+                scale=s * 1.1,
+            )
         y += sz.x * sc * R.uniform(0.4, 0.6)
     y = 420.0
     while y < 2600:
         xr = xs(y)
         s = R.uniform(24, 38)
         e2 = R.uniform(140, 220)
-        A.inst(faces[0], (xr + e2, y, h(xr + e2, y) - 30), yaw=math.radians(-90 + R.uniform(-12, 12)), scale=s)
+        A.inst(
+            faces[0],
+            (xr + e2, y, h(xr + e2, y) - 30),
+            yaw=math.radians(-90 + R.uniform(-12, 12)),
+            scale=s,
+        )
         y += 10.2 * s * R.uniform(0.6, 0.85)
 
 
@@ -317,11 +405,31 @@ def village():
     ]
     for i, (dx, y, yaw, w, d, wall, lit) in enumerate(houses):
         x = xs(y) + dx
-        B.nordic_house((x, y, h(x, y) - 0.15), math.radians(yaw), w=w, d=d, h=2.8 + 0.4 * (i % 2), wall=wall, lit=lit, seed=i)
+        B.nordic_house(
+            (x, y, h(x, y) - 0.15),
+            math.radians(yaw),
+            w=w,
+            d=d,
+            h=2.8 + 0.4 * (i % 2),
+            wall=wall,
+            lit=lit,
+            seed=i,
+        )
     # boathouses (naust) at the shore, gable to the water
     for i, y in enumerate((150, 192)):
         x = xs(y) + 5
-        B.nordic_house((x, y, max(0.2, h(x, y)) - 0.1), math.radians(90), w=5.0, d=9.0, h=2.4, pitch=32, wall="tar", lit=0.0, seed=20 + i, chimney=False)
+        B.nordic_house(
+            (x, y, max(0.2, h(x, y)) - 0.1),
+            math.radians(90),
+            w=5.0,
+            d=9.0,
+            h=2.4,
+            pitch=32,
+            wall="tar",
+            lit=0.0,
+            seed=20 + i,
+            chimney=False,
+        )
     # jetty and boats
     pier = A.proto("modular_wooden_pier")
     sz = A.proto_size(pier)
@@ -329,20 +437,42 @@ def village():
     yj = 172
     A.inst(pier, (xs(yj) - 6, yj, -0.6), yaw=math.radians(90), scale=1.0)
     A.inst(pier, (xs(yj) - 22, yj, -0.6), yaw=math.radians(90), scale=1.0)
-    boats = [(-10, yj + 3.0, 4, "#E9E4DA", False), (-18, yj - 3.2, -6, "#2F5A4A", True), (-26, yj + 3.4, 2, "#8E2B22", False), (-60, 240, 40, "#DCD6C8", True)]
+    boats = [
+        (-10, yj + 3.0, 4, "#E9E4DA", False),
+        (-18, yj - 3.2, -6, "#2F5A4A", True),
+        (-26, yj + 3.4, 2, "#8E2B22", False),
+        (-60, 240, 40, "#DCD6C8", True),
+    ]
     for i, (dx, y, yaw, col, cab) in enumerate(boats):
-        B.boat((xs(yj) + dx, y, -0.28), math.radians(90 + yaw), L=6.5 if not cab else 8.0, B=2.0 if not cab else 2.5, color=col, seed=i, cabin=cab)
+        B.boat(
+            (xs(yj) + dx, y, -0.28),
+            math.radians(90 + yaw),
+            L=6.5 if not cab else 8.0,
+            B=2.0 if not cab else 2.5,
+            color=col,
+            seed=i,
+            cabin=cab,
+        )
     # barrels and crates on the shore
     bar = A.proto("wooden_barrels_01")
     A.inst(bar, (xs(yj) + 3, yj - 6, h(xs(yj) + 3, yj - 6)), yaw=0.3)
 
 
 def water():
-    m = A.water_mat("fjord_water", A.hexc("#061A1E"), A.hexc("#16383A"), rough=0.02, wave_scale=0.05, wave_strength=0.08)
+    m = A.water_mat(
+        "fjord_water",
+        A.hexc("#061A1E"),
+        A.hexc("#16383A"),
+        rough=0.02,
+        wave_scale=0.05,
+        wave_strength=0.08,
+    )
     bpy.ops.mesh.primitive_plane_add(size=1, location=(-200, 3000, 0))
     o = bpy.context.active_object
     o.scale = (6000, 8000, 1)
     o.data.materials.append(m)
+    if DEM is not None:
+        shallow_tint(m)
     pr = bpy.data.lightprobes.new("planar", "PLANE")
     po = A.link(bpy.data.objects.new("planar", pr))
     po.location = (-200, 2000, 0.02)
@@ -350,7 +480,60 @@ def water():
     return o
 
 
+def shallow_tint(m):
+    """Colour the water by the real chart depth: green-turquoise over shallow shelves, a pale foam line at the shore.
+    The depth comes from the 10 m grid (seabed from Kartverket chart soundings), baked into a 600x800 image
+    that covers the water plane (x -3200..2800, y -1000..7000)."""
+    g, gx0, gy0, st = DEM["grid"], float(DEM["x0"]), float(DEM["y0"]), float(DEM["step"])
+    i0, j0 = int((-1000 - gy0) / st), int((-3200 - gx0) / st)
+    d = np.clip(-g[i0 : i0 + 800, j0 : j0 + 600], 0.0, 60.0) / 60.0  # 0 = shore, 1 = 60 m or deeper
+    img = bpy.data.images.new("water_depth", 600, 800, float_buffer=True)
+    px = np.repeat(d.astype(np.float32).ravel(), 4)
+    px[3::4] = 1.0
+    img.pixels.foreach_set(px)
+    nt = m.node_tree
+    b = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+    base = b.inputs["Base Color"].links[0].from_socket
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    off = nt.nodes.new("ShaderNodeVectorMath")
+    off.operation = "ADD"
+    off.inputs[1].default_value = (0.5, 0.5, 0.0)
+    nt.links.new(tc.outputs["Object"], off.inputs[0])
+    tex = nt.nodes.new("ShaderNodeTexImage")
+    tex.image = img
+    tex.extension = "EXTEND"
+    tex.interpolation = "Cubic"
+    nt.links.new(off.outputs["Vector"], tex.inputs["Vector"])
+    shallow = A.maprange(nt, tex.outputs["Color"], 0.25, 0.0)  # 1 at the shore, 0 from 15 m depth
+    col = A.mixc(nt, shallow, base, A.hexc("#2E6B5E"))
+    foam = A.maprange(nt, tex.outputs["Color"], 0.02, 0.0)  # last ~1 m of depth
+    col = A.mixc(nt, A.math_node(nt, "MULTIPLY", foam, 0.55), col, (0.82, 0.86, 0.84, 1.0))
+    nt.links.new(col, b.inputs["Base Color"])
+
+
+def falls_real():
+    """Waterfall down the real gully on the east wall near y=1300, traced by following the lowest ground."""
+    pts, y = [], 1300.0
+    for k in range(48):
+        e = 520 - k * (505 / 47)
+        y = min((y + d for d in range(-24, 25, 4)), key=lambda yy: h(xs(yy) + e, yy))
+        x = xs(y) + e
+        pts.append((x, y, h(x, y) + 1.5))
+    B.waterfall(pts, 22.0, strength=3.0)
+    x, y, z = pts[-1]
+    for i in range(3):
+        B.mist(
+            (x - 6 + i * 6, y + R.uniform(-8, 8), z + 6 + i * 5),
+            (40, 26),
+            alpha=LIT["MIST_ALPHA"],
+            face=(P0[0], P0[1], 10),
+            seed=i,
+        )
+
+
 def falls():
+    if DEM is not None:
+        return falls_real()
     y0 = 1150
     pts = []
     xo = xs(y0) - W(y0)
@@ -363,13 +546,19 @@ def falls():
     B.waterfall(pts, 34.0, strength=2.6)
     xb = xo + 10
     for i in range(5):
-        B.mist((xb - 15 + i * 6, y0 + R.uniform(-15, 15), 18 + i * 7), (90, 55), alpha=LIT["MIST_ALPHA"], face=(P0[0], P0[1], 10), seed=i)
+        B.mist(
+            (xb - 15 + i * 6, y0 + R.uniform(-15, 15), 18 + i * 7),
+            (90, 55),
+            alpha=LIT["MIST_ALPHA"],
+            face=(P0[0], P0[1], 10),
+            seed=i,
+        )
 
 
 def player_and_camera(P, variant):
     import wf_mh as M
 
-    yaw = float(os.environ.get("WF_YAW", 6.0))  # degrees left of +Y
+    yaw = float(os.environ.get("WF_YAW", -10.0 if DEM is not None else 6.0))  # degrees left of +Y
     M.character("explorer", "stand_look", loc=(P.x, P.y, P.z), yaw_deg=yaw)
     fwd = Vector((-math.sin(math.radians(yaw)), math.cos(math.radians(yaw)), 0))
     right = Vector((fwd.y, -fwd.x, 0))
@@ -434,14 +623,18 @@ def talk_setup():
     y = 128.0
     x = xs(y) + 11.0
     P = Vector((x, y, h(x, y)))
-    F = Vector((x - 1.2, y + 4.6, 0))
+    F = Vector(
+        (x + 2.4, y + 4.0, 0)
+    )  # NPC front-right of the explorer, so the backpack does not hide them
     F.z = h(F.x, F.y)
-    M.character("explorer", "stand_look", loc=tuple(P), yaw_deg=8)
-    M.character("fisher", "talk", loc=tuple(F), yaw_deg=180 + 10)
+    M.character("explorer", "stand_look", loc=tuple(P), yaw_deg=-25)
+    M.character("fisher", "talk", loc=tuple(F), yaw_deg=155)
     right = Vector((1, 0, 0))
-    cam = P + Vector((0, -3.0, 0)) + right * 0.95 + Vector((0, 0, 1.95))
-    tgt = F + Vector((0, 0, 1.45)) + right * -0.4
-    A.camera(cam, tgt, lens=40, dof=((F - cam).length, 2.8))
+    cam = P + Vector((0, -2.4, 0)) + right * -0.9 + Vector((0, 0, 1.9))
+    tgt = (
+        F + Vector((0, 0, 1.3)) + right * 1.1
+    )  # NPC sits left of centre, clear of the reply buttons
+    A.camera(cam, tgt, lens=35, dof=((F - cam).length, 2.8))
 
 
 def main():
@@ -450,9 +643,18 @@ def main():
     A.eevee(samples=SAMPLES, res=(int(1920 * SCALE), int(1080 * SCALE)), exposure=LIT["EXPOSURE"])
     if SCREEN_RT and hasattr(bpy.context.scene.eevee, "ray_tracing_method"):
         bpy.context.scene.eevee.ray_tracing_method = "SCREEN"
-    w, nt, env = A.world_hdri(os.environ.get("WF_HDRI", "qwantani_dusk_2_puresky_4k.hdr"), 25, strength=0.9)
-    if os.environ.get("WF_AURORA", "1") == "1":
-        B.aurora(nt, nt.nodes["Background"], strength=2.2, az_center=112.0, az_width=40.0, elev=(16.0, 46.0))
+    w, nt, env = A.world_hdri(
+        os.environ.get("WF_HDRI", "kloofendal_48d_partly_cloudy_puresky_4k.hdr"), 25, strength=0.9
+    )
+    if os.environ.get("WF_AURORA", "0") == "1":
+        B.aurora(
+            nt,
+            nt.nodes["Background"],
+            strength=2.2,
+            az_center=112.0,
+            az_width=40.0,
+            elev=(16.0, 46.0),
+        )
     A.sun(LIT["SUN_ELEV"], 152, color=(1.0, 0.66, 0.36), energy=LIT["SUN_ENERGY"], angle=1.5)
     terrain()
     water()
@@ -474,7 +676,9 @@ def main():
     if VARIANT == "build":
         gx, gy = P.x + 4.0, P.y + 14.0
         ghost_frame((gx, gy, hn(gx, gy) + 0.05), math.radians(-12))
-    A.compositor_fog((0.56, 0.62, 0.72), LIT["FOG_START"], 3200, LIT["FOG_MAX"], sky_haze=0.05, haze_power=2.0)
+    A.compositor_fog(
+        (0.56, 0.62, 0.72), LIT["FOG_START"], 3200, LIT["FOG_MAX"], sky_haze=0.05, haze_power=2.0
+    )
     print("BUILD", round(__import__("time").time() - t0, 1))
     bpy.ops.wm.save_as_mainfile(filepath=str(A.BUILD / f"fjord_{VARIANT}.blend"))
     if "--norender" not in argv:
