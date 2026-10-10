@@ -14,8 +14,12 @@ signal foam_pressed
 signal forest_pressed
 signal bench_pressed(all_presets: bool)
 signal vsync_pressed
+signal parts_pressed
 
 const WINDOW := 300
+## The readout text is rebuilt this many times a second (perf pass 3: re-shaping the label every
+## frame cost CPU on the phone for numbers nobody can read at 120 Hz).
+const TEXT_HZ := 4.0
 const INK := Color(0.067, 0.082, 0.102, 0.88)
 const INK_DOWN := Color(0.078, 0.431, 0.392, 0.95)
 const TEXT := Color(0.965, 0.953, 0.925)
@@ -39,6 +43,7 @@ var _gpu_ms: float = 0.0
 var _cpu_ms: float = 0.0
 var _gpu_p95_ms: float = 0.0
 var _vp_rid: RID
+var _text_timer: float = 0.0
 
 
 func _ready() -> void:
@@ -91,6 +96,7 @@ func _ready() -> void:
 	_add_button(grid, "bench", "Bench 60 s", func() -> void: bench_pressed.emit(false))
 	_add_button(grid, "bench_all", "Bench all", func() -> void: bench_pressed.emit(true))
 	_add_button(grid, "vsync", "VSync: on", func() -> void: vsync_pressed.emit())
+	_add_button(grid, "parts", "GPU parts", func() -> void: parts_pressed.emit())
 
 
 func _make_label(size: int, col: Color) -> Label:
@@ -140,6 +146,8 @@ func set_buttons_enabled(on: bool) -> void:
 
 func show_result(text: String) -> void:
 	_result.text = text
+	# long results (GPU parts) grow upward from the centre so they stay on screen
+	_result_box.offset_top = -minf(120.0 + 18.0 * text.count("\n"), 500.0)
 	_result_box.visible = true
 
 
@@ -157,6 +165,11 @@ func p95_ms() -> float:
 
 
 ## GPU render time of the last measured frame in ms (0 where the driver gives no timestamps).
+## Render-thread CPU time of the last frame in ms (culling and command recording).
+func cpu_ms() -> float:
+	return _cpu_ms
+
+
 func gpu_ms() -> float:
 	return _gpu_ms
 
@@ -198,6 +211,10 @@ func _process(delta: float) -> void:
 		_gpu_p95_ms = g[int(floor((_filled - 1) * 0.95))]
 	if not _panel.visible:
 		return
+	_text_timer -= delta
+	if _text_timer > 0.0:
+		return
+	_text_timer = 1.0 / TEXT_HZ
 	var fps := Engine.get_frames_per_second()
 	var draws := Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 	var tris := Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)

@@ -33,8 +33,8 @@ const TREE_MESH := "res://assets/models/trees/scots_pine/scots_pine_a.glb"
 const GRASS_RADIUS := 35.0
 const GRASS_SPACING := 0.5
 ## Ultra: a second ring of bigger, sparser clumps from about 30 m out to GRASS_FAR_RADIUS.
-const GRASS_FAR_RADIUS := 120.0
-const GRASS_FAR_SPACING := 1.6
+const GRASS_FAR_RADIUS := 95.0
+const GRASS_FAR_SPACING := 1.9
 const GRASS_FAR_SCALE := 1.7
 
 ## Skin shading (Humans.skin): material names that are skin, light through skin.
@@ -113,6 +113,11 @@ const WARMUP_FRAMES := 3
 ## fps_cap: Engine.max_fps (0 = display rate). shadow_quality: soft shadow filter
 ## (RenderingServer.ShadowQuality, 1 = very low ... 5 = ultra). Ultra (visual pass 2) spends the
 ## 60 fps budget (16.7 ms) of the owner's phone; Low/Medium/High keep the pass 1 costs.
+## Perf pass 3 (phone Ultra GPU p95 27.2 ms, High frame p95 19.4 ms): High capped at 60 fps
+## (uncapped it paced 8.3 / 16.7 / 25 ms frames on the 120 Hz display); Ultra render scale 0.9,
+## soft shadow filter one step lower (blur 1.3), far clumps to 95 m at 1.9 m spacing (about a
+## third of the cards). Laptop GPU parts (tests/profile.gd) ranked these the cheapest cuts
+## in look per ms.
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
@@ -163,7 +168,7 @@ const PRESETS: Array[Dictionary] = [
 		"grass_far": false,
 		"shadow_blur": 1.0,
 		"terrain_quality": 1,
-		"fps_cap": 0,
+		"fps_cap": 60,
 		"shadow_quality": 1,
 		"scale": 1.0,
 		"shadows": true,
@@ -182,11 +187,11 @@ const PRESETS: Array[Dictionary] = [
 		"rocks": false,
 		"tree_geo": 70.0,
 		"grass_far": true,
-		"shadow_blur": 1.6,
+		"shadow_blur": 1.3,
 		"terrain_quality": 2,
 		"fps_cap": 60,
-		"shadow_quality": 3,
-		"scale": 1.0,
+		"shadow_quality": 2,
+		"scale": 0.9,
 		"shadows": true,
 		"forest": 1.0,
 		"grass": 1.0,

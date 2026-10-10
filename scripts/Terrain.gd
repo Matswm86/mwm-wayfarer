@@ -15,6 +15,12 @@ var tile_count: int = 0
 
 var _coarse: Dictionary = {}
 var _fine: Dictionary = {}
+## CPU copies of the height grids for height_at (perf pass 3: Image.get_pixel plus dictionary
+## lookups cost about 10 us per call; raw arrays and cached grid numbers about a fifth of that).
+var _c_data: PackedFloat32Array
+var _f_data: PackedFloat32Array
+var _c_grid: PackedFloat32Array  # x0, z0, step, nx, nz
+var _f_grid: PackedFloat32Array  # x0, z0, step, nx, nz, feather
 var _tex_cache: Dictionary = {}
 var _noise: NoiseTexture2D
 
@@ -26,6 +32,27 @@ func load_data() -> void:
 	_fine = meta["fine"]
 	coarse_img = _load_heights("coarse_h.bin", int(_coarse["nx"]), int(_coarse["nz"]))
 	fine_img = _load_heights("fine_h.bin", int(_fine["nx"]), int(_fine["nz"]))
+	_c_data = coarse_img.get_data().to_float32_array()
+	_f_data = fine_img.get_data().to_float32_array()
+	_c_grid = PackedFloat32Array(
+		[
+			float(_coarse["x0"]),
+			float(_coarse["z0"]),
+			float(_coarse["step"]),
+			float(_coarse["nx"]),
+			float(_coarse["nz"])
+		]
+	)
+	_f_grid = PackedFloat32Array(
+		[
+			float(_fine["x0"]),
+			float(_fine["z0"]),
+			float(_fine["step"]),
+			float(_fine["nx"]),
+			float(_fine["nz"]),
+			float(_fine["feather"])
+		]
+	)
 
 
 func _load_heights(file_name: String, nx: int, nz: int) -> Image:
@@ -233,27 +260,27 @@ func _grid_mesh(cells: int) -> ArrayMesh:
 
 ## CPU height, same blend as the shader (bilinear, fine feathered into coarse).
 func height_at(x: float, z: float) -> float:
-	var hc: float = _bilinear(coarse_img, _coarse, x, z)
-	var fx0: float = float(_fine["x0"])
-	var fz0: float = float(_fine["z0"])
-	var st: float = float(_fine["step"])
-	var fx1: float = fx0 + st * (float(_fine["nx"]) - 1.0)
-	var fz1: float = fz0 + st * (float(_fine["nz"]) - 1.0)
-	var inner: float = minf(minf(x - fx0, fx1 - x), minf(z - fz0, fz1 - z))
+	var hc: float = _bilinear(_c_data, _c_grid, x, z)
+	var st: float = _f_grid[2]
+	var fx1: float = _f_grid[0] + st * (_f_grid[3] - 1.0)
+	var fz1: float = _f_grid[1] + st * (_f_grid[4] - 1.0)
+	var inner: float = minf(minf(x - _f_grid[0], fx1 - x), minf(z - _f_grid[1], fz1 - z))
 	if inner <= 0.0:
 		return hc
-	var k: float = smoothstep(0.0, float(_fine["feather"]), inner)
-	return lerpf(hc, _bilinear(fine_img, _fine, x, z), k)
+	var k: float = smoothstep(0.0, _f_grid[5], inner)
+	return lerpf(hc, _bilinear(_f_data, _f_grid, x, z), k)
 
 
-func _bilinear(img: Image, g: Dictionary, x: float, z: float) -> float:
-	var st: float = float(g["step"])
-	var fx: float = clampf((x - float(g["x0"])) / st, 0.0, float(g["nx"]) - 1.001)
-	var fz: float = clampf((z - float(g["z0"])) / st, 0.0, float(g["nz"]) - 1.001)
+func _bilinear(d: PackedFloat32Array, g: PackedFloat32Array, x: float, z: float) -> float:
+	var st: float = g[2]
+	var nx: int = int(g[3])
+	var fx: float = clampf((x - g[0]) / st, 0.0, g[3] - 1.001)
+	var fz: float = clampf((z - g[1]) / st, 0.0, g[4] - 1.001)
 	var i: int = int(fx)
 	var j: int = int(fz)
 	var tx: float = fx - i
 	var tz: float = fz - j
-	var top: float = lerpf(img.get_pixel(i, j).r, img.get_pixel(i + 1, j).r, tx)
-	var bot: float = lerpf(img.get_pixel(i, j + 1).r, img.get_pixel(i + 1, j + 1).r, tx)
+	var o: int = j * nx + i
+	var top: float = lerpf(d[o], d[o + 1], tx)
+	var bot: float = lerpf(d[o + nx], d[o + nx + 1], tx)
 	return lerpf(top, bot, tz)

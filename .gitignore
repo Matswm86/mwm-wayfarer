@@ -21,3 +21,6 @@ __pycache__/
 *.pyc
 .DS_Store
 !assets/_raw/.gdignore
+
+# Designer drop zone (2.5 GB); the game uses copies in assets/models/
+assets/incoming/

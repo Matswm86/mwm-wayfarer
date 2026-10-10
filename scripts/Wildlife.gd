@@ -8,11 +8,19 @@ extends Node3D
 ## SpikeConfig.WILDLIFE. Far animals stop animating and are culled by visibility range.
 
 const DIR := "res://assets/models/animals/"
+## Perf pass 3: skeletons animate only within ANIM_RANGE and inside the camera view (an animal
+## behind the camera or 200 m off is a few pixels or none); grounded animals far from the player
+## think every FAR_STRIDE frames with the summed delta.
+const ANIM_RANGE := 160.0
+const FAR_THINK := 120.0
+const FAR_STRIDE := 4
 
 var target: Node3D
 var terrain: Terrain
 var animals: Array[Animal] = []
 var _rng := RandomNumberGenerator.new()
+var _frame: int = 0
+var _far_dt: float = 0.0
 
 
 class Animal:
@@ -86,16 +94,28 @@ func count_visible() -> int:
 func _process(delta: float) -> void:
 	var cam := get_viewport().get_camera_3d()
 	var player_pos: Vector3 = target.global_position if target else Vector3.INF
+	_frame += 1
+	_far_dt += delta
+	var far_tick: bool = _frame % FAR_STRIDE == 0
 	for a in animals:
 		if not a.node.visible:
 			continue
+		var pos: Vector3 = a.node.global_position
 		if cam and a.anim:
-			var far: bool = cam.global_position.distance_to(a.node.global_position) > 350.0
-			a.anim.active = not far
+			var near: bool = cam.global_position.distance_to(pos) < ANIM_RANGE
+			var seen: bool = near and cam.is_position_in_frustum(pos + Vector3(0.0, 1.0, 0.0))
+			# birds keep flapping in view at any range (they are the only motion in the sky)
+			if a.state == "fly":
+				seen = cam.is_position_in_frustum(pos)
+			a.anim.active = seen
 		if a.state == "fly":
 			_fly(a, delta)
-		else:
+		elif pos.distance_to(player_pos) < FAR_THINK or a.state == "flee":
 			_ground(a, delta, player_pos)
+		elif far_tick:
+			_ground(a, _far_dt, player_pos)
+	if far_tick:
+		_far_dt = 0.0
 
 
 func _fly(a: Animal, delta: float) -> void:

@@ -42,6 +42,13 @@ func _ready() -> void:
 	print("PROBE foam after tap: ", main.foam_on)
 	await _tap("result")
 	print("PROBE result tap ok")
+	await _tap("parts")
+	for i in 5:
+		await get_tree().process_frame
+	print("PROBE GPU parts running after tap: ", main.bench.running)
+	while main.bench.running:
+		await get_tree().process_frame
+	print("PROBE GPU parts result: ", PerfOverlay._result.text.split("\n").slice(0, 4))
 	await _tap("bench_all")
 	for i in 5:
 		await get_tree().process_frame

@@ -93,6 +93,7 @@ func _ready() -> void:
 	PerfOverlay.forest_pressed.connect(_on_forest)
 	PerfOverlay.bench_pressed.connect(_on_bench)
 	PerfOverlay.vsync_pressed.connect(_on_vsync)
+	PerfOverlay.parts_pressed.connect(_on_parts)
 	apply_preset(preset_index)
 	set_vsync(true)
 	print(
@@ -546,6 +547,37 @@ func _on_bench(all_presets: bool) -> void:
 		for k in SpikeConfig.PRESETS.size():
 			list.append(k)
 	run_bench(list, SpikeConfig.BENCH_SECONDS)
+
+
+## "GPU parts": what each feature of the current preset costs on this device's GPU
+## (scripts/GpuParts.gd, about 2 minutes).
+func _on_parts() -> void:
+	if bench.running or not warm:
+		return
+	bench.running = true
+	var start_vsync: bool = vsync_on
+	set_vsync(false)
+	PerfOverlay.set_buttons_enabled(false)
+	PerfOverlay.show_result("GPU parts: measuring (about 2 min)")
+	var grass_target := grass.target
+	grass.target = bench.camera
+	grass_far.target = bench.camera
+	var parts := GpuParts.new()
+	add_child(parts)
+	var lines: Array[String] = await parts.run(self, get_viewport())
+	parts.queue_free()
+	grass.target = grass_target
+	grass_far.target = grass_target
+	player.camera.current = true
+	set_vsync(start_vsync)
+	bench.running = false
+	PerfOverlay.set_buttons_enabled(true)
+	PerfOverlay.show_result(
+		(
+			"GPU parts, %s (%s): ms saved per switch\n%s"
+			% [SpikeConfig.PRESETS[preset_index]["name"], OS.get_model_name(), "\n".join(lines)]
+		)
+	)
 
 
 ## Flies the bench path once per preset; restores the player camera and the starting preset.
