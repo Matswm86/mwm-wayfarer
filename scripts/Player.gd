@@ -1,0 +1,82 @@
+class_name Player
+extends CharacterBody3D
+
+## Walking capsule with a third-person orbit camera. Input comes from TouchControls
+## (left-thumb stick, right-side drag). The camera never dips under the terrain.
+
+var controls: TouchControls
+var terrain: Terrain
+var camera: Camera3D
+var yaw: float = 0.0
+var pitch: float = -0.12
+var bounds: Rect2 = Rect2()
+var model: Node3D
+var anim: AnimationPlayer
+
+
+func build() -> void:
+	var shape := CollisionShape3D.new()
+	var cap := CapsuleShape3D.new()
+	cap.radius = 0.35
+	cap.height = 1.75
+	shape.shape = cap
+	shape.position.y = 0.875
+	add_child(shape)
+	# MakeHuman explorer (CC0), exported by tools/spike/export_human.py; faces +Z, the body faces -Z
+	model = (load("res://assets/models/explorer.glb") as PackedScene).instantiate() as Node3D
+	model.rotation.y = PI
+	add_child(model)
+	anim = Humans.find_player(model)
+	Humans.loop_all(anim)
+	if anim:
+		anim.play("idle")
+	camera = Camera3D.new()
+	camera.fov = 60.0
+	camera.near = 0.2
+	camera.far = 9000.0
+	add_child(camera)
+	camera.top_level = true
+	floor_snap_length = 0.6
+	floor_max_angle = deg_to_rad(50.0)
+
+
+func _physics_process(delta: float) -> void:
+	var stick := Vector2.ZERO
+	if controls:
+		stick = controls.move
+		var orbit := controls.take_orbit()
+		yaw -= orbit.x * SpikeConfig.ORBIT_SPEED
+		pitch = clampf(pitch - orbit.y * SpikeConfig.ORBIT_SPEED, -1.2, 0.5)
+	var fwd := Vector3(-sin(yaw), 0.0, -cos(yaw))
+	var right := Vector3(cos(yaw), 0.0, -sin(yaw))
+	var speed: float = SpikeConfig.PLAYER_RUN if stick.length() > 0.9 else SpikeConfig.PLAYER_WALK
+	var wish := (right * stick.x - fwd * stick.y) * speed
+	velocity.x = wish.x
+	velocity.z = wish.z
+	velocity.y -= SpikeConfig.GRAVITY * delta
+	move_and_slide()
+	if bounds.size.x > 0.0:
+		var p := global_position
+		p.x = clampf(p.x, bounds.position.x, bounds.end.x)
+		p.z = clampf(p.z, bounds.position.y, bounds.end.y)
+		global_position = p
+	if wish.length() > 0.1:
+		rotation.y = atan2(-wish.x, -wish.z)
+	if anim:
+		var moving: bool = Vector2(velocity.x, velocity.z).length() > 0.3
+		var want: String = "walk" if moving else "idle"
+		if anim.current_animation != want:
+			anim.play(want, 0.2)
+		anim.speed_scale = (speed / SpikeConfig.PLAYER_WALK) * 1.3 if moving else 1.0
+
+
+func _process(_delta: float) -> void:
+	if not camera.current:
+		return
+	var head := global_position + Vector3(0.0, SpikeConfig.CAM_HEIGHT, 0.0)
+	var dir := Vector3(-sin(yaw) * cos(pitch), sin(pitch), -cos(yaw) * cos(pitch))
+	var cam_pos := head - dir * SpikeConfig.CAM_DISTANCE
+	if terrain:
+		cam_pos.y = maxf(cam_pos.y, terrain.height_at(cam_pos.x, cam_pos.z) + 0.6)
+	camera.global_position = cam_pos
+	camera.look_at(head + dir * 2.0, Vector3.UP)
