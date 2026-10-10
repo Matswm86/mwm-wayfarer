@@ -10,8 +10,14 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "assets" / "_raw" / "polyhaven" / "textures"
 OUT = ROOT / "assets" / "textures"
-SETS = {"leafy_grass": "grass", "aerial_rocks_02": "rock", "aerial_grass_rock": "alpine"}
-NORMALS = {"aerial_rocks_02": "rock"}
+SETS = {
+    "leafy_grass": "grass",
+    "aerial_rocks_02": "rock",
+    "aerial_grass_rock": "alpine",
+    "cliff_side": "cliff",
+    "gray_rocks": "scree",
+}
+NORMALS = {"aerial_rocks_02": "rock", "cliff_side": "cliff"}
 
 OUT.mkdir(parents=True, exist_ok=True)
 for name, short in SETS.items():

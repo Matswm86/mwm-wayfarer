@@ -16,6 +16,7 @@ var tile_count: int = 0
 var _coarse: Dictionary = {}
 var _fine: Dictionary = {}
 var _tex_cache: Dictionary = {}
+var _noise: NoiseTexture2D
 
 
 func load_data() -> void:
@@ -50,6 +51,32 @@ func apply_height_params(mat: ShaderMaterial) -> void:
 	mat.set_shader_parameter("fine_feather", float(_fine["feather"]))
 
 
+## Baked sun visibility, sky visibility, concavity and scree (tools/spike/bake_terrain_light.py),
+## for every material that sits on the terrain (terrain, trees, ground cover).
+func apply_light_params(mat: ShaderMaterial) -> void:
+	mat.set_shader_parameter("coarse_light", load(SpikeConfig.TERRAIN_DIR + "coarse_light.png"))
+	mat.set_shader_parameter("fine_light", load(SpikeConfig.TERRAIN_DIR + "fine_light.png"))
+
+
+## Seamless value noise shared by the terrain shaders (generated once, no file).
+func world_noise() -> NoiseTexture2D:
+	if _noise:
+		return _noise
+	var n := FastNoiseLite.new()
+	n.seed = 7
+	n.noise_type = FastNoiseLite.TYPE_VALUE_CUBIC
+	n.frequency = 1.0 / 48.0
+	n.fractal_octaves = 5
+	_noise = NoiseTexture2D.new()
+	_noise.width = 512
+	_noise.height = 512
+	_noise.seamless = true
+	_noise.normalize = true
+	_noise.generate_mipmaps = true
+	_noise.noise = n
+	return _noise
+
+
 ## One mipmapped height texture per image, shared by every material.
 func _texture(img: Image) -> ImageTexture:
 	if _tex_cache.has(img):
@@ -76,9 +103,11 @@ func build() -> void:
 	material.shader = load("res://shaders/terrain.gdshader")
 	apply_height_params(material)
 	material.set_shader_parameter("grass_tex", load("res://assets/textures/grass_albedo.jpg"))
-	material.set_shader_parameter("rock_tex", load("res://assets/textures/rock_albedo.jpg"))
-	material.set_shader_parameter("rock_nrm", load("res://assets/textures/rock_normal.jpg"))
-	material.set_shader_parameter("alpine_tex", load("res://assets/textures/alpine_albedo.jpg"))
+	material.set_shader_parameter("cliff_tex", load("res://assets/textures/cliff_albedo.jpg"))
+	material.set_shader_parameter("cliff_nrm", load("res://assets/textures/cliff_normal.jpg"))
+	material.set_shader_parameter("scree_tex", load("res://assets/textures/scree_albedo.jpg"))
+	material.set_shader_parameter("noise_tex", world_noise())
+	apply_light_params(material)
 	material.set_shader_parameter("skirt_depth", SpikeConfig.SKIRT_DEPTH)
 
 	var levels: Array = meta["levels"]

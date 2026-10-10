@@ -42,7 +42,8 @@ const SUN_COLOR := Color(1.0, 0.90, 0.78)
 const SKY_TEXTURE := "res://assets/sky/kloofendal_48d_partly_cloudy.jpg"
 const SKY_ENERGY := 1.56
 const SKY_ROTATION_DEG := 180.0
-const EXPOSURE := 1.0
+const EXPOSURE := 0.85
+const AMBIENT_ENERGY := 1.5
 ## Aerial perspective (DESIGN.md 7.2 rules 3 and 8): depth fog from 200 m, at most 0.22,
 ## quadratic falloff, blue-grey, never milky.
 const FOG_COLOR := Color(0.62, 0.74, 0.90)
@@ -71,6 +72,7 @@ const WARMUP_FRAMES := 3
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
+		"rock_detail": false,
 		"scale": 0.7,
 		"shadows": false,
 		"forest": 0.35,
@@ -85,6 +87,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
+		"rock_detail": true,
 		"scale": 0.85,
 		"shadows": true,
 		"forest": 0.65,
@@ -99,6 +102,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
+		"rock_detail": true,
 		"scale": 1.0,
 		"shadows": true,
 		"forest": 1.0,

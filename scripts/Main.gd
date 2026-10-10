@@ -146,7 +146,7 @@ func _build_environment() -> void:
 	env.sky = sky
 	env.sky_rotation = Vector3(0.0, deg_to_rad(SpikeConfig.SKY_ROTATION_DEG), 0.0)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.ambient_light_energy = 1.0
+	env.ambient_light_energy = SpikeConfig.AMBIENT_ENERGY
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	env.tonemap_mode = Environment.TONE_MAPPER_AGX
 	env.tonemap_exposure = SpikeConfig.EXPOSURE
@@ -507,6 +507,7 @@ func apply_preset(i: int) -> void:
 	)
 	RenderingServer.directional_shadow_atlas_set_size(int(p["shadow_atlas"]), true)
 	env.glow_enabled = bool(p["glow"])
+	terrain.material.set_shader_parameter("detail_7m", bool(p["rock_detail"]))
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
