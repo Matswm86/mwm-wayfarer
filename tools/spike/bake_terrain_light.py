@@ -49,7 +49,7 @@ TO_SUN = np.array(
 
 
 def load(name: str, g: dict) -> np.ndarray:
-    raw = np.fromfile(TER / name, dtype=np.float16).astype(np.float32)
+    raw = np.fromfile(TER / name, dtype="<f4")
     return raw.reshape(int(g["nz"]), int(g["nx"]))
 
 

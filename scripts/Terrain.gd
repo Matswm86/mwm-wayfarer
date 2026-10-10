@@ -30,7 +30,7 @@ func load_data() -> void:
 
 func _load_heights(file_name: String, nx: int, nz: int) -> Image:
 	var bytes := FileAccess.get_file_as_bytes(SpikeConfig.TERRAIN_DIR + file_name)
-	var img := Image.create_from_data(nx, nz, false, Image.FORMAT_RH, bytes)
+	var img := Image.create_from_data(nx, nz, false, Image.FORMAT_RF, bytes)
 	return img
 
 
@@ -102,12 +102,18 @@ func build() -> void:
 	material = ShaderMaterial.new()
 	material.shader = load("res://shaders/terrain.gdshader")
 	apply_height_params(material)
-	material.set_shader_parameter("grass_tex", load("res://assets/textures/grass_albedo.jpg"))
-	material.set_shader_parameter("cliff_tex", load("res://assets/textures/cliff_albedo.jpg"))
-	material.set_shader_parameter("cliff_nrm", load("res://assets/textures/cliff_normal.jpg"))
-	material.set_shader_parameter("scree_tex", load("res://assets/textures/scree_albedo.jpg"))
+	for key: String in ["rock_mask", "rock_nrm"]:
+		material.set_shader_parameter(key, load(SpikeConfig.TERRAIN_DIR + "tex/%s.png" % key))
+	for key: String in ["grass", "turf", "soil", "scree"]:
+		material.set_shader_parameter(
+			key + "_tex", load(SpikeConfig.TERRAIN_DIR + "tex/%s.png" % key)
+		)
 	material.set_shader_parameter("noise_tex", world_noise())
 	apply_light_params(material)
+	material.set_shader_parameter(
+		"coarse_detail", load(SpikeConfig.TERRAIN_DIR + "coarse_detail.png")
+	)
+	material.set_shader_parameter("fine_detail", load(SpikeConfig.TERRAIN_DIR + "fine_detail.png"))
 	material.set_shader_parameter("skirt_depth", SpikeConfig.SKIRT_DEPTH)
 
 	var levels: Array = meta["levels"]

@@ -2,8 +2,8 @@
 
 Input:  assets/_raw/dem/naeroy_game.npz (made by tools/terrain/dem_to_game.py)
 Output: assets/terrain/
-  coarse_h.bin   float16 heights, 1025 x 1025, 10 m step, row-major (row = Godot z, col = Godot x)
-  fine_h.bin     float16 heights, 1201 x 1561, 2.5 m step, the 2 m DTM area round the village
+  coarse_h.bin   float32 heights, 1281 x 1281, 10 m step, row-major (row = Godot z, col = Godot x)
+  fine_h.bin     float32 heights, 1201 x 1561, 2.5 m step, the 2 m DTM area round the village
   water_depth.png 8-bit depth below sea level (0 = shore, 255 = 60 m or deeper), same frame as coarse
   trees.bin      float32 records (x, y, z, yaw, scale, species 0 pine / 1 birch), Godot space,
                  sorted by forest chunk
@@ -121,8 +121,8 @@ def main() -> None:
     fine_g = edit(FX, -FZ, fine_g)
 
     OUT.mkdir(parents=True, exist_ok=True)
-    coarse.astype("<f2").tofile(OUT / "coarse_h.bin")
-    fine_g.astype("<f2").tofile(OUT / "fine_h.bin")
+    coarse.astype("<f4").tofile(OUT / "coarse_h.bin")
+    fine_g.astype("<f4").tofile(OUT / "fine_h.bin")
     depth = np.clip(-coarse, 0.0, 60.0) / 60.0
     write_png_gray(OUT / "water_depth.png", np.round(depth * 255.0))
 
