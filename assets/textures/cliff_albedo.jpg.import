@@ -3,15 +3,17 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://xktm6fv16imw"
-path="res://.godot/imported/cliff_albedo.jpg-994aea5ff28185f49479edfa7eea5ba7.ctex"
+path.s3tc="res://.godot/imported/cliff_albedo.jpg-994aea5ff28185f49479edfa7eea5ba7.s3tc.ctex"
+path.etc2="res://.godot/imported/cliff_albedo.jpg-994aea5ff28185f49479edfa7eea5ba7.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/textures/cliff_albedo.jpg"
-dest_files=["res://.godot/imported/cliff_albedo.jpg-994aea5ff28185f49479edfa7eea5ba7.ctex"]
+dest_files=["res://.godot/imported/cliff_albedo.jpg-994aea5ff28185f49479edfa7eea5ba7.s3tc.ctex", "res://.godot/imported/cliff_albedo.jpg-994aea5ff28185f49479edfa7eea5ba7.etc2.ctex"]
 
 [params]
 
