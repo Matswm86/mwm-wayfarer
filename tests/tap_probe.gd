@@ -9,8 +9,14 @@ var main: Node
 func _ready() -> void:
 	main = (load("res://scenes/Main.tscn") as PackedScene).instantiate()
 	add_child(main)
-	for i in 90:
+	if not main.warm:
+		await main.warmed_up
+	for i in 10:
 		await get_tree().process_frame
+	await _tap("vsync")
+	print("PROBE vsync_on after tap: ", main.vsync_on, " mode ", main.vsync_mode_name())
+	await _tap("vsync")
+	print("PROBE vsync_on after 2nd tap: ", main.vsync_on, " mode ", main.vsync_mode_name())
 	await _tap("preset")
 	print("PROBE preset_index after tap: ", main.preset_index)
 	await _tap("bench_all")

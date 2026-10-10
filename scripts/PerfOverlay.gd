@@ -10,11 +10,15 @@ signal preset_pressed
 signal foam_pressed
 signal forest_pressed
 signal bench_pressed(all_presets: bool)
+signal vsync_pressed
 
 const WINDOW := 300
 const INK := Color(0.067, 0.082, 0.102, 0.88)
 const INK_DOWN := Color(0.078, 0.431, 0.392, 0.95)
 const TEXT := Color(0.965, 0.953, 0.925)
+
+## Extra readout line written by Main (vsync mode, anti-aliasing).
+var status_line: String = ""
 
 var _label: Label
 var _result: Label
@@ -75,6 +79,7 @@ func _ready() -> void:
 	_add_button(grid, "result", "Hide result", func() -> void: _result_box.visible = false)
 	_add_button(grid, "bench", "Bench 60 s", func() -> void: bench_pressed.emit(false))
 	_add_button(grid, "bench_all", "Bench L/M/H", func() -> void: bench_pressed.emit(true))
+	_add_button(grid, "vsync", "VSync: on", func() -> void: vsync_pressed.emit())
 
 
 func _make_label(size: int, col: Color) -> Label:
@@ -127,6 +132,15 @@ func show_result(text: String) -> void:
 	_result_box.visible = true
 
 
+func hide_result() -> void:
+	_result_box.visible = false
+
+
+## Hides or shows the readout and buttons (same as the three-finger tap).
+func set_ui_visible(on: bool) -> void:
+	_panel.visible = on
+
+
 func p95_ms() -> float:
 	return _p95_ms
 
@@ -161,6 +175,6 @@ func _process(delta: float) -> void:
 	var vram := Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
 	var ram := Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 	_label.text = (
-		"%d fps   p95 %.1f ms (300 fr)\n%d draws   %dk prims\nVRAM %.0f MB   RAM %.0f MB"
-		% [fps, _p95_ms, int(draws), int(tris / 1000.0), vram, ram]
+		"%d fps   p95 %.1f ms (300 fr)\n%d draws   %dk prims\nVRAM %.0f MB   RAM %.0f MB\n%s"
+		% [fps, _p95_ms, int(draws), int(tris / 1000.0), vram, ram, status_line]
 	)

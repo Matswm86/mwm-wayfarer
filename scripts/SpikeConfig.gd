@@ -36,11 +36,41 @@ const SHADOW_DISTANCE := 70.0
 
 const BENCH_SECONDS := 60.0
 const BENCH_WARMUP := 1.0
+## Boot warm-up: frames rendered per preset and view so every pipeline compiles before play.
+const WARMUP_FRAMES := 3
 
-## Graphics presets: render scale, sun shadows, forest density, grass density, water depth foam.
+## Graphics presets: render scale, sun shadows, forest density, grass density, water depth foam,
+## MSAA sample count (0, 2, 4) and FXAA (screen-space, Mobile renderer supports both in 4.6).
 const PRESETS: Array[Dictionary] = [
-	{"name": "Low", "scale": 0.7, "shadows": false, "forest": 0.35, "grass": 0.0, "foam": false},
-	{"name": "Medium", "scale": 0.85, "shadows": true, "forest": 0.65, "grass": 0.5, "foam": false},
-	{"name": "High", "scale": 1.0, "shadows": true, "forest": 1.0, "grass": 1.0, "foam": true},
+	{
+		"name": "Low",
+		"scale": 0.7,
+		"shadows": false,
+		"forest": 0.35,
+		"grass": 0.0,
+		"foam": false,
+		"msaa": 0,
+		"fxaa": false,
+	},
+	{
+		"name": "Medium",
+		"scale": 0.85,
+		"shadows": true,
+		"forest": 0.65,
+		"grass": 0.5,
+		"foam": false,
+		"msaa": 2,
+		"fxaa": false,
+	},
+	{
+		"name": "High",
+		"scale": 1.0,
+		"shadows": true,
+		"forest": 1.0,
+		"grass": 1.0,
+		"foam": true,
+		"msaa": 4,
+		"fxaa": false,
+	},
 ]
 const FOREST_STEPS: Array[float] = [0.35, 0.65, 1.0]

@@ -4,6 +4,8 @@ extends Node3D
 ## Mobile renderer. Builds the world from assets/terrain/ at start; the PerfOverlay buttons
 ## switch presets and run the benchmark flight. Not the game: no gameplay systems.
 
+signal warmed_up
+
 var terrain: Terrain
 var forest: Forest
 var grass: Grass
@@ -17,6 +19,9 @@ var water_plain: ShaderMaterial
 var preset_index: int = 2
 var forest_index: int = 2
 var foam_on: bool = true
+var vsync_on: bool = true
+## True once the boot warm-up has rendered every preset (see _warm_up).
+var warm: bool = false
 
 
 func _ready() -> void:
@@ -56,13 +61,75 @@ func _ready() -> void:
 	PerfOverlay.foam_pressed.connect(_on_foam)
 	PerfOverlay.forest_pressed.connect(_on_forest)
 	PerfOverlay.bench_pressed.connect(_on_bench)
+	PerfOverlay.vsync_pressed.connect(_on_vsync)
 	apply_preset(preset_index)
+	set_vsync(true)
 	print(
 		(
 			"SPIKE ready in %d ms: %d terrain tiles, %d trees"
 			% [Time.get_ticks_msec() - t0, terrain.tile_count, forest.visible_trees()]
 		)
 	)
+	_warm_up()
+
+
+## Renders every preset from a few views behind a loading cover so the shader pipelines
+## (shadows on/off, foam water, MSAA variants) compile at boot instead of mid-flight.
+func _warm_up() -> void:
+	var t0: int = Time.get_ticks_msec()
+	PerfOverlay.set_buttons_enabled(false)
+	PerfOverlay.show_result("Loading: preparing shaders")
+	var start: int = preset_index
+	var views: Array[float] = [0.02, 0.12, 0.45, 0.62]
+	for i in [0, 1, 2]:
+		apply_preset(i)
+		for f: bool in [true, false]:
+			set_foam(f)
+			player.camera.current = true
+			for k in SpikeConfig.WARMUP_FRAMES:
+				await get_tree().process_frame
+		for u in views:
+			bench.place(u)
+			bench.camera.current = true
+			for k in SpikeConfig.WARMUP_FRAMES:
+				await get_tree().process_frame
+	apply_preset(start)
+	player.camera.current = true
+	await get_tree().process_frame
+	PerfOverlay.hide_result()
+	PerfOverlay.set_buttons_enabled(true)
+	warm = true
+	print("WARMUP %d ms" % (Time.get_ticks_msec() - t0))
+	warmed_up.emit()
+
+
+## VSync off lets the bench show real frame times instead of the display cap (Android may
+## still limit the rate; the readout shows the mode the driver actually reports).
+func set_vsync(on: bool) -> void:
+	vsync_on = on
+	DisplayServer.window_set_vsync_mode(
+		DisplayServer.VSYNC_ENABLED if on else DisplayServer.VSYNC_DISABLED
+	)
+	Engine.max_fps = 0
+	PerfOverlay.set_button_text("vsync", "VSync: %s" % ("on" if on else "off"))
+	_update_status()
+
+
+func vsync_mode_name() -> String:
+	var names: Array[String] = ["off", "on", "adaptive", "mailbox"]
+	return names[clampi(DisplayServer.window_get_vsync_mode(), 0, 3)]
+
+
+func _update_status() -> void:
+	var p: Dictionary = SpikeConfig.PRESETS[preset_index]
+	var aa: String = "MSAA %dx" % int(p["msaa"]) if int(p["msaa"]) > 0 else "no MSAA"
+	if bool(p["fxaa"]):
+		aa += " + FXAA"
+	PerfOverlay.status_line = "VSync %s   %s" % [vsync_mode_name(), aa]
+
+
+func _on_vsync() -> void:
+	set_vsync(not vsync_on)
 
 
 func _build_environment() -> void:
@@ -372,7 +439,15 @@ func _build_player() -> void:
 func apply_preset(i: int) -> void:
 	preset_index = i
 	var p: Dictionary = SpikeConfig.PRESETS[i]
-	get_viewport().scaling_3d_scale = float(p["scale"])
+	var vp := get_viewport()
+	vp.scaling_3d_scale = float(p["scale"])
+	var msaa_modes: Dictionary = {
+		0: Viewport.MSAA_DISABLED, 2: Viewport.MSAA_2X, 4: Viewport.MSAA_4X
+	}
+	vp.msaa_3d = msaa_modes[int(p["msaa"])]
+	vp.screen_space_aa = (
+		Viewport.SCREEN_SPACE_AA_FXAA if bool(p["fxaa"]) else Viewport.SCREEN_SPACE_AA_DISABLED
+	)
 	sun.shadow_enabled = bool(p["shadows"])
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
@@ -381,6 +456,7 @@ func apply_preset(i: int) -> void:
 	set_foam(bool(p["foam"]))
 	PerfOverlay.set_button_text("preset", "Preset: %s" % p["name"])
 	_update_forest_text()
+	_update_status()
 
 
 func set_foam(on: bool) -> void:
@@ -410,7 +486,7 @@ func _on_forest() -> void:
 
 
 func _on_bench(all_presets: bool) -> void:
-	if bench.running:
+	if bench.running or not warm:
 		return
 	var list: Array[int] = [preset_index]
 	if all_presets:
@@ -421,6 +497,9 @@ func _on_bench(all_presets: bool) -> void:
 ## Flies the bench path once per preset; restores the player camera and the starting preset.
 func run_bench(list: Array[int], seconds: float) -> Array[Dictionary]:
 	var start_preset: int = preset_index
+	var start_vsync: bool = vsync_on
+	set_vsync(false)
+	var mode: String = vsync_mode_name()
 	PerfOverlay.set_buttons_enabled(false)
 	var grass_target := grass.target
 	grass.target = bench.camera
@@ -438,8 +517,12 @@ func run_bench(list: Array[int], seconds: float) -> Array[Dictionary]:
 	if list.size() > 1:
 		apply_preset(start_preset)
 	player.camera.current = true
+	set_vsync(start_vsync)
 	PerfOverlay.set_buttons_enabled(true)
 	PerfOverlay.show_result(
-		"Bench %d s (%s)\n%s" % [int(seconds), OS.get_model_name(), "\n".join(lines)]
+		(
+			"Bench %d s (%s, vsync %s)\n%s"
+			% [int(seconds), OS.get_model_name(), mode, "\n".join(lines)]
+		)
 	)
 	return out
