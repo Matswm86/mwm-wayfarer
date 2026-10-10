@@ -1,0 +1,29 @@
+{
+ "cards": [
+  {
+   "model": "grass_medium_01",
+   "size_m": 0.32334915161132816
+  },
+  {
+   "model": "grass_medium_01",
+   "size_m": 0.28436689138412474
+  },
+  {
+   "model": "grass_medium_02",
+   "size_m": 0.3237235987186432
+  },
+  {
+   "model": "grass_medium_02",
+   "size_m": 0.18315529578365386
+  },
+  {
+   "model": "fern_02",
+   "size_m": 1.0095423531532288
+  },
+  {
+   "model": "shrub_04",
+   "size_m": 0.5953639698028564
+  }
+ ],
+ "px": 512
+}

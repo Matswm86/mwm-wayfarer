@@ -1,0 +1,49 @@
+{
+ "azimuths": 8,
+ "elevations_deg": [
+  5.0,
+  40.0
+ ],
+ "frame_px": [
+  256,
+  512
+ ],
+ "variants": [
+  {
+   "model": "pine_tree_01",
+   "node": "pine_tree_01_a_LOD0",
+   "height": 20.374791517853737,
+   "frame_m": 21.189783178567886,
+   "centre_z": 10.187395468354225
+  },
+  {
+   "model": "pine_tree_01",
+   "node": "pine_tree_01_c_LOD0",
+   "height": 17.544002883136272,
+   "frame_m": 18.245762998461725,
+   "centre_z": 8.77200161665678
+  },
+  {
+   "model": "fir_tree_01",
+   "node": "fir_tree_01_a_LOD0",
+   "height": 18.925109282135963,
+   "frame_m": 19.682113653421403,
+   "centre_z": 9.462554350495338
+  },
+  {
+   "model": "fir_tree_01",
+   "node": "fir_tree_01_b_LOD0",
+   "height": 14.055205553770065,
+   "frame_m": 14.617413775920868,
+   "centre_z": 7.027602881193161
+  },
+  {
+   "model": "island_tree_01",
+   "node": "island_tree_01_LOD0",
+   "height": 5.02744660153985,
+   "frame_m": 10.020773658752441,
+   "centre_z": 2.5137232281267643
+  }
+ ],
+ "note": "frames: azimuth a views the tree from direction (sin a, -cos a) in Blender = (sin a, cos a) in Godot x, z"
+}
