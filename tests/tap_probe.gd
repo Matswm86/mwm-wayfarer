@@ -17,8 +17,31 @@ func _ready() -> void:
 	print("PROBE vsync_on after tap: ", main.vsync_on, " mode ", main.vsync_mode_name())
 	await _tap("vsync")
 	print("PROBE vsync_on after 2nd tap: ", main.vsync_on, " mode ", main.vsync_mode_name())
+	# High -> Ultra (60 fps cap, softer shadows, near pine meshes, far grass) -> Low
 	await _tap("preset")
-	print("PROBE preset_index after tap: ", main.preset_index)
+	print(
+		"PROBE preset after tap: ",
+		SpikeConfig.PRESETS[main.preset_index]["name"],
+		" max_fps ",
+		Engine.max_fps,
+		" near trees on ",
+		main.near_trees.visible,
+		" far grass on ",
+		main.grass_far.visible
+	)
+	await _tap("preset")
+	print(
+		"PROBE preset after 2nd tap: ",
+		SpikeConfig.PRESETS[main.preset_index]["name"],
+		" max_fps ",
+		Engine.max_fps
+	)
+	await _tap("forest")
+	print("PROBE forest density after tap: ", main.forest.density)
+	await _tap("foam")
+	print("PROBE foam after tap: ", main.foam_on)
+	await _tap("result")
+	print("PROBE result tap ok")
 	await _tap("bench_all")
 	for i in 5:
 		await get_tree().process_frame

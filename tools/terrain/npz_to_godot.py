@@ -45,6 +45,10 @@ FOREST_CHUNK = 640.0
 TREES_HIGH = 90000
 # tree line (m) before noise; Naeroyfjord birch and pine thin out at about 500-650 m
 TREE_LINE = 560.0
+# cliff rock meshes: count, one per cell (m), within this radius of the village (m)
+ROCK_COUNT = 2400
+ROCK_CELL = 22.0
+ROCK_RADIUS = 1800.0
 BIRCH_BELOW = 320.0  # birch mixes in on the lower slopes, pine above
 SEED = 7
 
@@ -257,6 +261,39 @@ def main() -> None:
             ]
         )
     tr.astype("<f4").tofile(OUT / "trees.bin")
+
+    # ---- cliff rocks (visual pass 2): rock meshes along the steep bands round the village, at
+    # most one per ROCK_CELL m cell on faces of 45-78 deg, half sunk into the slope; up = the
+    # surface normal blended halfway to world up. Record: x, y, z, nx, ny, nz, yaw, size.
+    rocks = []
+    taken = set()
+    tries = 0
+    while len(rocks) < ROCK_COUNT and tries < 60:
+        tries += 1
+        m = 200000
+        ang = rng.random(m) * math.tau
+        rad = np.sqrt(rng.random(m)) * ROCK_RADIUS
+        x = p0[0] + 150.0 + np.cos(ang) * rad
+        z = -(p0[1] + 150.0) + np.sin(ang) * rad
+        hgt = height(x, z)
+        dx = (height(x + 3, z) - height(x - 3, z)) / 6.0
+        dz = (height(x, z + 3) - height(x, z - 3)) / 6.0
+        slope = np.degrees(np.arctan(np.hypot(dx, dz)))
+        ok = (slope > 45.0) & (slope < 78.0) & (hgt > 3.0)
+        for xx, zz, hh, gx, gz in zip(x[ok], z[ok], hgt[ok], dx[ok], dz[ok]):
+            cell = (int(xx // ROCK_CELL), int(zz // ROCK_CELL))
+            if cell in taken:
+                continue
+            taken.add(cell)
+            n = np.array([-gx, 1.0, -gz])
+            n /= np.linalg.norm(n)
+            size = float(rng.uniform(8.0, 22.0))
+            pos = np.array([xx, hh, zz]) - n * size * 0.3
+            rocks.append((*pos, *n, rng.uniform(0, math.tau), size))
+            if len(rocks) >= ROCK_COUNT:
+                break
+    np.array(rocks, dtype="<f4").tofile(OUT / "rocks.bin")
+    print("rocks:", len(rocks))
 
     # ---- points of interest (scene_fjord.py coordinates)
     def gpt(x, y, up=0.0):

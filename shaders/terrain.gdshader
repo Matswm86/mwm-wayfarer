@@ -148,14 +148,16 @@ void fragment() {
 			vec4 dz = texture(rock_mask, pz / 12.0 + 0.37);
 			vec3 tw2 = height_weights(bw, vec3(dx.b, dy.b, dz.b), 0.3);
 			vec4 m12 = dx * tw2.x + dy * tw2.y + dz * tw2.z;
-			tone = mix(tone, tone * 0.6 + m12.r * 0.45, near12);
+			// mostly the rock-face scan; the cliff strata only as a hint (on rounded faces they
+			// bent into swirly bands)
+			tone = mix(tone, tone * 0.6 + (m12.g * 0.75 + m12.r * 0.25) * 0.45, near12);
 			cav = mix(cav, cav * 0.5 + m12.b * 0.5, near12);
 			vec2 ux = texture(rock_nrm, px / 12.0 + 0.37).xy * 2.0 - 1.0;
 			vec2 uy = texture(rock_nrm, py / 12.0 + 0.37).xy * 2.0 - 1.0;
 			vec2 uz = texture(rock_nrm, pz / 12.0 + 0.37).xy * 2.0 - 1.0;
 			vec3 dn2 = tw2.x * vec3(0.0, ux.y, ux.x * sign(n.x)) + tw2.y * vec3(uy.x, 0.0, uy.y)
 				+ tw2.z * vec3(-uz.x * sign(n.z), uz.y, 0.0);
-			dn = mix(dn, dn * 0.5 + dn2 * 0.8, near12);
+			dn = mix(dn, dn * 0.6 + dn2 * 0.45, near12);
 		}
 		if (quality > 1 && dist < 70.0) {
 			float k = maprange(dist, 70.0, 25.0, 0.0, 1.0);

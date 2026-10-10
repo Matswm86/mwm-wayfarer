@@ -21,6 +21,11 @@ const TREE_FAR_END := 7000.0
 ## Ultra: conifers within tree_geo m of the camera are meshes (scripts/NearTrees.gd), full detail
 ## within TREE_LOD0_RADIUS, the light LOD beyond.
 const TREE_LOD0_RADIUS := 22.0
+## Cliff rocks (scripts/CliffRocks.gd): LOD0 / LOD1 / LOD2 distance limits (m), albedo tint.
+## Off on every preset for now: the Poly Haven stand-ins read as dark planks on the gneiss;
+## turn on ("rocks") when the designer's cliff set replaces them.
+const ROCK_LOD_RANGES := Vector3(90.0, 320.0, 900.0)
+const ROCK_TINT := Color(0.62, 0.66, 0.72)
 const TREE_MESH := "res://assets/models/trees/scots_pine/scots_pine_a.glb"
 
 ## Ground cover: one plant (two crossed cards) per GRASS_SPACING m grid point within
@@ -106,6 +111,7 @@ const WARMUP_FRAMES := 3
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
+		"rocks": false,
 		"tree_geo": 0.0,
 		"grass_far": false,
 		"shadow_blur": 1.0,
@@ -126,6 +132,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
+		"rocks": false,
 		"tree_geo": 0.0,
 		"grass_far": false,
 		"shadow_blur": 1.0,
@@ -146,6 +153,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
+		"rocks": false,
 		"tree_geo": 0.0,
 		"grass_far": false,
 		"shadow_blur": 1.0,
@@ -166,6 +174,7 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Ultra",
+		"rocks": false,
 		"tree_geo": 70.0,
 		"grass_far": true,
 		"shadow_blur": 1.6,

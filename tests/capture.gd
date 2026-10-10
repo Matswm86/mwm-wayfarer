@@ -154,7 +154,7 @@ func _shot(shot_name: String) -> void:
 	img.save_png(path)
 	print(
 		(
-			"SHOT %-24s draws %4d  prims %7d  vram %.0f MB  near trees %d  -> %s"
-			% [shot_name, dc, pr, vram, main.near_trees.count(), path]
+			"SHOT %-24s draws %4d  prims %7d  vram %.0f MB  near trees %d  rocks %d  -> %s"
+			% [shot_name, dc, pr, vram, main.near_trees.count(), main.rocks.count(), path]
 		)
 	)
