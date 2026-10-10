@@ -73,7 +73,7 @@ a:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
 
 <div class="wrap">
 <header class="col">
-  <div class="eyebrow">MWM Game Studio · design drafts v1 · 7 Oct 2026</div>
+  <div class="eyebrow">MWM Game Studio · design drafts v2 · 10 Oct 2026</div>
   <h1 style="margin-top:12px">Wayfarer</h1>
   <p class="lede">An open-world Android game with no fighting. You walk, climb, swim and sail across five regions, gather and trade what each place has, build homes and docks that make villages grow, and follow rumors from the people you meet to wonders no map shows.</p>
   <p class="coords">Working title · landscape 1920×1080 · third person · offline · voiced English NPCs · youth and adults</p>
@@ -84,13 +84,18 @@ a:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
 
 <!--KEYFRAMES-->
 <section id="look">
-  <h2>First look: Skarvik Fjord</h2>
-  <figure class="hero"><img src="mockups/key_fjord.jpg" alt="Third-person view of a hiker with a large backpack on a grassy shore path, looking down a steep fjord with timber turf-roof houses, a jetty and grey granite cliffs fading into haze" width="1600" height="900"><figcaption><b>Draft 1, rendered in Blender from scanned CC0 materials.</b> The composition works: player over the shoulder, path leading to the hamlet and jetty, cliffs framing the fjord. The finish is not there yet: cliff textures smear on the steep faces, the haze washes out the far fjord, and the water reads as flat lavender.</figcaption></figure>
-  <div class="verdict"><strong>Graphics bar: this draft is below Race Riders.</strong><p>Race Riders reaches its look with tuned light, real ground textures and sharp riders. This first fjord frame has the right layout but softer, flatter surfaces. The fix list is concrete: triplanar rock on cliffs, a water shader with reflections and depth colour, less fog, warmer low sun. Nothing here suggests the engine or phone cannot reach the Race Riders level; the art pass is not finished.</p></div>
+  <h2>First look: Skarvik Fjord, on the real Nærøyfjord</h2>
+  <figure class="hero"><img src="mockups/key_fjord_real_terrain.jpg" alt="Third-person view of a hiker on a gravel shore looking up a fjord between real mountain ridges, turf-roof houses on a green bench to the right, turquoise shallows and reflections in the water" width="960" height="540"><figcaption><b>Draft 2, 10 Oct.</b> The mountains are the real Nærøyfjord from Kartverket's 10 m and 2 m elevation data, the seabed comes from nautical-chart soundings (deepest point 291 m), and the water turns turquoise over the real shallows. Sun at 30°, daytime sky, light fog.</figcaption></figure>
+  <div class="verdict"><strong>Graphics bar: much closer to Race Riders, not there yet.</strong><p>Fixed since draft 1: real mountain shapes instead of a smooth wall, sunlight that reaches the valley, water with reflections and depth colour, a denser forest. Still weak: the far rock faces are smooth and beige because 10 m data has no rock detail, and the waterfall is small at this distance.</p></div>
   <div class="grid2">
+    <figure><img src="mockups/key_fjord.jpg" alt="Draft 1: the same view with a flat wall-like cliff, heavy haze and flat lavender water" width="1600" height="900"><figcaption><b>Draft 1 (7 Oct), for comparison.</b> Low sun behind the walls, heavy haze, one smooth cliff wall.</figcaption></figure>
     <figure><img src="mockups/racerriders_ref.jpg" alt="Race Riders screenshot: riders in numbered jerseys on a dirt trail through pine forest" width="540" height="960" style="max-height:520px;object-fit:cover"><figcaption><b>The bar.</b> Race Riders, World 1, a real in-game frame.</figcaption></figure>
-    <figure><img src="mockups/build_draft.jpg" alt="Same fjord view with a pale blue ghost outline of a house frame placed on the slope" width="1600" height="900"><figcaption><b>Build mode draft.</b> A ghost timber frame placed on the slope before you commit materials. The ghost reads clearly; buttons and cost chips come next.</figcaption></figure>
   </div>
+  <div class="grid2">
+    <figure><img src="mockups/key_archipelago.jpg" alt="Hiker on a stony headland above a turquoise bay with pale limestone hills and a half-fallen Greek temple among cypresses" width="960" height="540"><figcaption><b>Amberline Isles, draft 2.</b> Real relief from Kefalonia (Copernicus 30 m data). Turquoise shallows, limestone, a fallen temple. Weak: one big hill, no depth behind it, olive terraces barely visible.</figcaption></figure>
+    <figure><img src="mockups/key_canyon.jpg" alt="Hiker walking into a sunlit red sandstone canyon with date palms, striped market stalls and a temple front cut into the rock" width="960" height="540"><figcaption><b>Redwall Oasis, draft 2.</b> Real relief from Wadi Rum (Copernicus 30 m data), now in full sun. Weak: open sky on the left reads as a valley, not a slot canyon; the sand ramp at the wall foot smears.</figcaption></figure>
+  </div>
+  <figure><img src="mockups/build_draft.jpg" alt="Fjord view with a pale blue ghost outline of a house frame placed on the slope" width="1600" height="900"><figcaption><b>Build mode draft (draft 1 scene).</b> A ghost timber frame placed on the slope before you commit materials.</figcaption></figure>
 </section>
 
 <section id="worlds">
@@ -156,34 +161,21 @@ a:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
 <!--UI-->
 <section id="ui">
   <h2>On screen</h2>
-  <figure><img src="mockups/ui_hud.jpg" alt="Exploration HUD over the fjord: compass strip at top with markers for Bluewater Falls 1.2 km, a Blue moss rumor and Skarvik dock; time and weather chip and a 18.4 of 30 kg bag meter top right; move stick bottom left; Gather, jump and hand buttons bottom right; a Cloudberries x6 label in the world" width="1600" height="900"><figcaption><b>Exploration HUD, landscape.</b> Compass strip with a wonder (Bluewater Falls 1.2 km), a rumor (Blue moss?) and a place (Skarvik dock). Bag weight 18.4 of 30 kg. Left thumb moves; the amber Gather button changes with what is in front of you. Text contrast measured 7.0:1 over bright sky and 9.1:1 on the amber button (my calc). One fix owed: the clock says 21:40 over a daylight scene.</figcaption></figure>
-  <h3 style="margin-top:28px">Not ready, shown so you can see where the art stands</h3>
+  <figure><img src="mockups/ui_hud.jpg" alt="Exploration HUD over the fjord: compass strip, time and weather chip, bag meter, move stick and action buttons" width="1600" height="900"><figcaption><b>Exploration HUD (draft 1).</b> Its 17–24 px text and translucent chips are below the new type rules in DESIGN.md and get redrawn next.</figcaption></figure>
   <div class="grid2">
-    <figure><img src="mockups/arch_key_rejected.jpg" alt="Rejected render: hiker facing a bare brown hillside under blue sky" width="960" height="540"><figcaption><b>Archipelago: rejected.</b> The camera points at a bare hill; the ruins, bay and colossus are built but out of frame.</figcaption></figure>
-    <figure><img src="mockups/canyon_key_rejected.jpg" alt="Rejected render: dark red canyon with silhouetted palms and market stalls" width="960" height="540"><figcaption><b>Canyon oasis: rejected.</b> Under-lit, the market and palms read as silhouettes.</figcaption></figure>
-    <figure><img src="mockups/fjord_talk_rejected.jpg" alt="Rejected render: hiker's backpack blocks the view of the NPC in front of a turf-roof house" width="960" height="540"><figcaption><b>Conversation: rejected.</b> The player's backpack hides the fisher you are talking to.</figcaption></figure>
+    <figure><img src="mockups/ui_trade.jpg" alt="Skarvik market sell screen: five goods with the reason behind each price, a selected Smoked fish card with quantity buttons and a Sell 12 for 104 button" width="1920" height="1080"><figcaption><b>Market.</b> Every price shows its reason ("River flood: no fresh fish for 2 days"). Sell 12 smoked fish for 104 coins, the GDD flood example.</figcaption></figure>
+    <figure><img src="mockups/ui_talk.jpg" alt="Conversation over a village scene: a fisher in overalls stands ahead, a subtitle panel with Ingrid's line and memory, four reply buttons on the right" width="1920" height="1080"><figcaption><b>Conversation.</b> Subtitle with the NPC's memory of you, four replies, the trade reply in teal. Known mismatch: the line belongs to Ingrid, but the stand-in model is a man.</figcaption></figure>
+    <figure><img src="mockups/ui_wonder.jpg" alt="Wonder discovery card: The Singing Cavern, 1 of 30, lore text and four rewards" width="1920" height="1080"><figcaption><b>Wonder found.</b> The Singing Cavern, 1 of 30, with rewards. The cave view is a 2D stand-in until the wonder has its own render.</figcaption></figure>
   </div>
-  <p class="note">Still to draw: the market and trade screen, the wonder discovery card and the conversation subtitle bar.</p>
+  <p class="note">Visual rules, palette, type scale and credits: <code>docs/DESIGN.md</code>. All text contrast is 4.5:1 or better (designer's calc).</p>
 </section>
 
 <!--BAR-->
 
 <section id="engine" class="col">
-  <h2>Godot or Unity</h2>
-  <div class="verdict"><strong>My pick: Godot 4.7, after a two-week phone test.</strong>
-  <p>Build one 1 km valley with 20 walking NPCs and measure it on your phone. At 30 fps or better, stay with the pipeline that made Race Riders. Below that, switch to Unity before any real content exists. Unity's asset store is the real argument for it; its cost is a new toolchain, a licence in CI, and scene files Claude edits less reliably.</p></div>
-  <div class="tablewrap"><table>
-    <tr><th>Question</th><th>Godot</th><th>Unity</th></tr>
-    <tr><td>Current version</td><td>4.7.2 (Aug 2026). Studio runs 4.6.2 <span class="pill v">verified</span></td><td>6.3 LTS, 6000.3.25f1 (Sep 2026) <span class="pill v">verified</span></td></tr>
-    <tr><td>Big terrain</td><td>Terrain3D add-on; Android "still a bit experimental" per its docs <span class="pill v">verified</span></td><td>Built-in Terrain <span class="pill u">not checked</span></td></tr>
-    <tr><td>Runs on this Linux laptop</td><td>Yes, in use today</td><td>Ubuntu 22.04 / 24.04 supported <span class="pill v">verified</span></td></tr>
-    <tr><td>APK builds in GitHub</td><td>Studio workflow already builds Race Riders and the other studio games</td><td>GameCI; needs licence file + Unity login as secrets <span class="pill v">verified</span></td></tr>
-    <tr><td>Cost</td><td>Free, MIT</td><td>Free under $200K revenue a year; splash screen optional <span class="pill v">verified</span></td></tr>
-    <tr><td>Claude drives the editor</td><td>Scenes are text files Claude edits directly</td><td>Community bridge unity-mcp, 14.7k stars, active <span class="pill v">verified</span></td></tr>
-    <tr><td>NPC brains</td><td>LimboAI behaviour trees, built for 4.7.2 <span class="pill v">verified</span></td><td>Unity Behavior + AI Navigation <span class="pill u">not checked</span></td></tr>
-    <tr><td>Characters and animation</td><td colspan="2">Mixamo is royalty-free for commercial games in both (no reselling raw files, no ML training) <span class="pill v">verified</span></td></tr>
-  </table></div>
-  <p class="note">Each row was checked against vendor pages on 7 Oct 2026. Rows marked "not checked" ran out of time and are unconfirmed.</p>
+  <h2>Engine: Godot</h2>
+  <div class="verdict"><strong>Decided 10 Oct: Godot, with a two-week phone test first.</strong>
+  <p>Build one 1 km valley with 20 walking NPCs and measure it on your phone. At 30 fps or better, continue on the pipeline that made Race Riders.</p></div>
 </section>
 
 <section id="roadmap" class="col">
@@ -201,12 +193,12 @@ a:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
   <h2>Your decisions</h2>
   <ol class="q">
     <li><b>Which setting first.</b> The plan says the fjord for slice 01; the key frames above are the three candidates.</li>
-    <li><b>Engine.</b> Godot with the two-week phone test, or Unity from the start.</li>
-    <li><b>Voices.</b> Local text-to-speech for everyone, or recorded human voices for the main characters. I will render samples from licence-clean voices before you choose.</li>
+        <li><b>Voices.</b> Local text-to-speech for everyone, or recorded human voices for the main characters. I will render samples from licence-clean voices before you choose.</li>
     <li><b>Target phones.</b> Which phone must hit 60 fps and which is the 30 fps floor.</li>
     <li><b>Youth age band and default preset.</b> Assumed 10–15 and Gentle.</li>
     <li><b>Name.</b> Hearthroads, Far Harbours, Tidewright, The Wonder Roads, Saltwind Crossing, or Lanterns of the Long Coast. None are trademark-checked.</li>
   </ol>
+  <p class="note">Credits: fjord terrain and sea depth © Kartverket (CC BY 4.0); archipelago and canyon terrain produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved. Textures and skies: Poly Haven (CC0).</p>
   <p class="note">Full design doc: <code>projects/mwm-wayfarer/docs/GDD.md</code> (552 lines). Visual spec: <code>docs/DESIGN.md</code>.</p>
 </section>
 </div>
