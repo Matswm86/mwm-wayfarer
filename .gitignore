@@ -1,7 +1,7 @@
 # Godot
 .godot/
 .import/
-*.import
+# .import files are committed (texture compression settings)
 *.translation
 *.apk
 *.aab
@@ -20,3 +20,4 @@ assets/_raw/dem/cop30/*
 __pycache__/
 *.pyc
 .DS_Store
+!assets/_raw/.gdignore
