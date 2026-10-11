@@ -1,0 +1,80 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://d0qs6ei8w0bvb"]
+
+[ext_resource type="Shader" uid="uid://3adq88i7xsni" path="res://shaders/terrain_corner.gdshader" id="1_nger7"]
+[ext_resource type="Texture2D" uid="uid://ftgetgyj5a4i" path="res://assets/terrain/coarse_detail.png" id="2_gdywg"]
+[ext_resource type="Texture2D" uid="uid://bwd5r5twjw4dh" path="res://assets/terrain/coarse_light.png" id="3_bl2a6"]
+[ext_resource type="Texture2D" uid="uid://mnivqoc8co7r" path="res://assets/terrain/corner/corner_mask.png" id="4_xa08f"]
+[ext_resource type="Texture2D" uid="uid://c0gq7wwr2hh1e" path="res://assets/terrain/fine_detail.png" id="5_nhxkf"]
+[ext_resource type="Texture2D" uid="uid://x0q8gaa5nddk" path="res://assets/terrain/fine_light.png" id="6_vtsnw"]
+[ext_resource type="Texture2D" uid="uid://klv11qd06ods" path="res://assets/terrain/forest_mask.png" id="7_q7w7p"]
+[ext_resource type="Texture2D" uid="uid://c02vr5ykpfbij" path="res://assets/terrain/tex/grass.png" id="8_8k4ay"]
+[ext_resource type="Texture2D" uid="uid://cpub3kn2bl50x" path="res://assets/terrain/tex/gravel.png" id="9_m0jao"]
+[ext_resource type="Texture2D" uid="uid://83gcty8m65cu" path="res://assets/terrain/tex/path_nrm.png" id="10_4y1xw"]
+[ext_resource type="Texture2D" uid="uid://cxlk3gnxc5nxh" path="res://assets/terrain/tex/path.png" id="11_f4pby"]
+[ext_resource type="Texture2D" uid="uid://byvlg4vmakl6i" path="res://assets/terrain/tex/pebbles_nrm.png" id="12_bgpar"]
+[ext_resource type="Texture2D" uid="uid://bbtdmnhlvm2ad" path="res://assets/terrain/tex/pebbles.png" id="13_b7vt3"]
+[ext_resource type="Texture2D" uid="uid://dg10kwcvrpktr" path="res://assets/terrain/tex/rock_mask.png" id="14_ub1a0"]
+[ext_resource type="Texture2D" uid="uid://bxj4h66ddx1ea" path="res://assets/terrain/tex/rock_nrm.png" id="15_ro2tk"]
+[ext_resource type="Texture2D" uid="uid://dhj3swvt7q3pi" path="res://assets/terrain/tex/sand.png" id="16_msokm"]
+[ext_resource type="Texture2D" uid="uid://2xq4k87ftwe1" path="res://assets/terrain/tex/scree.png" id="17_4ob7h"]
+[ext_resource type="Texture2D" uid="uid://cjs6sxkdae3p2" path="res://assets/terrain/tex/soil.png" id="18_ddtli"]
+[ext_resource type="Texture2D" uid="uid://dhlvufic8nb3n" path="res://assets/terrain/tex/turf.png" id="19_8bsxe"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8vlui"]
+noise_type = 4
+seed = 7
+frequency = 0.020833334
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_q4uff"]
+noise = SubResource("FastNoiseLite_8vlui")
+seamless = true
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_nger7")
+shader_parameter/coarse_rect = Vector4(-6160, -9300, 12800, 12800)
+shader_parameter/fine_rect = Vector4(-1500, -3600, 3000, 3900)
+shader_parameter/coarse_texel = Vector2(0.0007806401, 0.0007806401)
+shader_parameter/fine_texel = Vector2(0.00083263946, 0.000640615)
+shader_parameter/coarse_step = 10.0
+shader_parameter/fine_step = 2.5
+shader_parameter/fine_feather = 60.0
+shader_parameter/coarse_light = ExtResource("3_bl2a6")
+shader_parameter/fine_light = ExtResource("6_vtsnw")
+shader_parameter/coarse_detail = ExtResource("2_gdywg")
+shader_parameter/fine_detail = ExtResource("5_nhxkf")
+shader_parameter/rock_mask = ExtResource("14_ub1a0")
+shader_parameter/rock_nrm = ExtResource("15_ro2tk")
+shader_parameter/grass_tex = ExtResource("8_8k4ay")
+shader_parameter/turf_tex = ExtResource("19_8bsxe")
+shader_parameter/soil_tex = ExtResource("18_ddtli")
+shader_parameter/scree_tex = ExtResource("17_4ob7h")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_q4uff")
+shader_parameter/forest_mask = ExtResource("7_q7w7p")
+shader_parameter/quality = 2
+shader_parameter/to_sun = Vector3(-0.5, 0.5, 0.7)
+shader_parameter/gneiss_dark = Vector3(0.052, 0.058, 0.066)
+shader_parameter/gneiss_light = Vector3(0.25, 0.268, 0.29)
+shader_parameter/rust_color = Vector3(0.24, 0.15, 0.09)
+shader_parameter/lichen_color = Vector3(0.18, 0.195, 0.165)
+shader_parameter/moss_color = Vector3(0.07, 0.11, 0.035)
+shader_parameter/heather_color = Vector3(0.13, 0.095, 0.085)
+shader_parameter/grass_tint = Vector3(0.7, 0.84, 0.52)
+shader_parameter/turf_tint = Vector3(0.78, 0.95, 0.62)
+shader_parameter/scree_tint = Vector3(0.8, 0.82, 0.86)
+shader_parameter/far_green = Vector3(0.075, 0.1, 0.05)
+shader_parameter/snow_color = Vector3(0.82, 0.85, 0.88)
+shader_parameter/seabed_color = Vector3(0.1, 0.17, 0.16)
+shader_parameter/alpine_height = Vector2(520, 760)
+shader_parameter/snow_height = Vector2(1150, 1400)
+shader_parameter/rock_normal_strength = 0.9
+shader_parameter/skirt_depth = 6.0
+shader_parameter/sky_ao_strength = 0.85
+shader_parameter/corner_mask = ExtResource("4_xa08f")
+shader_parameter/corner_rect = Vector4(-80, -500, 640, 640)
+shader_parameter/path_tex = ExtResource("11_f4pby")
+shader_parameter/path_nrm = ExtResource("10_4y1xw")
+shader_parameter/gravel_tex = ExtResource("9_m0jao")
+shader_parameter/pebbles_tex = ExtResource("13_b7vt3")
+shader_parameter/pebbles_nrm = ExtResource("12_bgpar")
+shader_parameter/sand_tex = ExtResource("16_msokm")

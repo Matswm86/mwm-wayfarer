@@ -23,6 +23,14 @@
   {
    "model": "shrub_04",
    "size_m": 0.5953639698028564
+  },
+  {
+   "model": "designer meadow atlas tile 4 (dandelion)",
+   "size_m": 0.35
+  },
+  {
+   "model": "designer meadow atlas tile 12 (pink_flower)",
+   "size_m": 0.32
   }
  ],
  "px": 512

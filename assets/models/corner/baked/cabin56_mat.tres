@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/models/corner/cabin56_albedo.jpg" id="1_njqd4"]
+[ext_resource type="Texture2D" path="res://assets/models/corner/cabin56_normal.png" id="2_nxtl1"]
+
+[resource]
+albedo_texture = ExtResource("1_njqd4")
+metallic_specular = 0.3
+roughness = 0.88
+normal_enabled = true
+normal_texture = ExtResource("2_nxtl1")
