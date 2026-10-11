@@ -113,85 +113,96 @@ void fragment() {
 	float n300 = texture(noise_tex, wpos.xz / 2400.0).r;       // ~300 m regions
 	float mac = maprange(n300, 0.25, 0.75, 0.82, 1.15);
 
-	// ---- rock: true triplanar, weights led by the scan heights
 	vec3 an = abs(n);
-	vec3 bw = pow(an, vec3(4.0));
-	bw /= bw.x + bw.y + bw.z;
-	// projections with v up the face, so scan "up" stays world up on every facing
-	vec2 px = vec2(wpos.z * sign(n.x), -wpos.y);
-	vec2 py = wpos.xz;
-	vec2 pz = vec2(-wpos.x * sign(n.z), -wpos.y);
-	// macro: the strata-free rock-face scan at 90 m and 37 m (no common period, so no visible
-	// repeat on a 1 km wall); cliff strata only at the 12 m scale
-	vec4 mx = texture(rock_mask, px / 90.0);
-	vec4 my = texture(rock_mask, py / 90.0);
-	vec4 mz = texture(rock_mask, pz / 90.0);
-	vec3 tw = height_weights(bw, vec3(mx.a, my.a, mz.a), 0.35);
-	vec4 m90 = mx * tw.x + my * tw.y + mz * tw.z;
-	vec4 ax = texture(rock_mask, px / 37.0 + 0.53);
-	vec4 ay = texture(rock_mask, py / 37.0 + 0.53);
-	vec4 az = texture(rock_mask, pz / 37.0 + 0.53);
-	vec4 m37 = ax * tw.x + ay * tw.y + az * tw.z;
-	float tone = m90.g * 0.55 + m37.g * 0.45;
-	float cav = m90.a * 0.5 + m37.a * 0.5;
+	// steep = 1 on faces steeper than about 50 deg, rock from about 38 deg; rock outcrops on
+	// convex knolls and edges break through the turf
+	float outcrop = maprange(convex + (n12 - 0.5) * 0.6, 0.45, 0.75, 0.0, 1.0) * maprange(an.y, 0.95, 0.8, 0.0, 1.0);
+	float steep_t = clamp(maprange(an.y + (n12 - 0.5) * 0.18, 0.74, 0.6, 0.0, 1.0) + outcrop, 0.0, 1.0);
+	// ---- rock: true triplanar, weights led by the scan heights. Skipped where steep_t is 0 (flat
+	// meadow, the spawn, the village): there hblend() below gives steep = 0 exactly, so no rock
+	// value reaches the pixel and the 20-35 rock texture reads are saved (corner pass 2026-10-11).
+	vec3 gneiss = vec3(0.0);
+	float cav = 1.0;
 	vec3 dn = vec3(0.0);
-	float near12 = maprange(dist, 1400.0, 500.0, 0.0, 1.0);
-	if (quality > 0) {
-		vec2 tx = texture(rock_nrm, px / 37.0 + 0.53).xy * 2.0 - 1.0;
-		vec2 ty = texture(rock_nrm, py / 37.0 + 0.53).xy * 2.0 - 1.0;
-		vec2 tz = texture(rock_nrm, pz / 37.0 + 0.53).xy * 2.0 - 1.0;
-		dn = tw.x * vec3(0.0, tx.y, tx.x * sign(n.x)) + tw.y * vec3(ty.x, 0.0, ty.y)
-			+ tw.z * vec3(-tz.x * sign(n.z), tz.y, 0.0);
-		if (near12 > 0.0) {
-			vec4 dx = texture(rock_mask, px / 12.0 + 0.37);
-			vec4 dy = texture(rock_mask, py / 12.0 + 0.37);
-			vec4 dz = texture(rock_mask, pz / 12.0 + 0.37);
-			vec3 tw2 = height_weights(bw, vec3(dx.b, dy.b, dz.b), 0.3);
-			vec4 m12 = dx * tw2.x + dy * tw2.y + dz * tw2.z;
-			// mostly the rock-face scan; the cliff strata only as a hint (on rounded faces they
-			// bent into swirly bands)
-			tone = mix(tone, tone * 0.6 + (m12.g * 0.75 + m12.r * 0.25) * 0.45, near12);
-			cav = mix(cav, cav * 0.5 + m12.b * 0.5, near12);
-			vec2 ux = texture(rock_nrm, px / 12.0 + 0.37).xy * 2.0 - 1.0;
-			vec2 uy = texture(rock_nrm, py / 12.0 + 0.37).xy * 2.0 - 1.0;
-			vec2 uz = texture(rock_nrm, pz / 12.0 + 0.37).xy * 2.0 - 1.0;
-			vec3 dn2 = tw2.x * vec3(0.0, ux.y, ux.x * sign(n.x)) + tw2.y * vec3(uy.x, 0.0, uy.y)
-				+ tw2.z * vec3(-uz.x * sign(n.z), uz.y, 0.0);
-			dn = mix(dn, dn * 0.6 + dn2 * 0.45, near12);
+	float seep = 0.0;
+	if (steep_t > 0.0) {
+		vec3 bw = pow(an, vec3(4.0));
+		bw /= bw.x + bw.y + bw.z;
+		// projections with v up the face, so scan "up" stays world up on every facing
+		vec2 px = vec2(wpos.z * sign(n.x), -wpos.y);
+		vec2 py = wpos.xz;
+		vec2 pz = vec2(-wpos.x * sign(n.z), -wpos.y);
+		// macro: the strata-free rock-face scan at 90 m and 37 m (no common period, so no visible
+		// repeat on a 1 km wall); cliff strata only at the 12 m scale
+		vec4 mx = texture(rock_mask, px / 90.0);
+		vec4 my = texture(rock_mask, py / 90.0);
+		vec4 mz = texture(rock_mask, pz / 90.0);
+		vec3 tw = height_weights(bw, vec3(mx.a, my.a, mz.a), 0.35);
+		vec4 m90 = mx * tw.x + my * tw.y + mz * tw.z;
+		vec4 ax = texture(rock_mask, px / 37.0 + 0.53);
+		vec4 ay = texture(rock_mask, py / 37.0 + 0.53);
+		vec4 az = texture(rock_mask, pz / 37.0 + 0.53);
+		vec4 m37 = ax * tw.x + ay * tw.y + az * tw.z;
+		float tone = m90.g * 0.55 + m37.g * 0.45;
+		cav = m90.a * 0.5 + m37.a * 0.5;
+		float near12 = maprange(dist, 1400.0, 500.0, 0.0, 1.0);
+		if (quality > 0) {
+			vec2 tx = texture(rock_nrm, px / 37.0 + 0.53).xy * 2.0 - 1.0;
+			vec2 ty = texture(rock_nrm, py / 37.0 + 0.53).xy * 2.0 - 1.0;
+			vec2 tz = texture(rock_nrm, pz / 37.0 + 0.53).xy * 2.0 - 1.0;
+			dn = tw.x * vec3(0.0, tx.y, tx.x * sign(n.x)) + tw.y * vec3(ty.x, 0.0, ty.y)
+				+ tw.z * vec3(-tz.x * sign(n.z), tz.y, 0.0);
+			if (near12 > 0.0) {
+				vec4 dx = texture(rock_mask, px / 12.0 + 0.37);
+				vec4 dy = texture(rock_mask, py / 12.0 + 0.37);
+				vec4 dz = texture(rock_mask, pz / 12.0 + 0.37);
+				vec3 tw2 = height_weights(bw, vec3(dx.b, dy.b, dz.b), 0.3);
+				vec4 m12 = dx * tw2.x + dy * tw2.y + dz * tw2.z;
+				// mostly the rock-face scan; the cliff strata only as a hint (on rounded faces they
+				// bent into swirly bands)
+				tone = mix(tone, tone * 0.6 + (m12.g * 0.75 + m12.r * 0.25) * 0.45, near12);
+				cav = mix(cav, cav * 0.5 + m12.b * 0.5, near12);
+				vec2 ux = texture(rock_nrm, px / 12.0 + 0.37).xy * 2.0 - 1.0;
+				vec2 uy = texture(rock_nrm, py / 12.0 + 0.37).xy * 2.0 - 1.0;
+				vec2 uz = texture(rock_nrm, pz / 12.0 + 0.37).xy * 2.0 - 1.0;
+				vec3 dn2 = tw2.x * vec3(0.0, ux.y, ux.x * sign(n.x)) + tw2.y * vec3(uy.x, 0.0, uy.y)
+					+ tw2.z * vec3(-uz.x * sign(n.z), uz.y, 0.0);
+				dn = mix(dn, dn * 0.6 + dn2 * 0.45, near12);
+			}
+			if (quality > 1 && dist < 70.0) {
+				float k = maprange(dist, 70.0, 25.0, 0.0, 1.0);
+				vec2 gx = texture(rock_nrm, px / 3.0 + 0.71).xy * 2.0 - 1.0;
+				vec2 gy = texture(rock_nrm, py / 3.0 + 0.71).xy * 2.0 - 1.0;
+				vec2 gz = texture(rock_nrm, pz / 3.0 + 0.71).xy * 2.0 - 1.0;
+				dn += k * 0.6 * (tw.x * vec3(0.0, gx.y, gx.x) + tw.y * vec3(gy.x, 0.0, gy.y)
+					+ tw.z * vec3(gz.x, gz.y, 0.0));
+				float g3 = texture(rock_mask, py / 3.0 + 0.71).g * tw.y
+					+ texture(rock_mask, px / 3.0 + 0.71).g * (tw.x + tw.z);
+				tone = mix(tone, tone * 0.7 + g3 * 0.35, k);
+			}
 		}
-		if (quality > 1 && dist < 70.0) {
-			float k = maprange(dist, 70.0, 25.0, 0.0, 1.0);
-			vec2 gx = texture(rock_nrm, px / 3.0 + 0.71).xy * 2.0 - 1.0;
-			vec2 gy = texture(rock_nrm, py / 3.0 + 0.71).xy * 2.0 - 1.0;
-			vec2 gz = texture(rock_nrm, pz / 3.0 + 0.71).xy * 2.0 - 1.0;
-			dn += k * 0.6 * (tw.x * vec3(0.0, gx.y, gx.x) + tw.y * vec3(gy.x, 0.0, gy.y)
-				+ tw.z * vec3(gz.x, gz.y, 0.0));
-			float g3 = texture(rock_mask, py / 3.0 + 0.71).g * tw.y
-				+ texture(rock_mask, px / 3.0 + 0.71).g * (tw.x + tw.z);
-			tone = mix(tone, tone * 0.7 + g3 * 0.35, k);
-		}
+		// gneiss: dark to light grey by the scan tone, broad 60-300 m variation, foliation bands
+		// (gently dipping strata from a squashed noise), rusty iron stain where water runs
+		vec2 hdir = normalize(vec2(-n.z, n.x) + vec2(1e-4));
+		float across = dot(wpos.xz, hdir);
+		float strata = texture(noise_tex, vec2(across / 900.0, (wpos.y + across * 0.12) / 22.0)).r;
+		float t = clamp(tone * 0.8 + (strata - 0.5) * 0.3 + (n60 - 0.5) * 0.35 - 0.05, 0.0, 1.0);
+		gneiss = mix(gneiss_dark, gneiss_light, t * t * (3.0 - 2.0 * t)) * mac;
+		// vertical seep streaks across the face plus the DEM's real drainage lines
+		float streak = texture(noise_tex, vec2(across / 30.0, wpos.y / 340.0)).r * 0.6
+			+ texture(noise_tex, vec2(across / 8.0, wpos.y / 110.0) + 0.5).r * 0.4;
+		seep = clamp(flow * 1.6 + maprange(streak, 0.55, 0.8, 0.0, 0.6), 0.0, 1.0);
+		gneiss = mix(gneiss, gneiss * 0.42, seep * 0.75);
+		gneiss = mix(gneiss, rust_color * 0.6, seep * maprange(n60, 0.55, 0.8, 0.0, 0.35));
+		// dry ridges paler, lichen on them, cavities darker
+		gneiss *= 1.0 + convex * 0.25;
+		float lich = maprange(texture(noise_tex, wpos.xz / 160.0 + vec2(0.37, 0.11)).r + convex * 0.25, 0.55, 0.75, 0.0, 1.0);
+		gneiss = mix(gneiss, lichen_color, lich * 0.4);
+		gneiss *= mix(0.55, 1.0, cav);
+		// moss on benches, hollows and wet less-steep rock
+		float rock_moss = clamp(concave * 0.7 + flow * 0.5, 0.0, 1.0) * maprange(an.y, 0.45, 0.8, 0.2, 1.0);
+		gneiss = mix(gneiss, moss_color * (0.8 + 0.4 * n12), rock_moss * 0.6);
 	}
-	// gneiss: dark to light grey by the scan tone, broad 60-300 m variation, foliation bands
-	// (gently dipping strata from a squashed noise), rusty iron stain where water runs
-	vec2 hdir = normalize(vec2(-n.z, n.x) + vec2(1e-4));
-	float across = dot(wpos.xz, hdir);
-	float strata = texture(noise_tex, vec2(across / 900.0, (wpos.y + across * 0.12) / 22.0)).r;
-	float t = clamp(tone * 0.8 + (strata - 0.5) * 0.3 + (n60 - 0.5) * 0.35 - 0.05, 0.0, 1.0);
-	vec3 gneiss = mix(gneiss_dark, gneiss_light, t * t * (3.0 - 2.0 * t)) * mac;
-	// vertical seep streaks across the face plus the DEM's real drainage lines
-	float streak = texture(noise_tex, vec2(across / 30.0, wpos.y / 340.0)).r * 0.6
-		+ texture(noise_tex, vec2(across / 8.0, wpos.y / 110.0) + 0.5).r * 0.4;
-	float seep = clamp(flow * 1.6 + maprange(streak, 0.55, 0.8, 0.0, 0.6), 0.0, 1.0);
-	gneiss = mix(gneiss, gneiss * 0.42, seep * 0.75);
-	gneiss = mix(gneiss, rust_color * 0.6, seep * maprange(n60, 0.55, 0.8, 0.0, 0.35));
-	// dry ridges paler, lichen on them, cavities darker
-	gneiss *= 1.0 + convex * 0.25;
-	float lich = maprange(texture(noise_tex, wpos.xz / 160.0 + vec2(0.37, 0.11)).r + convex * 0.25, 0.55, 0.75, 0.0, 1.0);
-	gneiss = mix(gneiss, lichen_color, lich * 0.4);
-	gneiss *= mix(0.55, 1.0, cav);
-	// moss on benches, hollows and wet less-steep rock
-	float rock_moss = clamp(concave * 0.7 + flow * 0.5, 0.0, 1.0) * maprange(an.y, 0.45, 0.8, 0.2, 1.0);
-	gneiss = mix(gneiss, moss_color * (0.8 + 0.4 * n12), rock_moss * 0.6);
 
 	// ---- soft ground: meadow grass low, turf and heather high, two scales against tiling
 	float gnear = maprange(dist, 250.0, 60.0, 0.0, 1.0);
@@ -219,10 +230,6 @@ void fragment() {
 	float bare = maprange(an.y, 0.86, 0.74, 0.0, 0.7) + flow * 0.2 + forest * 0.8;
 	soft = mix(soft, soil.rgb * 0.75, hblend(grass.a, soil.a, clamp(bare, 0.0, 1.0), 0.35) * 0.8);
 
-	// steep = 1 on faces steeper than about 50 deg, rock from about 38 deg; rock outcrops on
-	// convex knolls and edges break through the turf
-	float outcrop = maprange(convex + (n12 - 0.5) * 0.6, 0.45, 0.75, 0.0, 1.0) * maprange(an.y, 0.95, 0.8, 0.0, 1.0);
-	float steep_t = clamp(maprange(an.y + (n12 - 0.5) * 0.18, 0.74, 0.6, 0.0, 1.0) + outcrop, 0.0, 1.0);
 	float steep = hblend(grass.a * 0.6, cav, steep_t, 0.25);
 	vec3 col = mix(soft, gneiss, steep);
 
@@ -258,31 +265,35 @@ void fragment() {
 	{
 		vec4 cm = texture(corner_mask, (wpos.xz - corner_rect.xy) / corner_rect.zw);
 		cm *= 1.0 - steep;
-		// two scales of each layer against tiling, rotated against each other
-		vec2 q = wpos.xz;
-		vec2 q2 = mat2(vec2(0.8, 0.6), vec2(-0.6, 0.8)) * q;
-		vec4 pa = mix(texture(path_tex, q / 3.2), texture(path_tex, q2 / 7.9 + 0.31), 0.35);
-		vec4 pn = texture(path_nrm, q / 3.2);
-		vec4 gv = mix(texture(gravel_tex, q / 2.3), texture(gravel_tex, q2 / 5.7 + 0.17), 0.4);
-		vec4 pb = mix(texture(pebbles_tex, q / 2.6), texture(pebbles_tex, q2 / 6.1 + 0.63), 0.3);
-		vec4 bn = texture(pebbles_nrm, q / 2.6);
-		vec4 sd = texture(sand_tex, q / 3.5);
-		float ground_h = grass.a;
-		float w_path = hblend(ground_h, pa.a, clamp(cm.r * 1.15 + (n12 - 0.5) * 0.3, 0.0, 1.0), 0.3);
-		float w_grav = hblend(ground_h, gv.a, clamp(cm.g + (n12 - 0.5) * 0.4, 0.0, 1.0), 0.3);
-		float w_peb = hblend(ground_h, pb.a, clamp(cm.b * 1.1 + (n12 - 0.5) * 0.3, 0.0, 1.0), 0.25);
-		float w_sand = hblend(pb.a, sd.a, cm.a, 0.2) * cm.a;
-		col = mix(col, gv.rgb * 0.85, w_grav);
-		col = mix(col, pa.rgb * vec3(0.92, 0.9, 0.86), w_path);
-		vec3 shore = mix(pb.rgb * 0.9, sd.rgb * 0.75, w_sand);
-		// pebbles darken and gloss toward the water line (the wet band below still applies)
-		col = mix(col, shore * mix(1.0, 0.55, wet), w_peb);
-		vec3 tn_path = vec3(pn.x * 2.0 - 1.0, 0.0, pn.y * 2.0 - 1.0);
-		vec3 tn_peb = vec3(bn.x * 2.0 - 1.0, 0.0, bn.y * 2.0 - 1.0);
-		nn = normalize(nn + tn_path * 0.9 * w_path + tn_peb * 1.2 * w_peb * (1.0 - w_sand));
-		rough = mix(rough, pn.b, w_path);
-		rough = mix(rough, mix(bn.b, 0.25, wet), w_peb);
-		steep *= 1.0 - max(w_path, w_peb);
+		// open meadow (mask 0): path, pebble and sand weights are exactly 0 there and gravel
+		// at most a faint speck, so skip the 13 layer reads (corner pass 2026-10-11)
+		if (cm.r + cm.g + cm.b + cm.a > 0.0) {
+			// two scales of each layer against tiling, rotated against each other
+			vec2 q = wpos.xz;
+			vec2 q2 = mat2(vec2(0.8, 0.6), vec2(-0.6, 0.8)) * q;
+			vec4 pa = mix(texture(path_tex, q / 3.2), texture(path_tex, q2 / 7.9 + 0.31), 0.35);
+			vec4 pn = texture(path_nrm, q / 3.2);
+			vec4 gv = mix(texture(gravel_tex, q / 2.3), texture(gravel_tex, q2 / 5.7 + 0.17), 0.4);
+			vec4 pb = mix(texture(pebbles_tex, q / 2.6), texture(pebbles_tex, q2 / 6.1 + 0.63), 0.3);
+			vec4 bn = texture(pebbles_nrm, q / 2.6);
+			vec4 sd = texture(sand_tex, q / 3.5);
+			float ground_h = grass.a;
+			float w_path = hblend(ground_h, pa.a, clamp(cm.r * 1.15 + (n12 - 0.5) * 0.3, 0.0, 1.0), 0.3);
+			float w_grav = hblend(ground_h, gv.a, clamp(cm.g + (n12 - 0.5) * 0.4, 0.0, 1.0), 0.3);
+			float w_peb = hblend(ground_h, pb.a, clamp(cm.b * 1.1 + (n12 - 0.5) * 0.3, 0.0, 1.0), 0.25);
+			float w_sand = hblend(pb.a, sd.a, cm.a, 0.2) * cm.a;
+			col = mix(col, gv.rgb * 0.85, w_grav);
+			col = mix(col, pa.rgb * vec3(0.92, 0.9, 0.86), w_path);
+			vec3 shore = mix(pb.rgb * 0.9, sd.rgb * 0.75, w_sand);
+			// pebbles darken and gloss toward the water line (the wet band below still applies)
+			col = mix(col, shore * mix(1.0, 0.55, wet), w_peb);
+			vec3 tn_path = vec3(pn.x * 2.0 - 1.0, 0.0, pn.y * 2.0 - 1.0);
+			vec3 tn_peb = vec3(bn.x * 2.0 - 1.0, 0.0, bn.y * 2.0 - 1.0);
+			nn = normalize(nn + tn_path * 0.9 * w_path + tn_peb * 1.2 * w_peb * (1.0 - w_sand));
+			rough = mix(rough, pn.b, w_path);
+			rough = mix(rough, mix(bn.b, 0.25, wet), w_peb);
+			steep *= 1.0 - max(w_path, w_peb);
+		}
 	}
 #endif
 	ALBEDO = col;
