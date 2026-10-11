@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -37,6 +38,11 @@ OUT.mkdir(parents=True, exist_ok=True)
 META = json.loads((ROOT / "assets" / "terrain" / "terrain.json").read_text())
 WALLS = ["red", "ochre", "white", "tar"]
 AO_SIZE = 2048
+# WF_VILLAGE_SET=naust (beauty corner, pass 3): only the two boathouses, no boats; the main houses
+# are photogrammetry scans now (tools/spike/export_corner_houses.py) and the boats come from the
+# designer's village_props. Writes village_naust.glb / village_naust_ao.png instead.
+SET = os.environ.get("WF_VILLAGE_SET", "all")
+SUFFIX = "" if SET == "all" else "_" + SET
 
 
 def g2b(p) -> tuple[float, float, float]:
@@ -49,6 +55,8 @@ def build() -> list[bpy.types.Object]:
     houses = META["village"]
     main = [h for h in houses if not (h["wall"] == 3 and h["w"] == 5.0 and h["d"] == 9.0)]
     naust = [h for h in houses if h not in main]
+    if SET == "naust":
+        main = []
     for i, h in enumerate(main):
         root, _ = B.nordic_house(
             g2b(h["pos"]),
@@ -80,6 +88,8 @@ def build() -> list[bpy.types.Object]:
     # boats along the jetty (scene_fjord.py layout, jetty runs along Godot -x)
     j = META["jetty"]
     jx, jz = float(j["from"][0]), float(j["from"][2])
+    if SET == "naust":
+        return roots
     boats = [
         (-10, 3.0, 4, "#E9E4DA", False),
         (-18, -3.2, -6, "#2F5A4A", True),
@@ -255,7 +265,7 @@ def bake_ao(village: bpy.types.Object) -> None:
     bpy.context.view_layer.objects.active = village
     sc.render.bake.margin = 6
     bpy.ops.object.bake(type="AO", uv_layer="UV2")
-    img.filepath_raw = str(OUT / "village_ao.png")
+    img.filepath_raw = str(OUT / f"village{SUFFIX}_ao.png")
     img.file_format = "PNG"
     img.save()
     for o in occ:
@@ -325,16 +335,17 @@ def main() -> None:
     print("village triangles", tris, "slots", [s.material.name for s in village.material_slots])
     bake_ao(village)
     village.data.color_attributes.active_color = village.data.color_attributes["tint"]
-    export_glb([village], OUT / "village.glb")
+    export_glb([village], OUT / f"village{SUFFIX}.glb")
     used = {s.material.name.split(".")[0] for s in village.material_slots}
-    (OUT / "materials.json").write_text(
+    (OUT / f"materials{SUFFIX}.json").write_text(
         json.dumps({k: v for k, v in mats.items() if k in used}, indent=1)
     )
     bpy.ops.object.select_all(action="DESELECT")
     for r in roots:
         for o in [r, *r.children_recursive]:
             bpy.data.objects.remove(o, do_unlink=True)
-    pier()
+    if SET == "all":
+        pier()
 
 
 main()

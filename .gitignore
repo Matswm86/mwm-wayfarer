@@ -24,3 +24,12 @@ __pycache__/
 
 # Designer drop zone (2.5 GB); the game uses copies in assets/models/
 assets/incoming/
+
+# Beauty corner: build-time inputs only (copied from assets/incoming; the scene uses the meshes saved
+# by tools/spike/build_corner.gd in assets/models/corner/baked/ and the extracted textures)
+assets/models/corner/rocks/*.glb
+assets/models/corner/rocks/*.glb.import
+assets/models/corner/props/*.glb
+assets/models/corner/props/*.glb.import
+assets/models/corner/trees/downy_birch_*.glb
+assets/models/corner/trees/downy_birch_*.glb.import
