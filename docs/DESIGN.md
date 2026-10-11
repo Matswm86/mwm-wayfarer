@@ -222,17 +222,19 @@ Terrain from real elevation data wherever the licence allows (section 7.4). A he
 
 ### 7.3 Characters and props
 - Realistic proportions, work clothes in natural dyes (wool grey, oilskin yellow, linen, falu red); no bright synthetic colours on NPCs.
-- Faces must read at talk-camera distance (waist-up, 3.5-4 m with a 60 mm lens). MakeHuman (MPFB, CC0) is the stand-in: good enough for mockups, not for shipping; characters are the next art risk after terrain.
+- Faces must read at talk-camera distance (waist-up, 3.5-4 m with a 60 mm lens). MakeHuman (MPFB, CC0) was the stand-in and is retired by pass 2 (10-10 c): the player is a scanned human (Renderpeople Nathan, 4K albedo), Ingrid a realistic woman in denim work bibs, linen shirt and boots (section 7.6). Both share one animation set retargeted from Quaternius UAL (CC0): idle, walk, run, sprint, talk, interact, pickup, sit.
+- Hero budget (owner 10-10, frame time is the only limit): player up to about 60k triangles with 4K albedo; NPCs at talk distance up to 60k with 4K; crowd NPCs 15-25k with 2K.
 - **Ingrid** (`wf_mh.py` preset `ingrid`, 10-10 b): woman about 50, long mid-brown hair (a ponytail read as a man from the front), orange oilskin bibs over a grey-blue wool shirt, texture eyes (the procedural MPFB eyes glow at talk distance), calm talk pose `talk_calm` (hands low, no wide gesture). Talk camera: over the player's left shoulder, NPC face at x about 660 px, y about 400 px at 1080p, player blurred under the replies.
 - Item icons: render each item model in the game's own daylight on transparent, 256 px, three-quarter view, consistent light from top-left (`tools/art/icons.py`). The trade mock uses Poly Haven's own CC0 thumbnails as stand-ins.
-- Textures: 2048 px max, 1024 for props, ASTC on Android. Atlas small props.
+- Textures (raised by the owner 10-10: APK size is no constraint): characters 4K, cliff materials 4K, rock meshes 2-4K, trees 2K atlases, props 2K, small props 1K. ASTC on Android. Atlas small props.
 
 ### 7.4 Sources
 Poly Haven (CC0: models, textures, HDRIs), Blender Studio Human Base Meshes (CC0), MakeHuman system assets (CC0), Kartverket DTM (CC BY 4.0), Copernicus GLO-30 for Kefalonia and Wadi Rum (licence verified 10-10: free, distribution allowed, the credit text in `assets/_raw/dem/cop30/SOURCE.md` is required). Every new source goes into CREDITS (section 11) the day it is added.
+Added 10-10 c: ambientCG (CC0 materials), Quaternius Universal Animation Library (CC0 animations), Sketchfab models under CC BY 4.0 (author credit required; each listed in the asset's `NOTES.md`). Owner decision 10-10: licence does not block use of a free asset that looks good (NC included); record the licence anyway and re-check before any paid release.
 
 ### 7.5 Animals (wildlife only, GDD line 32)
 - Realistic scanned-look or hand-sculpted models with real proportions and fur textures; rigged with at least walk, run, idle/graze. **No stylized, low-poly, cel-shaded or anthropomorphic packs.**
-- Licence: CC0 or CC BY 4.0 only, checked on the asset page itself (Sketchfab shows it under the viewer; record author, URL, licence and the date in `assets/_raw/animals/<species>/CREDITS.md`). CC BY-NC (most "DEMO FREE" WildMesh / "Stylized" AnimalMesh3D items) is out. Tripo free-tier output is out (Tripo keeps the rights).
+- Licence: superseded by the owner 10-10 (17:12): free assets of any licence may be used, NC included; record author, URL, licence and date in `assets/_raw/animals/<species>/CREDITS.md` and re-check before any paid release. Tripo free-tier output stays out (Tripo keeps the rights).
 - Phone budget: 8-20k triangles per animal, one 2048 texture, at most 6 full animals near the camera, impostors or culling beyond 80 m.
 - 10-10 b shortlist (licence checked through the Sketchfab API, not yet downloaded: needs a Sketchfab login):
 
@@ -244,6 +246,35 @@ Poly Haven (CC0: models, textures, HDRIs), Blender Studio Human Base Meshes (CC0
 | Red fox | Animated Fox 3D Model `7b7d4f07d47a444ab6c08b62adfd4aff` | AnimalMesh3D | CC BY 4.0 | 19.5k / 69 | Realistic, full clip set |
 | Hare | Animated Rabbit `244017d76f804d6eaa0dd2c33bcff50f` | AnimalMesh3D | CC BY 4.0 | 8.2k / 36 | Brown, hare-like proportions |
 | Moose, reindeer, eagle, sheep, pony | none passed | | | | Only stylized, NC or low-poly found; next: paid realistic packs or a commissioned set |
+
+### 7.6 Asset library pass 2 (10-10 c): what replaces what
+Delivered to `assets/incoming/<asset>/` (GLB + PNG textures + `NOTES.md` each; contact sheet `assets/incoming/CONTACT_SHEET.jpg`). Every GLB holds its LODs as sibling nodes `<name>_LOD0`, `_LOD1`, ...; import with Godot's own LOD generation **off** for foliage cards (it collapses cards into holes) and switch by visibility range.
+
+| Need | Asset | How it was made | Why |
+|---|---|---|---|
+| Scots pine x3 | `scots_pine_a/b/c` | Poly Haven `pine_tree_01` (CC0, 4-7 M triangles of real needles) baked to game trees by `tools/assets/cardify_tree.py`: trunk + biggest branches kept, twiglets dropped, bark re-unwrapped and baked to 2K; needles become cards showing 16 renders of real twig islands (8 top views on near-flat cards, 8 side views on vertical radial cards) | Real Scots-pine crown (layered, flat-topped, bare orange-grey trunk) instead of floating leaf confetti |
+| Norway spruce x3 | `norway_spruce_a/b/c` | PlantCatalog "Realistic HD Norway spruce" 3/43, 13/43, 8/43 (CC BY 4.0) through the same card bake | Conical skirt to the ground; the Poly Haven fir has a bare pine-like trunk (kept as `fir_conifer_*` for mixed stands) |
+| Birch x3 | `downy_birch_a/b/c` | lolipop_1707 "Five Birch trees pack" (CC BY 4.0), author's 4K maps reduced to 2K, our LOD3 (about 1.2k) | Real white birch with black lenticels; c is multi-stemmed like mountain birch. Silver-birch leaves, not true downy birch (no realistic downy birch found) |
+| Tree impostors | `<species>_impostor_*` | `tools/assets/bake_impostors.py`, same 8 x 2 frame layout as `shaders/tree.gdshader` | Normals now rendered with the Raw view transform (the spike baker's Standard transform sRGB-encoded them) and alpha thickened x1.6 so far trees stay solid |
+| Cliff bands | `rocks/cliff_*` (8) | Poly Haven scans decimated to 8k / 2.4k / 0.6k, baked to 4K, albedo graded to fjord gneiss (saturation 0.35, mean sRGB luminance 0.33) | True cliff faces for slopes above about 70 deg instead of stretched heightfield |
+| Talus, boulders | `rocks/cliff_jagged_a/b` (talus aprons), `boulder_a`, `boulders_a` (cobbles), `stones_a` (pebbles) | Same bake, sets split into single stones sharing one 2K atlas; the two moss-stone sets were rejected (black patches from the source scans) | Cliff feet and shore |
+| Cliff material | `cliff_materials/gneiss_banded`, `gneiss_dark`, `granite_lichen` | ambientCG Rock030 / Rock028 / Rock048 at 4K (albedo, normal GL, ORM, height) | Grey foliated rock with no wood-grain swirl; `gneiss_dark` and `granite_lichen` repeat visibly at 3 x 3, so break them with a macro noise or random rotation |
+| Player | `player_nathan` (alt `player_mike`) | Renderpeople scan (CC BY 4.0) + UAL clips by `tools/assets/retarget_char.py` | Scanned face holds at talk distance |
+| Ingrid | `ingrid_farmer` | Sketchfab "Woman Farmer" (CC BY 4.0), welded, decimated 142k to 60k, albedo re-baked at 4K | Realistic woman in work clothes |
+| Meadow | `ground_cover/meadow_*` | 16 Poly Haven plant renders, 10 side tiles for crossed-card clumps, 6 oblique tiles for far cover | Fills the flat meadow beyond 35 m |
+| Village | `village_props/*` | 3 Sketchfab boats and 2 woodpiles (CC BY 4.0, 2K re-packed); skigard and hjell built by `tools/assets/build_skigard_hjell.py` | Village stops looking empty |
+
+**Four questions, answered for pass 2**
+- *Card trees near, impostors far:* 1) yes, trees fill every slope; 2) LOD0 13-18k triangles, two surfaces (bark opaque, leaves alpha-scissor), so keep LOD0 inside about 40 m, LOD1 (2-4k) to about 150 m, impostors beyond; alpha-tested overdraw is the real cost, so never alpha blend the leaves; 3) the cheaper trick is already the impostor; 4) fits.
+- *Rock meshes on cliff bands:* 1) yes, walls are half the fjord frame; 2) 8k LOD0 opaque, one material, instance-friendly; LOD2 0.6k from about 250 m; 3) beyond about 1.5 km the terrain shader alone is cheaper and enough; 4) fits.
+- *Scanned characters:* 1) the player is on screen 100 % of the time; 2) 21.5k triangles (Nathan) and 60k (Ingrid) skinned, one material each: fine for 1-3 skinned meshes on screen; 3) none cheaper that still reads as a person at talk distance; 4) fits.
+- *Ground clumps beyond 35 m:* 1) yes, the meadow is the foreground of most frames; 2) 6 triangles per clump, alpha-scissor, so density costs overdraw: cap at about 1 clump per 2 m2 from 35 to 120 m; 3) far tiles as flat cards past 80 m are the cheaper trick; 4) fits.
+
+**Do / don't for these assets**
+- Do keep the leaf and needle materials alpha-scissor (cutoff 0.4-0.5) with mipmapped alpha-to-coverage when MSAA is on; never alpha-blend foliage.
+- Do multiply the leaf albedo by `COLOR_0` (crown AO, darker inside and low) and use `UV2.x` (0 trunk, 1 crown edge) as the wind-sway weight.
+- Do rotate and scale instances (yaw random, scale 0.8-1.25; spruce from PlantCatalog 1.6-2.2 to reach 15-20 m).
+- Don't tint the rock meshes beige; their albedo is already graded to gneiss. Don't recolour the birch bark.
 
 ## 8. Do and don't
 
@@ -314,6 +345,9 @@ CREDITS.md does not exist yet; create it with the first build. Required lines:
 | MakeHuman system assets | CC0 | No obligation; courtesy credit |
 | Copernicus GLO-30 (Kefalonia, Wadi Rum terrain) | Copernicus DEM licence (verified 10-10) | **Required** credit text, see `assets/_raw/dem/cop30/SOURCE.md` |
 | Animal models (section 7.5) | CC BY 4.0 each | **Required**: author + model name + licence in the in-game credits for every model shipped |
+| Sketchfab trees, boats, woodpiles, characters (section 7.6) | CC BY 4.0 each | **Required**: author + model name + licence in the in-game credits; exact lines in each `assets/incoming/<asset>/NOTES.md` |
+| ambientCG materials | CC0 | No obligation; courtesy credit "ambientCG" |
+| Quaternius Universal Animation Library | CC0 | No obligation; courtesy credit "Quaternius" |
 | Voices (TTS model, future) | **open** (GDD 13) | Piper lessac/ryan are non-commercial and excluded; record the chosen model's licence here |
 
 No personal names, internal paths or tool names in the in-game credits or the store text.
