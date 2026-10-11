@@ -1,0 +1,4070 @@
+[gd_scene format=3 uid="uid://crmlemhlgai02"]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cabin56.res" id="1_wmobl"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cabin56_LOD1.res" id="2_ojdpn"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/evju.res" id="3_2gx3n"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/evju_LOD1.res" id="4_6uild"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_38_55.res" id="5_r2cwu"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_39_55.res" id="6_77ue1"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_40_55.res" id="7_6km5x"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_41_55.res" id="8_ql7fo"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_38_56.res" id="9_labvt"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_39_56.res" id="10_2fwjr"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_40_56.res" id="11_qciv6"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_41_56.res" id="12_kmk5l"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_38_57.res" id="13_3mqpe"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_39_57.res" id="14_xmd38"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_40_57.res" id="15_gksbl"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_41_57.res" id="16_42w8f"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_38_58.res" id="17_rueu5"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_39_58.res" id="18_g0g1y"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_40_58.res" id="19_krbo5"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/ground_41_58.res" id="20_2gc7u"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/corner/occluder.res" id="21_oabhr"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boat_tarred.res" id="22_ykenq"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boat_tarred_LOD1.res" id="23_ors4i"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boat_painted.res" id="24_qrnw5"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boat_painted_LOD1.res" id="25_lexjn"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boat_fishing.res" id="26_m16ns"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boat_fishing_LOD1.res" id="27_riaqg"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/woodpile_split.res" id="28_lfe6o"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/woodpile_split_LOD1.res" id="29_6gaoq"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/woodpile_logs.res" id="30_asdti"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/woodpile_logs_LOD1.res" id="31_ul57n"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/skigard_4m.res" id="32_167lh"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/skigard_4m_LOD1.res" id="33_mphgi"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/hjell_6m.res" id="34_hdhjv"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/hjell_6m_LOD1.res" id="35_xrip1"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_jagged_a.res" id="36_kcwru"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_jagged_a_LOD1.res" id="37_g6dxp"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_jagged_a_LOD2.res" id="38_iu84h"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_face_a.res" id="39_oxn8i"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_face_a_LOD1.res" id="40_c4e6h"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_face_a_LOD2.res" id="41_sxct7"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_jagged_b.res" id="42_ixlst"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_jagged_b_LOD1.res" id="43_wsrk1"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_jagged_b_LOD2.res" id="44_thosc"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_granite_a.res" id="45_sbphw"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_granite_a_LOD1.res" id="46_7h32g"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/cliff_granite_a_LOD2.res" id="47_b7k71"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulders_a_b.res" id="48_q2qbc"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulders_a_b_LOD1.res" id="49_5kigb"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulders_a_b_LOD2.res" id="50_vel36"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulders_a_a.res" id="51_h8asu"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulders_a_a_LOD1.res" id="52_obpog"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulders_a_a_LOD2.res" id="53_l1ope"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulder_a.res" id="54_mls3v"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulder_a_LOD1.res" id="55_ra40d"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/boulder_a_LOD2.res" id="56_ipi58"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_a_LOD0.res" id="57_dygue"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_a_LOD1.res" id="58_pyben"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_a_LOD3.res" id="59_ovn8c"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_b_LOD0.res" id="60_tcf7g"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_b_LOD1.res" id="61_8b03b"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_b_LOD3.res" id="62_fkwbg"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_c_LOD0.res" id="63_uyn7a"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_c_LOD1.res" id="64_pj61b"]
+[ext_resource type="ArrayMesh" path="res://assets/models/corner/baked/downy_birch_c_LOD3.res" id="65_2wsa2"]
+[ext_resource type="Texture2D" uid="uid://cnv1rnj46pr0k" path="res://assets/sky/kloofendal_48d_partly_cloudy.jpg" id="66_ole3s"]
+[ext_resource type="LightmapGIData" uid="uid://dm48v2jv5v3if" path="res://scenes/BeautyCorner.lmbake" id="67_ojdpn"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_rekp7"]
+panorama = ExtResource("66_ole3s")
+energy_multiplier = 1.56
+
+[sub_resource type="Sky" id="Sky_tidks"]
+sky_material = SubResource("PanoramaSkyMaterial_rekp7")
+
+[node name="BeautyCorner" type="Node3D" unique_id=282980521]
+
+[node name="Houses" type="Node3D" parent="." unique_id=881191646]
+
+[node name="cabin56_0" type="Node3D" parent="Houses" unique_id=1533366113]
+transform = Transform3D(0.9781476, 0, 0.2079117, 0, 1, 0, -0.2079117, 0, 0.9781476, 208, 1.6756418, -118)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/cabin56_0" unique_id=1532193525]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("1_wmobl")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/cabin56_0" unique_id=2006404674]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/cabin56_0" unique_id=1020508043]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="cabin56_1" type="Node3D" parent="Houses" unique_id=546635055]
+transform = Transform3D(0.13917308, 0, -0.99026805, 0, 1, 0, -0.99026805, 0, -0.13917308, 246, 3.0208373, -140)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/cabin56_1" unique_id=1207523495]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("1_wmobl")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/cabin56_1" unique_id=2115527282]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/cabin56_1" unique_id=1177534212]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="evju_2" type="Node3D" parent="Houses" unique_id=1025697997]
+transform = Transform3D(0.99026805, 0, 0.1391731, 0, 1, 0, -0.1391731, 0, 0.99026805, 232, 1.3719769, -160)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/evju_2" unique_id=523577367]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("3_2gx3n")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/evju_2" unique_id=710037738]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("4_6uild")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/evju_2" unique_id=2135335975]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("4_6uild")
+
+[node name="cabin56_3" type="Node3D" parent="Houses" unique_id=212763790]
+transform = Transform3D(-0.08715577, 0, 0.9961947, 0, 1, 0, -0.9961947, 0, -0.08715577, 283, 5.503751, -178)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/cabin56_3" unique_id=1943727158]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("1_wmobl")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/cabin56_3" unique_id=799197132]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/cabin56_3" unique_id=42572357]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="evju_4" type="Node3D" parent="Houses" unique_id=1201751748]
+transform = Transform3D(-0.9659258, 0, -0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, 270, 2.5715582, -205)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/evju_4" unique_id=605643228]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("3_2gx3n")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/evju_4" unique_id=1588353272]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("4_6uild")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/evju_4" unique_id=1845924610]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("4_6uild")
+
+[node name="evju_5" type="Node3D" parent="Houses" unique_id=1530271613]
+transform = Transform3D(-0.1736482, 0, 0.9848077, 0, 1, 0, -0.9848077, 0, -0.1736482, 312, 7.8270717, -222)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/evju_5" unique_id=1143963444]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("3_2gx3n")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/evju_5" unique_id=889490954]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("4_6uild")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/evju_5" unique_id=1174931466]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("4_6uild")
+
+[node name="cabin56_6" type="Node3D" parent="Houses" unique_id=1286647466]
+transform = Transform3D(-0.9396926, 0, -0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, 302, 3.1130795, -246)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/cabin56_6" unique_id=97808110]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("1_wmobl")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/cabin56_6" unique_id=106325324]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/cabin56_6" unique_id=95417490]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("2_ojdpn")
+
+[node name="evju_7" type="Node3D" parent="Houses" unique_id=1024331843]
+transform = Transform3D(4.371139e-08, 0, -1, 0, 1, 0, -1, 0, -4.371139e-08, 352, 12.283941, -262)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/evju_7" unique_id=989590351]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("3_2gx3n")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/evju_7" unique_id=1903089223]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("4_6uild")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/evju_7" unique_id=1132632279]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("4_6uild")
+
+[node name="evju_8" type="Node3D" parent="Houses" unique_id=322412860]
+transform = Transform3D(0.9961947, 0, 0.08715574, 0, 1, 0, -0.08715574, 0, 0.9961947, 304, 1.0546534, -270)
+
+[node name="LOD0" type="MeshInstance3D" parent="Houses/evju_8" unique_id=1071506352]
+cast_shadow = 0
+visibility_range_end = 45.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("3_2gx3n")
+
+[node name="LOD1" type="MeshInstance3D" parent="Houses/evju_8" unique_id=1848249001]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 45.0
+visibility_range_begin_margin = 4.0
+mesh = ExtResource("4_6uild")
+
+[node name="Shadow" type="MeshInstance3D" parent="Houses/evju_8" unique_id=1108630132]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("4_6uild")
+
+[node name="Ground" type="Node3D" parent="." unique_id=1935047853]
+
+[node name="Tile_38_55" type="MeshInstance3D" parent="Ground" unique_id=854974752]
+cast_shadow = 0
+mesh = ExtResource("5_r2cwu")
+
+[node name="Tile_39_55" type="MeshInstance3D" parent="Ground" unique_id=451115326]
+cast_shadow = 0
+mesh = ExtResource("6_77ue1")
+
+[node name="Tile_40_55" type="MeshInstance3D" parent="Ground" unique_id=397320858]
+cast_shadow = 0
+mesh = ExtResource("7_6km5x")
+
+[node name="Tile_41_55" type="MeshInstance3D" parent="Ground" unique_id=1825296205]
+cast_shadow = 0
+mesh = ExtResource("8_ql7fo")
+
+[node name="Tile_38_56" type="MeshInstance3D" parent="Ground" unique_id=2111520737]
+cast_shadow = 0
+mesh = ExtResource("9_labvt")
+
+[node name="Tile_39_56" type="MeshInstance3D" parent="Ground" unique_id=480184478]
+cast_shadow = 0
+mesh = ExtResource("10_2fwjr")
+
+[node name="Tile_40_56" type="MeshInstance3D" parent="Ground" unique_id=1091716010]
+cast_shadow = 0
+mesh = ExtResource("11_qciv6")
+
+[node name="Tile_41_56" type="MeshInstance3D" parent="Ground" unique_id=178007718]
+cast_shadow = 0
+mesh = ExtResource("12_kmk5l")
+
+[node name="Tile_38_57" type="MeshInstance3D" parent="Ground" unique_id=591048226]
+cast_shadow = 0
+mesh = ExtResource("13_3mqpe")
+
+[node name="Tile_39_57" type="MeshInstance3D" parent="Ground" unique_id=1594820137]
+cast_shadow = 0
+mesh = ExtResource("14_xmd38")
+
+[node name="Tile_40_57" type="MeshInstance3D" parent="Ground" unique_id=1149940350]
+cast_shadow = 0
+mesh = ExtResource("15_gksbl")
+
+[node name="Tile_41_57" type="MeshInstance3D" parent="Ground" unique_id=512681655]
+cast_shadow = 0
+mesh = ExtResource("16_42w8f")
+
+[node name="Tile_38_58" type="MeshInstance3D" parent="Ground" unique_id=499271489]
+cast_shadow = 0
+mesh = ExtResource("17_rueu5")
+
+[node name="Tile_39_58" type="MeshInstance3D" parent="Ground" unique_id=437924141]
+cast_shadow = 0
+mesh = ExtResource("18_g0g1y")
+
+[node name="Tile_40_58" type="MeshInstance3D" parent="Ground" unique_id=120506311]
+cast_shadow = 0
+mesh = ExtResource("19_krbo5")
+
+[node name="Tile_41_58" type="MeshInstance3D" parent="Ground" unique_id=156214616]
+cast_shadow = 0
+mesh = ExtResource("20_2gc7u")
+
+[node name="BakeOccluder" type="MeshInstance3D" parent="." unique_id=1121973451]
+mesh = ExtResource("21_oabhr")
+
+[node name="Props" type="Node3D" parent="." unique_id=1108949217]
+
+[node name="boat_tarred_0" type="Node3D" parent="Props" unique_id=477010102]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, 213, -0.17957105, -161)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/boat_tarred_0" unique_id=416878389]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("22_ykenq")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/boat_tarred_0" unique_id=228072406]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("23_ors4i")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/boat_tarred_0" unique_id=1216539857]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("23_ors4i")
+
+[node name="boat_painted_1" type="Node3D" parent="Props" unique_id=88507372]
+transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, 244, 0.8005119, -199)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/boat_painted_1" unique_id=2120915586]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("24_qrnw5")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/boat_painted_1" unique_id=594086745]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("25_lexjn")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/boat_painted_1" unique_id=2033119828]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("25_lexjn")
+
+[node name="boat_fishing_2" type="Node3D" parent="Props" unique_id=24406946]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 206, -0.35, -167.5)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/boat_fishing_2" unique_id=1681293942]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("26_m16ns")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/boat_fishing_2" unique_id=1998437652]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("27_riaqg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/boat_fishing_2" unique_id=1059595382]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("27_riaqg")
+
+[node name="woodpile_split_3" type="Node3D" parent="Props" unique_id=447223720]
+transform = Transform3D(1.5650362, 0, 0.33265874, 0, 1.6, 0, -0.33265874, 0, 1.5650362, 213.01343, 2.461712, -120.86722)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/woodpile_split_3" unique_id=1538931573]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("28_lfe6o")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/woodpile_split_3" unique_id=485142955]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("29_6gaoq")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/woodpile_split_3" unique_id=707645756]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("29_6gaoq")
+
+[node name="woodpile_logs_4" type="Node3D" parent="Props" unique_id=206362635]
+transform = Transform3D(0.99026805, 0, 0.1391731, 0, 1, 0, -0.1391731, 0, 0.99026805, 236.24913, 2.0850692, -159.94409)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/woodpile_logs_4" unique_id=1752559421]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("30_asdti")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/woodpile_logs_4" unique_id=1328380342]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("31_ul57n")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/woodpile_logs_4" unique_id=744075574]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("31_ul57n")
+
+[node name="woodpile_split_5" type="Node3D" parent="Props" unique_id=1391590360]
+transform = Transform3D(1.5454813, 0, 0.41411048, 0, 1.6, 0, -0.41411048, 0, 1.5454813, 273.96722, 3.8674848, -206.4217)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/woodpile_split_5" unique_id=512907106]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("28_lfe6o")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/woodpile_split_5" unique_id=881413613]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("29_6gaoq")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/woodpile_split_5" unique_id=950749813]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("29_6gaoq")
+
+[node name="woodpile_logs_6" type="Node3D" parent="Props" unique_id=2055287568]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, 306.76578, 4.918469, -248.98701)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/woodpile_logs_6" unique_id=1340310996]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("30_asdti")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/woodpile_logs_6" unique_id=104815703]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("31_ul57n")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/woodpile_logs_6" unique_id=2094292443]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("31_ul57n")
+
+[node name="woodpile_split_7" type="Node3D" parent="Props" unique_id=609780321]
+transform = Transform3D(1.5939115, 0, 0.13944918, 0, 1.6, 0, -0.13944918, 0, 1.5939115, 308.2062, 2.2808459, -270.11224)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/woodpile_split_7" unique_id=1422202989]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("28_lfe6o")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/woodpile_split_7" unique_id=470220200]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("29_6gaoq")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/woodpile_split_7" unique_id=1291328068]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("29_6gaoq")
+
+[node name="skigard_4m_8" type="Node3D" parent="Props" unique_id=1700382766]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 150, 5.6710887, -30)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_8" unique_id=461377077]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_8" unique_id=717844054]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_9" type="Node3D" parent="Props" unique_id=1772879883]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 152.65376, 5.254357, -32.857895)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_9" unique_id=424764262]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_9" unique_id=1738807426]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_10" type="Node3D" parent="Props" unique_id=1177731297]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 155.30753, 4.9865046, -35.71579)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_10" unique_id=796899109]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_10" unique_id=613967823]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_11" type="Node3D" parent="Props" unique_id=730335021]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 157.96127, 4.6853595, -38.573685)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_11" unique_id=71611373]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_11" unique_id=1020780681]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_12" type="Node3D" parent="Props" unique_id=321429611]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 160.61504, 4.3677726, -41.43158)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_12" unique_id=1697772111]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_12" unique_id=2008059839]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_13" type="Node3D" parent="Props" unique_id=373185694]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 163.2688, 4.1784472, -44.289474)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_13" unique_id=982453763]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_13" unique_id=1610244120]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_14" type="Node3D" parent="Props" unique_id=471340342]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 165.92256, 4.0494194, -47.14737)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_14" unique_id=413330108]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_14" unique_id=1537758360]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_15" type="Node3D" parent="Props" unique_id=1345246919]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 168.57631, 3.9147983, -50.005264)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_15" unique_id=1702332707]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_15" unique_id=1033359936]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_16" type="Node3D" parent="Props" unique_id=1276858093]
+transform = Transform3D(0.6804511, 0, 0.7327935, 0, 1, 0, -0.7327935, 0, 0.6804511, 171.23007, 3.93776, -52.86316)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_16" unique_id=316193486]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_16" unique_id=2101384792]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_17" type="Node3D" parent="Props" unique_id=1161064457]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 176, 3.8169138, -58)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_17" unique_id=2105410290]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_17" unique_id=351312706]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_18" type="Node3D" parent="Props" unique_id=1319295460]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 178.62343, 3.6401527, -60.885765)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_18" unique_id=1138682519]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_18" unique_id=246957068]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_19" type="Node3D" parent="Props" unique_id=968648184]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 181.24684, 3.376542, -63.771534)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_19" unique_id=935248591]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_19" unique_id=522941230]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_20" type="Node3D" parent="Props" unique_id=1504701934]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 183.87027, 3.2050862, -66.657295)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_20" unique_id=992217876]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_20" unique_id=234867299]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_21" type="Node3D" parent="Props" unique_id=1417900405]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 186.4937, 3.0628266, -69.54307)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_21" unique_id=1138496850]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_21" unique_id=377671091]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_22" type="Node3D" parent="Props" unique_id=1187840719]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 189.11713, 2.9321566, -72.42883)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_22" unique_id=622846511]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_22" unique_id=335570579]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_23" type="Node3D" parent="Props" unique_id=1494006000]
+transform = Transform3D(0.6726728, 0, 0.73994005, 0, 1, 0, -0.73994005, 0, 0.6726728, 191.74054, 2.9216638, -75.3146)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_23" unique_id=92682632]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_23" unique_id=1335760240]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_24" type="Node3D" parent="Props" unique_id=716439364]
+transform = Transform3D(0.8574929, 0, 0.5144958, 0, 1, 0, -0.5144958, 0, 0.8574929, 255, 3.7113311, -160)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_24" unique_id=1009990500]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_24" unique_id=1625860926]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_25" type="Node3D" parent="Props" unique_id=1129929952]
+transform = Transform3D(0.8574929, 0, 0.5144958, 0, 1, 0, -0.5144958, 0, 0.8574929, 258.3442, 3.9589465, -162.00653)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_25" unique_id=196399161]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_25" unique_id=510463967]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_26" type="Node3D" parent="Props" unique_id=413389426]
+transform = Transform3D(0.8574929, 0, 0.5144958, 0, 1, 0, -0.5144958, 0, 0.8574929, 261.68845, 4.203541, -164.01306)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_26" unique_id=1412742170]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_26" unique_id=194427650]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_27" type="Node3D" parent="Props" unique_id=1277105575]
+transform = Transform3D(0.8574929, 0, 0.5144958, 0, 1, 0, -0.5144958, 0, 0.8574929, 265.03265, 4.514846, -166.0196)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_27" unique_id=1193355742]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_27" unique_id=2133045434]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_28" type="Node3D" parent="Props" unique_id=342622235]
+transform = Transform3D(0.8574929, 0, 0.5144958, 0, 1, 0, -0.5144958, 0, 0.8574929, 268.3769, 4.8334355, -168.02614)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_28" unique_id=340270080]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_28" unique_id=1786482888]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_29" type="Node3D" parent="Props" unique_id=1400719193]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 275, 5.5616264, -172)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_29" unique_id=1462775262]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_29" unique_id=1551782742]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_30" type="Node3D" parent="Props" unique_id=2017606307]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 277.82413, 5.820649, -174.68965)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_30" unique_id=1315451626]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_30" unique_id=2106354220]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_31" type="Node3D" parent="Props" unique_id=1340465383]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 280.6483, 6.1495433, -177.3793)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_31" unique_id=446127339]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_31" unique_id=1558918465]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_32" type="Node3D" parent="Props" unique_id=1524370874]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 283.4724, 6.5769615, -180.06897)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_32" unique_id=465706186]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_32" unique_id=195188688]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_33" type="Node3D" parent="Props" unique_id=1292911074]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 286.29654, 7.1044536, -182.75862)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_33" unique_id=893961640]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_33" unique_id=781463422]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_34" type="Node3D" parent="Props" unique_id=102674838]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 289.1207, 7.5406737, -185.44827)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_34" unique_id=260872569]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_34" unique_id=1087126293]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_35" type="Node3D" parent="Props" unique_id=949634396]
+transform = Transform3D(0.7241379, 0, 0.6896552, 0, 1, 0, -0.6896552, 0, 0.7241379, 291.94482, 7.9961514, -188.13794)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_35" unique_id=1161783166]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_35" unique_id=554418411]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_36" type="Node3D" parent="Props" unique_id=1416034147]
+transform = Transform3D(0.58817166, 0, 0.8087361, 0, 1, 0, -0.8087361, 0, 0.58817166, 318, 7.347015, -240)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_36" unique_id=247312175]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_36" unique_id=1660996051]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_37" type="Node3D" parent="Props" unique_id=756879071]
+transform = Transform3D(0.58817166, 0, 0.8087361, 0, 1, 0, -0.8087361, 0, 0.58817166, 320.29388, 7.217573, -243.15407)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_37" unique_id=305298025]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_37" unique_id=496994673]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_38" type="Node3D" parent="Props" unique_id=1438633641]
+transform = Transform3D(0.58817166, 0, 0.8087361, 0, 1, 0, -0.8087361, 0, 0.58817166, 322.58774, 7.3819957, -246.30814)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_38" unique_id=253658575]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_38" unique_id=513551108]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_39" type="Node3D" parent="Props" unique_id=366827998]
+transform = Transform3D(0.58817166, 0, 0.8087361, 0, 1, 0, -0.8087361, 0, 0.58817166, 324.88162, 7.807115, -249.46222)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_39" unique_id=1096674469]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_39" unique_id=90622914]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_40" type="Node3D" parent="Props" unique_id=616006017]
+transform = Transform3D(0.58817166, 0, 0.8087361, 0, 1, 0, -0.8087361, 0, 0.58817166, 327.17548, 8.62697, -252.61629)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_40" unique_id=1560981808]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_40" unique_id=1022963020]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="skigard_4m_41" type="Node3D" parent="Props" unique_id=736495057]
+transform = Transform3D(0.58817166, 0, 0.8087361, 0, 1, 0, -0.8087361, 0, 0.58817166, 329.46936, 9.824523, -255.77036)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/skigard_4m_41" unique_id=576850707]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("32_167lh")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/skigard_4m_41" unique_id=368180093]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("33_mphgi")
+
+[node name="hjell_6m_42" type="Node3D" parent="Props" unique_id=177242290]
+transform = Transform3D(0.76604444, 0, -0.6427876, 0, 1, 0, 0.6427876, 0, 0.76604444, 186, -0.58614457, -122)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/hjell_6m_42" unique_id=1771023934]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("34_hdhjv")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/hjell_6m_42" unique_id=544856925]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("35_xrip1")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/hjell_6m_42" unique_id=1846050456]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("35_xrip1")
+
+[node name="hjell_6m_43" type="Node3D" parent="Props" unique_id=627443297]
+transform = Transform3D(0.76604444, 0, -0.6427876, 0, 1, 0, 0.6427876, 0, 0.76604444, 190.6, 0.26607895, -126)
+
+[node name="LOD0" type="MeshInstance3D" parent="Props/hjell_6m_43" unique_id=631403930]
+cast_shadow = 0
+visibility_range_end = 35.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("34_hdhjv")
+
+[node name="LOD1" type="MeshInstance3D" parent="Props/hjell_6m_43" unique_id=1845232540]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 35.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 160.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("35_xrip1")
+
+[node name="Shadow" type="MeshInstance3D" parent="Props/hjell_6m_43" unique_id=1020814503]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("35_xrip1")
+
+[node name="Rocks" type="Node3D" parent="." unique_id=1078531421]
+
+[node name="cliff_jagged_a_0" type="Node3D" parent="Rocks" unique_id=1494576042]
+transform = Transform3D(1.849168, 0, 2.2866576, 0, 2.9407866, 0, -2.2866576, 0, 1.849168, 379.8407, 134.64052, -142.7594)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_0" unique_id=169439956]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_0" unique_id=504661138]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_0" unique_id=1922845004]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_0" unique_id=821804229]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="cliff_face_a_1" type="Node3D" parent="Rocks" unique_id=21079738]
+transform = Transform3D(-2.3153377, 0, -4.0325513, 0, 4.6499743, 0, 4.0325513, 0, -2.3153377, 348.07217, 79.92449, -152.43497)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_1" unique_id=426525144]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_1" unique_id=943980393]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_1" unique_id=716848511]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_1" unique_id=1330240556]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="cliff_jagged_b_2" type="Node3D" parent="Rocks" unique_id=900395236]
+transform = Transform3D(-0.06870948, 0, 2.8970058, 0, 2.8978207, 0, -2.8970058, 0, -0.06870948, 410.08377, 153.57275, -154.59946)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_2" unique_id=1177587657]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_2" unique_id=716259624]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_2" unique_id=128794125]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_2" unique_id=482547123]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="cliff_granite_a_3" type="Node3D" parent="Rocks" unique_id=1564108822]
+transform = Transform3D(-1.1057937, 0, -2.861203, 0, 3.067452, 0, 2.861203, 0, -1.1057937, 384.3455, 108.53158, -181.18236)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_3" unique_id=925250225]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_3" unique_id=932448908]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_3" unique_id=1900947808]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_3" unique_id=67503585]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_face_a_4" type="Node3D" parent="Rocks" unique_id=2014249757]
+transform = Transform3D(0.40575138, 0, -5.26721, 0, 5.2828155, 0, 5.26721, 0, 0.40575138, 418.41064, 39.85747, -312.0325)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_4" unique_id=707769103]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_4" unique_id=617914199]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_4" unique_id=169701389]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_4" unique_id=476158698]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="cliff_jagged_a_5" type="Node3D" parent="Rocks" unique_id=1501635227]
+transform = Transform3D(1.2979193, 0, 2.155922, 0, 2.5164645, 0, -2.155922, 0, 1.2979193, 332.07806, 15.781368, -193.64102)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_5" unique_id=172842064]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_5" unique_id=1889317833]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_5" unique_id=584649096]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_5" unique_id=24445732]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="cliff_granite_a_6" type="Node3D" parent="Rocks" unique_id=1540836927]
+transform = Transform3D(0.85128134, 0, -5.730428, 0, 5.793314, 0, 5.730428, 0, 0.85128134, 428.59094, 57.24633, -302.28455)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_6" unique_id=519456265]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_6" unique_id=1117157819]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_6" unique_id=281973860]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_6" unique_id=629379676]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_face_a_7" type="Node3D" parent="Rocks" unique_id=871764918]
+transform = Transform3D(-1.2159517, 0, -3.8948152, 0, 4.0802116, 0, 3.8948152, 0, -1.2159517, 418.47592, 127.21371, -208.30173)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_7" unique_id=1076652733]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_7" unique_id=603901211]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_7" unique_id=581351209]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_7" unique_id=1060182255]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="boulders_a_b_8" type="Node3D" parent="Rocks" unique_id=155248885]
+transform = Transform3D(1.0440416, 0, -3.2441661, 0, 3.4080253, 0, 3.2441661, 0, 1.0440416, 205.85638, 0.118116975, -141.69226)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_8" unique_id=2093094140]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_8" unique_id=1110823349]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_8" unique_id=41586507]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulders_a_b_9" type="Node3D" parent="Rocks" unique_id=504048219]
+transform = Transform3D(3.775109, 0, -0.499477, 0, 3.8080082, 0, 0.499477, 0, 3.775109, 176.79115, 0.28518808, -100.556274)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_9" unique_id=1664273025]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_9" unique_id=1174317769]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_9" unique_id=1074919692]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="cliff_jagged_b_10" type="Node3D" parent="Rocks" unique_id=948360369]
+transform = Transform3D(0.025588702, 0, 2.2723296, 0, 2.2724738, 0, -2.2723296, 0, 0.025588702, 395.9328, 24.657885, -299.03357)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_10" unique_id=355689311]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_10" unique_id=240701715]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_10" unique_id=1783028759]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_10" unique_id=937020022]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="cliff_granite_a_11" type="Node3D" parent="Rocks" unique_id=361145870]
+transform = Transform3D(-2.9582453, 0, -4.2406106, 0, 5.1704926, 0, 4.2406106, 0, -2.9582453, 383.10547, 103.51034, -175.58423)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_11" unique_id=1875657797]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_11" unique_id=212524194]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_11" unique_id=1876842371]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_11" unique_id=950726953]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_face_a_12" type="Node3D" parent="Rocks" unique_id=690810814]
+transform = Transform3D(0.09778492, 0, -5.2702827, 0, 5.2711897, 0, 5.2702827, 0, 0.09778492, 455.22876, 126.325806, -301.55814)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_12" unique_id=906117131]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_12" unique_id=472313377]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_12" unique_id=905570192]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_12" unique_id=536833060]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="boulders_a_a_13" type="Node3D" parent="Rocks" unique_id=12168160]
+transform = Transform3D(1.8477532, 0, -4.616648, 0, 4.9726887, 0, 4.616648, 0, 1.8477532, 95.77286, -0.63594866, 7.6216125)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_13" unique_id=167263142]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_13" unique_id=955292620]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_13" unique_id=142061418]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="cliff_granite_a_14" type="Node3D" parent="Rocks" unique_id=399972331]
+transform = Transform3D(0.2662261, 0, -5.80814, 0, 5.814238, 0, 5.80814, 0, 0.2662261, 416.63715, 35.490685, -318.19662)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_14" unique_id=1924097351]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_14" unique_id=2116990552]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_14" unique_id=1813937189]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_14" unique_id=760473961]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_face_a_15" type="Node3D" parent="Rocks" unique_id=848896575]
+transform = Transform3D(-1.6956522, 0, -2.5672362, 0, 3.0766768, 0, 2.5672362, 0, -1.6956522, 396.843, 33.82167, -259.3056)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_15" unique_id=1117826141]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_15" unique_id=654654419]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_15" unique_id=121000206]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_15" unique_id=119920581]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="cliff_granite_a_16" type="Node3D" parent="Rocks" unique_id=338071515]
+transform = Transform3D(-3.5527449, 0, -2.939589, 0, 4.611202, 0, 2.939589, 0, -3.5527449, 366.0091, 95.19003, -164.08028)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_16" unique_id=892878471]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_16" unique_id=573036162]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_16" unique_id=1606644517]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_16" unique_id=1024351534]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="boulder_a_17" type="Node3D" parent="Rocks" unique_id=702793944]
+transform = Transform3D(0.9267077, 0, -0.33347753, 0, 0.98488295, 0, 0.33347753, 0, 0.9267077, 163.57379, 6.4148746, -9.483429)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_17" unique_id=1951644412]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_17" unique_id=430155595]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_17" unique_id=998549058]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_17" unique_id=1955310261]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="boulders_a_b_18" type="Node3D" parent="Rocks" unique_id=848369163]
+transform = Transform3D(-4.332297, 0, 1.2995081, 0, 4.522999, 0, -1.2995081, 0, -4.332297, 209.4202, 0.55460626, -148.4636)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_18" unique_id=969415756]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_18" unique_id=1155377570]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_18" unique_id=1324570617]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="cliff_face_a_19" type="Node3D" parent="Rocks" unique_id=856022099]
+transform = Transform3D(-3.4844077, 0, -3.9737377, 0, 5.285044, 0, 3.9737377, 0, -3.4844077, 326.5683, 49.999603, -116.74849)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_19" unique_id=1842547568]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_19" unique_id=1968653184]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_19" unique_id=1317630224]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_19" unique_id=661263629]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="boulders_a_a_20" type="Node3D" parent="Rocks" unique_id=532423947]
+transform = Transform3D(-0.58801144, 0, 3.09785, 0, 3.1531622, 0, -3.09785, 0, -0.58801144, 230.57928, -0.7539326, -188.75629)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_20" unique_id=1215847681]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_20" unique_id=972170344]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_20" unique_id=354978094]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="cliff_jagged_a_21" type="Node3D" parent="Rocks" unique_id=1528343199]
+transform = Transform3D(1.6985325, 0, 1.548719, 0, 2.298596, 0, -1.548719, 0, 1.6985325, 429.3506, 158.44633, -211.86954)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_21" unique_id=260047002]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_21" unique_id=444716034]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_21" unique_id=1361370183]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_21" unique_id=170833966]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="cliff_granite_a_22" type="Node3D" parent="Rocks" unique_id=1111363990]
+transform = Transform3D(-2.6711175, 0, -4.0695033, 0, 4.867826, 0, 4.0695033, 0, -2.6711175, 389.60623, 22.469637, -256.25604)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_22" unique_id=301593899]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_22" unique_id=270084567]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_22" unique_id=1214108582]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_22" unique_id=206037764]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_face_a_23" type="Node3D" parent="Rocks" unique_id=1983976202]
+transform = Transform3D(-3.6299481, 0, -4.6169105, 0, 5.873022, 0, 4.6169105, 0, -3.6299481, 414.368, 72.46652, -250.02257)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_23" unique_id=1075158182]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_23" unique_id=1765412782]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_23" unique_id=1501861452]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_23" unique_id=2080196793]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="boulders_a_a_24" type="Node3D" parent="Rocks" unique_id=386881905]
+transform = Transform3D(-0.8830704, 0, -3.8674273, 0, 3.9669645, 0, 3.8674273, 0, -0.8830704, 73.76785, 0.45971012, 49.22339)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_24" unique_id=887420391]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_24" unique_id=1593012910]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_24" unique_id=1546034007]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="cliff_granite_a_25" type="Node3D" parent="Rocks" unique_id=28260280]
+transform = Transform3D(-1.3315817, 0, -3.016032, 0, 3.2969012, 0, 3.016032, 0, -1.3315817, 365.82495, 122.73623, -151.32355)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_25" unique_id=556706]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_25" unique_id=532710852]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_25" unique_id=1052438246]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_25" unique_id=1981789988]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_face_a_26" type="Node3D" parent="Rocks" unique_id=150038120]
+transform = Transform3D(-2.217267, 0, -2.8764985, 0, 3.631875, 0, 2.8764985, 0, -2.217267, 381.8798, 88.33884, -190.25768)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_face_a_26" unique_id=1679443306]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("39_oxn8i")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_face_a_26" unique_id=1381066080]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_face_a_26" unique_id=593679904]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("41_sxct7")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_face_a_26" unique_id=1094018858]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("40_c4e6h")
+
+[node name="cliff_granite_a_27" type="Node3D" parent="Rocks" unique_id=850017825]
+transform = Transform3D(-0.88452154, 0, -4.3965755, 0, 4.484669, 0, 4.3965755, 0, -0.88452154, 328.98215, 30.043652, -142.95395)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_granite_a_27" unique_id=694032936]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("45_sbphw")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_granite_a_27" unique_id=1773142816]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("46_7h32g")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_granite_a_27" unique_id=846236708]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("47_b7k71")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_granite_a_27" unique_id=886509377]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("46_7h32g")
+
+[node name="cliff_jagged_b_28" type="Node3D" parent="Rocks" unique_id=659411083]
+transform = Transform3D(-0.0755248, 0, 2.6436815, 0, 2.6447601, 0, -2.6436815, 0, -0.0755248, 383.631, 19.834097, -277.1974)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_28" unique_id=1598363488]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_28" unique_id=328974648]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_28" unique_id=310436112]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_28" unique_id=1463953845]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="boulders_a_b_29" type="Node3D" parent="Rocks" unique_id=1620519081]
+transform = Transform3D(-0.13231625, 0, 2.5862315, 0, 2.589614, 0, -2.5862315, 0, -0.13231625, 97.47427, 0.528606, 8.350372)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_29" unique_id=1779363343]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_29" unique_id=662632013]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_29" unique_id=1288855691]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="cliff_jagged_a_30" type="Node3D" parent="Rocks" unique_id=1530025806]
+transform = Transform3D(-0.65591073, 0, 1.9164953, 0, 2.0256293, 0, -1.9164953, 0, -0.65591073, 403.5783, 152.47139, -139.72354)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_30" unique_id=1012676767]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_30" unique_id=1915875150]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_30" unique_id=121604230]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_30" unique_id=67423926]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="cliff_jagged_b_31" type="Node3D" parent="Rocks" unique_id=455678854]
+transform = Transform3D(0.1764154, 0, 1.6569066, 0, 1.6662718, 0, -1.6569066, 0, 0.1764154, 373.76556, 16.823957, -280.49197)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_31" unique_id=627726475]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_31" unique_id=1102307119]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_31" unique_id=1375981237]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_31" unique_id=801173560]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="boulders_a_b_32" type="Node3D" parent="Rocks" unique_id=355386467]
+transform = Transform3D(3.2005951, 0, -0.42934173, 0, 3.2292635, 0, 0.42934173, 0, 3.2005951, 259.1262, 0.3077969, -234.85641)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_32" unique_id=1041779970]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_32" unique_id=223298715]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_32" unique_id=309740996]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulders_a_a_33" type="Node3D" parent="Rocks" unique_id=358133563]
+transform = Transform3D(1.2763045, 0, 5.719307, 0, 5.859985, 0, -5.719307, 0, 1.2763045, 260.05768, -0.3717309, -238.95308)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_33" unique_id=619366915]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_33" unique_id=2081362236]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_33" unique_id=794326837]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="boulders_a_a_34" type="Node3D" parent="Rocks" unique_id=778225787]
+transform = Transform3D(-2.5157182, 0, -3.4721947, 0, 4.2877703, 0, 3.4721947, 0, -2.5157182, 328.55948, 0.53350663, -449.9694)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_34" unique_id=1878846576]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_34" unique_id=909541936]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_34" unique_id=1715126113]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="cliff_jagged_a_35" type="Node3D" parent="Rocks" unique_id=291778121]
+transform = Transform3D(0.26798007, 0, 2.8030193, 0, 2.8158004, 0, -2.8030193, 0, 0.26798007, 355.75357, 125.41307, -127.289734)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_35" unique_id=291174600]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_35" unique_id=1024502385]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_35" unique_id=954975567]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_35" unique_id=898520973]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="boulders_a_b_36" type="Node3D" parent="Rocks" unique_id=1460322955]
+transform = Transform3D(-0.7835284, 0, 3.0276077, 0, 3.127351, 0, -3.0276077, 0, -0.7835284, 260.35922, 0.93692005, -223.3388)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_36" unique_id=1104206259]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_36" unique_id=1068911898]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_36" unique_id=676168159]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulders_a_a_37" type="Node3D" parent="Rocks" unique_id=237971642]
+transform = Transform3D(-3.6092691, 0, 0.89200515, 0, 3.717862, 0, -0.89200515, 0, -3.6092691, 302.61533, 0.3930612, -422.78207)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_37" unique_id=643385464]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_37" unique_id=1922804885]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_37" unique_id=881598992]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="boulders_a_b_38" type="Node3D" parent="Rocks" unique_id=1182189590]
+transform = Transform3D(2.6398127, 0, 1.2180696, 0, 2.9072847, 0, -1.2180696, 0, 2.6398127, 220.97974, 0.77794695, -164.80295)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_38" unique_id=1861610059]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_38" unique_id=93014104]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_38" unique_id=501651691]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulder_a_39" type="Node3D" parent="Rocks" unique_id=961447503]
+transform = Transform3D(-0.4989569, 0, -1.1921004, 0, 1.2923086, 0, 1.1921004, 0, -0.4989569, 321.70007, 3.5820844, -316.60205)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_39" unique_id=649153646]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_39" unique_id=561244214]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_39" unique_id=1940044415]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_39" unique_id=528410391]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="cliff_jagged_b_40" type="Node3D" parent="Rocks" unique_id=1941582713]
+transform = Transform3D(1.0189898, 0, 1.2551886, 0, 1.616737, 0, -1.2551886, 0, 1.0189898, 431.94177, 157.62988, -217.1611)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_40" unique_id=448311583]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_40" unique_id=1577708823]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_40" unique_id=330721633]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_40" unique_id=1554063402]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="boulders_a_b_41" type="Node3D" parent="Rocks" unique_id=615044497]
+transform = Transform3D(-2.5956192, 0, -0.6781326, 0, 2.6827416, 0, 0.6781326, 0, -2.5956192, 311.1434, 1.0172542, -343.95688)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_41" unique_id=1409206499]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_41" unique_id=1866126043]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_41" unique_id=1418991860]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulders_a_a_42" type="Node3D" parent="Rocks" unique_id=497555215]
+transform = Transform3D(-4.7562675, 0, 0.3586002, 0, 4.769767, 0, -0.3586002, 0, -4.7562675, 151.26755, 0.6899207, -66.73599)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_42" unique_id=336911391]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_42" unique_id=2076898695]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_42" unique_id=603160561]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="boulders_a_b_43" type="Node3D" parent="Rocks" unique_id=1778645586]
+transform = Transform3D(4.5991874, 0, -1.211768, 0, 4.756144, 0, 1.211768, 0, 4.5991874, 199.50839, 0.6137457, -130.80502)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_43" unique_id=1588492643]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_43" unique_id=793985698]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_43" unique_id=59046691]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulder_a_44" type="Node3D" parent="Rocks" unique_id=1943336125]
+transform = Transform3D(-0.6245766, 0, -0.3539083, 0, 0.7178768, 0, 0.3539083, 0, -0.6245766, 133.4, 8.836574, 54.053894)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_44" unique_id=1333581566]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_44" unique_id=2061503021]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_44" unique_id=843625390]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_44" unique_id=1435394878]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="cliff_jagged_a_45" type="Node3D" parent="Rocks" unique_id=1062565734]
+transform = Transform3D(-0.28803104, 0, 1.491244, 0, 1.5188057, 0, -1.491244, 0, -0.28803104, 420.06708, 157.59476, -120.17462)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_45" unique_id=1512640526]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_45" unique_id=1644750967]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_45" unique_id=234267924]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_45" unique_id=1583019199]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="cliff_jagged_b_46" type="Node3D" parent="Rocks" unique_id=503881486]
+transform = Transform3D(1.3716387, 0, 2.2986643, 0, 2.6767986, 0, -2.2986643, 0, 1.3716387, 344.5059, 19.270542, -208.59549)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_46" unique_id=394785641]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_46" unique_id=1081126062]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_46" unique_id=1712196494]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_46" unique_id=2064953261]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="cliff_jagged_a_47" type="Node3D" parent="Rocks" unique_id=1383855079]
+transform = Transform3D(1.1332667, 0, 1.9075251, 0, 2.2187712, 0, -1.9075251, 0, 1.1332667, 433.1885, 156.88933, -219.90771)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_47" unique_id=506148112]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_47" unique_id=1081001547]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_47" unique_id=1268403778]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_47" unique_id=1165381093]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="cliff_jagged_b_48" type="Node3D" parent="Rocks" unique_id=1497582544]
+transform = Transform3D(-0.9801971, 0, 2.7103705, 0, 2.8821683, 0, -2.7103705, 0, -0.9801971, 403.2974, 151.14647, -135.52277)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_48" unique_id=1771615433]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_48" unique_id=910982022]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_48" unique_id=1497368273]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_48" unique_id=422800679]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="cliff_jagged_a_49" type="Node3D" parent="Rocks" unique_id=438572130]
+transform = Transform3D(-0.025653603, 0, 1.8758484, 0, 1.876024, 0, -1.8758484, 0, -0.025653603, 377.723, 18.430092, -299.27527)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_49" unique_id=1382233681]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_49" unique_id=137910689]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_49" unique_id=329858071]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_49" unique_id=1914127742]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="boulder_a_50" type="Node3D" parent="Rocks" unique_id=1910229365]
+transform = Transform3D(0.38908872, 0, -0.6553611, 0, 0.76216024, 0, 0.6553611, 0, 0.38908872, 200.53766, 3.2495058, -81.35135)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_50" unique_id=15316259]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_50" unique_id=473426284]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_50" unique_id=1923747228]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_50" unique_id=16404346]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="cliff_jagged_b_51" type="Node3D" parent="Rocks" unique_id=2051382941]
+transform = Transform3D(-0.43123692, 0, 2.645198, 0, 2.680119, 0, -2.645198, 0, -0.43123692, 382.81848, 140.1912, -130.90863)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_51" unique_id=1092014473]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_51" unique_id=921584353]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_51" unique_id=725875338]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_51" unique_id=1595694178]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="cliff_jagged_a_52" type="Node3D" parent="Rocks" unique_id=428845140]
+transform = Transform3D(0.17083251, 0, 2.6215482, 0, 2.6271086, 0, -2.6215482, 0, 0.17083251, 415.60165, 156.2438, -186.11047)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_52" unique_id=267427219]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("36_kcwru")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_52" unique_id=1018908637]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_52" unique_id=1696534329]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("38_iu84h")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_a_52" unique_id=357757857]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("37_g6dxp")
+
+[node name="boulders_a_b_53" type="Node3D" parent="Rocks" unique_id=712169497]
+transform = Transform3D(2.7134042, 0, -1.1347915, 0, 2.9411416, 0, 1.1347915, 0, 2.7134042, 260.24725, 0.7173407, -235.9411)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_53" unique_id=1328859919]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_53" unique_id=542681124]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_53" unique_id=58490642]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="cliff_jagged_b_54" type="Node3D" parent="Rocks" unique_id=1158049494]
+transform = Transform3D(-0.32586744, 0, 1.9622064, 0, 1.989081, 0, -1.9622064, 0, -0.32586744, 421.10675, 157.88837, -120.255035)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_54" unique_id=1643146425]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("42_ixlst")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_54" unique_id=402957864]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_54" unique_id=1092856031]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("44_thosc")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/cliff_jagged_b_54" unique_id=339744542]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("43_wsrk1")
+
+[node name="boulders_a_b_55" type="Node3D" parent="Rocks" unique_id=2030119466]
+transform = Transform3D(2.9015214, 0, -3.5404513, 0, 4.5775127, 0, 3.5404513, 0, 2.9015214, 171.21939, -1.0349903, -99.66043)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_55" unique_id=1196525933]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_55" unique_id=178807144]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_55" unique_id=1779611273]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulders_a_a_56" type="Node3D" parent="Rocks" unique_id=450490462]
+transform = Transform3D(1.948313, 0, -3.0092845, 0, 3.584929, 0, 3.0092845, 0, 1.948313, 290.29144, 0.6208728, -267.02838)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_56" unique_id=467376658]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_56" unique_id=793458363]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_56" unique_id=2069724677]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="boulders_a_a_57" type="Node3D" parent="Rocks" unique_id=1394438275]
+transform = Transform3D(2.73169, 0, 0.7903513, 0, 2.8437274, 0, -0.7903513, 0, 2.73169, 236.58026, 0.81404847, -179.72113)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_57" unique_id=592085103]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_57" unique_id=1839159614]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_57" unique_id=423666064]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="boulders_a_a_58" type="Node3D" parent="Rocks" unique_id=2140612260]
+transform = Transform3D(-1.2341435, 0, -4.390892, 0, 4.561035, 0, 4.390892, 0, -1.2341435, 334.67734, 0.52448505, -455.97568)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_a_58" unique_id=1238147260]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("51_h8asu")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_a_58" unique_id=1609077385]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("52_obpog")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_a_58" unique_id=1014254383]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("53_l1ope")
+
+[node name="boulders_a_b_59" type="Node3D" parent="Rocks" unique_id=186884983]
+transform = Transform3D(-5.091838, 0, 1.6341678, 0, 5.347646, 0, -1.6341678, 0, -5.091838, 275.8213, 0.66867745, -246.08968)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_59" unique_id=1113617526]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_59" unique_id=1728053923]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_59" unique_id=527025726]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulder_a_60" type="Node3D" parent="Rocks" unique_id=1367550600]
+transform = Transform3D(0.70778877, 0, 0.7352303, 0, 1.0205531, 0, -0.7352303, 0, 0.70778877, 113.85101, 2.2425728, -0.61151123)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_60" unique_id=1338740265]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_60" unique_id=1790949969]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_60" unique_id=1703295139]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_60" unique_id=663927798]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="boulders_a_b_61" type="Node3D" parent="Rocks" unique_id=1913789032]
+transform = Transform3D(3.5317526, 0, 1.5783463, 0, 3.8683915, 0, -1.5783463, 0, 3.5317526, 77.07036, 0.720212, 54.312683)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_61" unique_id=680266523]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_61" unique_id=928671127]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_61" unique_id=778251167]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulder_a_62" type="Node3D" parent="Rocks" unique_id=244786095]
+transform = Transform3D(-0.98467386, 0, -0.1309711, 0, 0.99334586, 0, 0.1309711, 0, -0.98467386, 134.64484, 6.4023056, 27.804993)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_62" unique_id=1101053887]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_62" unique_id=1419616658]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_62" unique_id=1016212107]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_62" unique_id=1003852298]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="boulders_a_b_63" type="Node3D" parent="Rocks" unique_id=1000395781]
+transform = Transform3D(1.0594794, 0, 4.595768, 0, 4.71631, 0, -4.595768, 0, 1.0594794, 244.93884, -1.0892048, -213.84854)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulders_a_b_63" unique_id=1909712457]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("48_q2qbc")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulders_a_b_63" unique_id=164271706]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("49_5kigb")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulders_a_b_63" unique_id=505194888]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("50_vel36")
+
+[node name="boulder_a_64" type="Node3D" parent="Rocks" unique_id=1031047790]
+transform = Transform3D(0.19374214, 0, 1.0413004, 0, 1.0591707, 0, -1.0413004, 0, 0.19374214, 229.5755, 3.6707482, -111.21747)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_64" unique_id=1712667629]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_64" unique_id=968422639]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_64" unique_id=2143120936]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_64" unique_id=494837502]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="boulder_a_65" type="Node3D" parent="Rocks" unique_id=958034081]
+transform = Transform3D(-0.97538644, 0, 0.117938735, 0, 0.98249084, 0, -0.117938735, 0, -0.97538644, 156.02911, 8.7496605, 40.063904)
+
+[node name="LOD0" type="MeshInstance3D" parent="Rocks/boulder_a_65" unique_id=388177217]
+cast_shadow = 0
+visibility_range_end = 40.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("54_mls3v")
+
+[node name="LOD1" type="MeshInstance3D" parent="Rocks/boulder_a_65" unique_id=763712756]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 40.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("55_ra40d")
+
+[node name="LOD2" type="MeshInstance3D" parent="Rocks/boulder_a_65" unique_id=143871568]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 150.0
+visibility_range_begin_margin = 4.0
+visibility_range_end = 900.0
+visibility_range_end_margin = 4.0
+mesh = ExtResource("56_ipi58")
+
+[node name="Shadow" type="MeshInstance3D" parent="Rocks/boulder_a_65" unique_id=1652738956]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 260.0
+mesh = ExtResource("55_ra40d")
+
+[node name="Trees" type="Node3D" parent="." unique_id=1314255313]
+
+[node name="downy_birch_a_0" type="Node3D" parent="Trees" unique_id=1009060876]
+transform = Transform3D(-1.0366368, 0, -0.15111607, 0, 1.0475935, 0, 0.15111607, 0, -1.0366368, 178.9819, 5.1535616, -47.769367)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_0" unique_id=2014515084]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_0" unique_id=1889944874]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_0" unique_id=944129882]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_0" unique_id=864639628]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_1" type="Node3D" parent="Trees" unique_id=206649551]
+transform = Transform3D(-0.7202603, 0, -0.5709403, 0, 0.9191016, 0, 0.5709403, 0, -0.7202603, 175.81871, 5.8729267, -36.02732)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_1" unique_id=527413429]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_1" unique_id=1418756667]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_1" unique_id=1395945422]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_1" unique_id=1238967625]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_2" type="Node3D" parent="Trees" unique_id=925521869]
+transform = Transform3D(0.6722986, 0, 0.8565311, 0, 1.0888668, 0, -0.8565311, 0, 0.6722986, 169.30804, 5.165806, -39.704704)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_2" unique_id=50272186]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_2" unique_id=853389907]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_2" unique_id=189937382]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_2" unique_id=227759083]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_3" type="Node3D" parent="Trees" unique_id=1591252633]
+transform = Transform3D(-0.8878902, 0, -0.41110754, 0, 0.97844696, 0, 0.41110754, 0, -0.8878902, 177.65366, 5.2201962, -46.07775)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_3" unique_id=901961121]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_3" unique_id=571312333]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_3" unique_id=2115921129]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_3" unique_id=341697478]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_4" type="Node3D" parent="Trees" unique_id=1412452260]
+transform = Transform3D(-0.25902835, 0, -1.0568945, 0, 1.0881735, 0, 1.0568945, 0, -0.25902835, 193.94952, 5.0339737, -63.84932)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_4" unique_id=178631337]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_4" unique_id=1987446099]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_4" unique_id=1741590236]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_4" unique_id=614215105]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_5" type="Node3D" parent="Trees" unique_id=1542248977]
+transform = Transform3D(-0.41319498, 0, -0.7699972, 0, 0.87385684, 0, 0.7699972, 0, -0.41319498, 206.30074, 4.9142265, -72.70024)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_5" unique_id=1690957137]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_5" unique_id=1534031091]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_5" unique_id=703225304]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_5" unique_id=1788149862]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_6" type="Node3D" parent="Trees" unique_id=889572238]
+transform = Transform3D(-0.03329509, 0, -1.1605856, 0, 1.1610632, 0, 1.1605856, 0, -0.03329509, 202.88995, 6.032673, -60.15823)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_6" unique_id=479642944]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_6" unique_id=1470300416]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_6" unique_id=1337802107]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_6" unique_id=1982793752]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_7" type="Node3D" parent="Trees" unique_id=1386892014]
+transform = Transform3D(0.78590274, 0, 0.6889902, 0, 1.0451558, 0, -0.6889902, 0, 0.78590274, 259.18918, 5.0052414, -143.16547)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_7" unique_id=1243696405]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_7" unique_id=1382275379]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_7" unique_id=265250543]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_7" unique_id=1480344622]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_8" type="Node3D" parent="Trees" unique_id=1964041715]
+transform = Transform3D(-1.0944154, 0, -0.39195943, 0, 1.1624875, 0, 0.39195943, 0, -1.0944154, 254.49469, 4.3096538, -146.15823)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_8" unique_id=985845010]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_8" unique_id=2099583160]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_8" unique_id=1223483867]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_8" unique_id=1680195088]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_9" type="Node3D" parent="Trees" unique_id=476594176]
+transform = Transform3D(-0.0033580496, 0, 1.1452153, 0, 1.1452202, 0, -1.1452153, 0, -0.0033580496, 268.81128, 6.0032635, -145.58026)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_9" unique_id=1968343948]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_9" unique_id=420961609]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_9" unique_id=118337031]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_9" unique_id=1383919537]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_10" type="Node3D" parent="Trees" unique_id=1915575083]
+transform = Transform3D(-0.6976508, 0, -0.57932, 0, 0.9068232, 0, 0.57932, 0, -0.6976508, 262.41556, 7.3420305, -118.51048)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_10" unique_id=1928238171]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_10" unique_id=981758702]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_10" unique_id=1280796122]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_10" unique_id=1137571961]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_11" type="Node3D" parent="Trees" unique_id=1114186873]
+transform = Transform3D(0.6757623, 0, -0.5340811, 0, 0.8613346, 0, 0.5340811, 0, 0.6757623, 262.86118, 7.02363, -120.50123)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_11" unique_id=1184357660]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_11" unique_id=1897262548]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_11" unique_id=2143827695]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_11" unique_id=868466505]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_12" type="Node3D" parent="Trees" unique_id=491536844]
+transform = Transform3D(-0.19913751, 0, 1.1688179, 0, 1.1856606, 0, -1.1688179, 0, -0.19913751, 264.18994, 7.9643025, -116.254944)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_12" unique_id=15179932]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_12" unique_id=1066204765]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_12" unique_id=742512196]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_12" unique_id=1342844001]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_13" type="Node3D" parent="Trees" unique_id=408090811]
+transform = Transform3D(0.9003191, 0, 0.21948175, 0, 0.92668587, 0, -0.21948175, 0, 0.9003191, 257.99677, 7.150264, -111.95857)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_13" unique_id=1246953779]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_13" unique_id=1102223430]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_13" unique_id=1165910770]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_13" unique_id=709871299]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_14" type="Node3D" parent="Trees" unique_id=1710830057]
+transform = Transform3D(0.2534254, 0, 1.1503285, 0, 1.1779134, 0, -1.1503285, 0, 0.2534254, 268.67404, 8.500767, -119.91907)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_14" unique_id=1986685772]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_14" unique_id=1423355655]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_14" unique_id=1041209173]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_14" unique_id=578125587]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_15" type="Node3D" parent="Trees" unique_id=561267024]
+transform = Transform3D(0.7566425, 0, -0.5314562, 0, 0.92463696, 0, 0.5314562, 0, 0.7566425, 335.6236, 11.628489, -235.17426)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_15" unique_id=364791495]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_15" unique_id=100043449]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_15" unique_id=878174206]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_15" unique_id=1330988139]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_16" type="Node3D" parent="Trees" unique_id=1208834764]
+transform = Transform3D(-0.52261674, 0, -0.9335622, 0, 1.069891, 0, 0.9335622, 0, -0.52261674, 333.7055, 11.876403, -229.4697)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_16" unique_id=1524270944]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_16" unique_id=1917240770]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_16" unique_id=1777916052]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_16" unique_id=415491926]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_17" type="Node3D" parent="Trees" unique_id=507149572]
+transform = Transform3D(0.47299188, 0, -0.8935946, 0, 1.0110552, 0, 0.8935946, 0, 0.47299188, 331.46295, 10.817974, -235.00476)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_17" unique_id=2033576389]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_17" unique_id=1181212051]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_17" unique_id=1000672380]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_17" unique_id=764414580]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_18" type="Node3D" parent="Trees" unique_id=1289319948]
+transform = Transform3D(-0.94574827, 0, 0.021272503, 0, 0.94598746, 0, -0.021272503, 0, -0.94574827, 340.70822, 13.218365, -229.36655)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_18" unique_id=385790469]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_18" unique_id=1492597852]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_18" unique_id=479520287]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_18" unique_id=1373202813]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_19" type="Node3D" parent="Trees" unique_id=52192756]
+transform = Transform3D(-0.59018385, 0, -0.82015187, 0, 1.0104287, 0, 0.82015187, 0, -0.59018385, 347.8115, 15.900839, -231.91019)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_19" unique_id=1893040982]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_19" unique_id=1699590593]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_19" unique_id=243503193]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_19" unique_id=1174498025]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_20" type="Node3D" parent="Trees" unique_id=322072857]
+transform = Transform3D(0.8394712, 0, -0.48816332, 0, 0.9710898, 0, 0.48816332, 0, 0.8394712, 156.03526, 6.377517, -10.923084)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_20" unique_id=208442781]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_20" unique_id=624640370]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_20" unique_id=139600259]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_20" unique_id=1556769854]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="downy_birch_a_21" type="Node3D" parent="Trees" unique_id=210882898]
+transform = Transform3D(0.5026196, 0, 0.75937927, 0, 0.91064996, 0, -0.75937927, 0, 0.5026196, 143.13675, 6.3154507, -14.362117)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_a_21" unique_id=1824536635]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("57_dygue")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_a_21" unique_id=133749147]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("58_pyben")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_a_21" unique_id=1767462783]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_a_21" unique_id=1051311615]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("59_ovn8c")
+
+[node name="downy_birch_b_22" type="Node3D" parent="Trees" unique_id=1875881711]
+transform = Transform3D(-0.2854383, 0, -0.8020617, 0, 0.8513389, 0, 0.8020617, 0, -0.2854383, 147.72243, 6.458032, -4.854105)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_b_22" unique_id=114427179]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("60_tcf7g")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_b_22" unique_id=567161577]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("61_8b03b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_b_22" unique_id=2050247025]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_b_22" unique_id=1618983333]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("62_fkwbg")
+
+[node name="downy_birch_c_23" type="Node3D" parent="Trees" unique_id=1242665367]
+transform = Transform3D(1.0708416, 0, 0.037766147, 0, 1.0715073, 0, -0.037766147, 0, 1.0708416, 149.93411, 6.657402, -2.6857529)
+
+[node name="LOD0" type="MeshInstance3D" parent="Trees/downy_birch_c_23" unique_id=1986067326]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 30.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("63_uyn7a")
+
+[node name="LOD1" type="MeshInstance3D" parent="Trees/downy_birch_c_23" unique_id=2112217727]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 30.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 60.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("64_pj61b")
+
+[node name="LOD3" type="MeshInstance3D" parent="Trees/downy_birch_c_23" unique_id=126543059]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 60.0
+visibility_range_begin_margin = 3.0
+visibility_range_end = 150.0
+visibility_range_end_margin = 3.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="Shadow" type="MeshInstance3D" parent="Trees/downy_birch_c_23" unique_id=39864743]
+cast_shadow = 3
+gi_mode = 0
+visibility_range_end = 150.0
+mesh = ExtResource("65_2wsa2")
+
+[node name="BakeSun" type="DirectionalLight3D" parent="." unique_id=1762180629]
+transform = Transform3D(0.81915206, 0.28678823, -0.49673176, 0, 0.86602545, 0.5, 0.57357645, -0.40957603, 0.7094065, 0, 100, 0)
+light_color = Color(1, 0.9, 0.78, 1)
+light_energy = 2.5
+shadow_enabled = true
+
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=83703917]
+texel_scale = 0.75
+max_texture_size = 4096
+environment_mode = 3
+environment_custom_sky = SubResource("Sky_tidks")
+environment_custom_color = Color(0.5242163, 0.56285334, 0.66524965, 1)
+environment_custom_energy = 1.56
+light_data = ExtResource("67_ojdpn")

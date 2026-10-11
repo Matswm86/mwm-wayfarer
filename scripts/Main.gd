@@ -18,6 +18,9 @@ var controls: TouchControls
 var sun: DirectionalLight3D
 var env: Environment
 var village: Village
+var corner: Node3D
+var waterfall: Waterfall
+var corner_ground: ShaderMaterial
 var wildlife: Wildlife
 var water: MeshInstance3D
 var water_foam: ShaderMaterial
@@ -35,8 +38,13 @@ func _ready() -> void:
 	terrain = Terrain.new()
 	terrain.name = "Terrain"
 	terrain.load_data()
+	var has_corner: bool = ResourceLoader.exists(SpikeConfig.CORNER_SCENE)
+	if has_corner:
+		terrain.skip_leaf = SpikeConfig.CORNER_TILES
 	terrain.build()
 	add_child(terrain)
+	if has_corner:
+		_build_corner()
 	_build_environment()
 	_build_water()
 	_build_probes()
@@ -50,7 +58,7 @@ func _ready() -> void:
 	near_trees = NearTrees.new()
 	near_trees.name = "NearTrees"
 	add_child(near_trees)
-	near_trees.build(forest, SpikeConfig.TREE_MESH)
+	near_trees.build(forest, SpikeConfig.TREE_MESHES)
 	rocks = CliffRocks.new()
 	rocks.name = "CliffRocks"
 	add_child(rocks)
@@ -72,6 +80,10 @@ func _ready() -> void:
 		SpikeConfig.GRASS_FAR_SCALE
 	)
 	grass_far.target = player
+	if corner:
+		for g: Grass in [grass, grass_far]:
+			g.mat.set_shader_parameter("corner_mask", load(SpikeConfig.CORNER_MASK))
+			g.mat.set_shader_parameter("corner_rect", corner.get_meta("rect"))
 	wildlife = Wildlife.new()
 	wildlife.name = "Wildlife"
 	add_child(wildlife)
@@ -211,6 +223,8 @@ func _build_environment() -> void:
 	add_child(sun)
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
 	terrain.material.set_shader_parameter("to_sun", to_sun)
+	if corner_ground:
+		corner_ground.set_shader_parameter("to_sun", to_sun)
 	sun.light_color = SpikeConfig.SUN_COLOR
 	sun.light_energy = SpikeConfig.SUN_ENERGY
 	sun.shadow_enabled = true
@@ -223,6 +237,34 @@ func _build_environment() -> void:
 	sun.directional_shadow_split_1 = 0.08
 	sun.directional_shadow_split_2 = 0.2
 	sun.directional_shadow_split_3 = 0.45
+
+
+## The beauty corner (scenes/BeautyCorner.tscn): lightmapped ground meshes in place of the
+## terrain's finest tiles, scanned houses, props, rocks and birches. The bake-only sun and valley
+## occluder are removed; each ground tile shows when its 320 m parent tile hides, like the
+## shader tiles it replaces.
+func _build_corner() -> void:
+	corner = (load(SpikeConfig.CORNER_SCENE) as PackedScene).instantiate() as Node3D
+	add_child(corner)
+	for n: String in ["BakeSun", "BakeOccluder"]:
+		var node := corner.get_node_or_null(n)
+		if node:
+			node.free()
+	var parents: Dictionary = terrain.tile_nodes[terrain.tile_nodes.size() - 2]
+	for mi: MeshInstance3D in corner.get_node("Ground").get_children():
+		var parts: PackedStringArray = String(mi.name).split("_")
+		var key := Vector2i(int(parts[1]) / 2, int(parts[2]) / 2)
+		var parent: MeshInstance3D = parents.get(key)
+		if parent:
+			mi.visibility_parent = mi.get_path_to(parent)
+		corner_ground = mi.mesh.surface_get_material(0) as ShaderMaterial
+	var rect := Vector4(
+		float(terrain.meta["coarse"]["x0"]) + SpikeConfig.CORNER_TILES.position.x * 160.0,
+		float(terrain.meta["coarse"]["z0"]) + SpikeConfig.CORNER_TILES.position.y * 160.0,
+		SpikeConfig.CORNER_TILES.size.x * 160.0,
+		SpikeConfig.CORNER_TILES.size.y * 160.0
+	)
+	corner.set_meta("rect", rect)
 
 
 ## Colour grade toward the key frame (docs/mockups/key_fjord_rock.jpg): a 33^3 LUT fitted by
@@ -306,115 +348,30 @@ func _build_village() -> void:
 	village = Village.new()
 	village.name = "Village"
 	add_child(village)
-	village.build()
+	village.build("_naust" if corner else "")
 	for h: Dictionary in terrain.meta["village"]:
+		var boathouse: bool = int(h["wall"]) == 3 and float(h["w"]) == 5.0 and float(h["d"]) == 9.0
+		if corner and not boathouse:
+			continue  # scanned house: its lightmap holds the contact shading
 		var p: Array = h["pos"]
 		var pos := Vector3(float(p[0]), float(p[1]), float(p[2]))
 		Lighting.footprint_shadow(village, pos, float(h["w"]), float(h["d"]), float(h["yaw"]))
 	Lighting.village_probe(self)
 
 
-## Waterfall down the real gully near scene y=1300 (path from terrain.json, traced like
-## scene_fjord.py falls_real): one scrolling ribbon plus mist particles at the foot.
+## The cascade down the real gully on the east wall (scripts/Waterfall.gd).
 func _build_waterfall() -> void:
-	var pts: Array[Vector3] = []
-	for p: Array in terrain.meta["waterfall"]:
-		pts.append(Vector3(float(p[0]), float(p[1]), float(p[2])))
-	var verts := PackedVector3Array()
-	var uvs := PackedVector2Array()
-	var idx := PackedInt32Array()
-	var along: float = 0.0
-	for i in pts.size():
-		var d: Vector3 = pts[mini(i + 1, pts.size() - 1)] - pts[maxi(i - 1, 0)]
-		var side := Vector3(-d.z, 0.0, d.x).normalized()
-		var t: float = float(i) / float(pts.size() - 1)
-		var w: float = lerpf(SpikeConfig.FALLS_WIDTH.x, SpikeConfig.FALLS_WIDTH.y, t)
-		if i > 0:
-			along += pts[i].distance_to(pts[i - 1])
-		verts.append(pts[i] - side * w + Vector3(0.0, SpikeConfig.FALLS_LIFT, 0.0))
-		verts.append(pts[i] + side * w + Vector3(0.0, SpikeConfig.FALLS_LIFT, 0.0))
-		uvs.append(Vector2(0.0, along / 10.0))
-		uvs.append(Vector2(1.0, along / 10.0))
-		if i > 0:
-			var a: int = (i - 1) * 2
-			idx.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
-	var arrays := []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = verts
-	arrays[Mesh.ARRAY_TEX_UV] = uvs
-	arrays[Mesh.ARRAY_INDEX] = idx
-	var mesh := ArrayMesh.new()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	var mi := MeshInstance3D.new()
-	mi.mesh = mesh
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://shaders/waterfall.gdshader")
-	mi.material_override = mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(mi)
-
-	var mist := GPUParticles3D.new()
-	mist.amount = 40
-	mist.lifetime = 5.0
-	mist.visibility_aabb = AABB(Vector3(-60, -10, -60), Vector3(120, 90, 120))
-	var pm := ParticleProcessMaterial.new()
-	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
-	pm.emission_sphere_radius = 22.0
-	pm.direction = Vector3(0, 1, 0)
-	pm.spread = 50.0
-	pm.initial_velocity_min = 2.0
-	pm.initial_velocity_max = 5.0
-	pm.gravity = Vector3(0, 0.3, 0)
-	pm.scale_min = 0.7
-	pm.scale_max = 1.4
-	var fade := Gradient.new()
-	fade.set_color(0, Color(1, 1, 1, 0))
-	fade.set_color(1, Color(1, 1, 1, 0))
-	fade.add_point(0.3, Color(1, 1, 1, 0.55))
-	var ramp := GradientTexture1D.new()
-	ramp.gradient = fade
-	pm.color_ramp = ramp
-	mist.process_material = pm
-	var quad := QuadMesh.new()
-	quad.size = Vector2(SpikeConfig.FALLS_MIST_SIZE, SpikeConfig.FALLS_MIST_SIZE)
-	var qm := StandardMaterial3D.new()
-	qm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	qm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	qm.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	qm.vertex_color_use_as_albedo = true
-	var blob := GradientTexture2D.new()
-	var bg := Gradient.new()
-	bg.set_color(0, Color(0.92, 0.95, 0.96, 1))
-	bg.set_color(1, Color(0.92, 0.95, 0.96, 0))
-	blob.gradient = bg
-	blob.fill = GradientTexture2D.FILL_RADIAL
-	blob.fill_from = Vector2(0.5, 0.5)
-	blob.fill_to = Vector2(1.0, 0.5)
-	qm.albedo_texture = blob
-	quad.material = qm
-	mist.draw_pass_1 = quad
-	mist.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mist.position = pts[pts.size() - 1] + Vector3(0, 4, 0)
-	add_child(mist)
-	# spray where the water drops steepest, so the fall reads from the village 1 km away
-	var steep_i: int = 1
-	var steep: float = 0.0
-	for i in range(1, pts.size()):
-		var drop: float = (pts[i - 1].y - pts[i].y) / maxf(pts[i - 1].distance_to(pts[i]), 0.1)
-		if drop > steep:
-			steep = drop
-			steep_i = i
-	var spray := mist.duplicate() as GPUParticles3D
-	spray.amount = 24
-	spray.position = pts[steep_i] + Vector3(0, 6, 0)
-	add_child(spray)
+	waterfall = Waterfall.new()
+	waterfall.name = "Waterfall"
+	add_child(waterfall)
+	waterfall.build(terrain)
 
 
 ## Ingrid (GDD 6.4), idle on the shore by the jetty. MakeHuman CC0, tools/spike/export_human.py.
 func _build_ingrid() -> void:
 	var info: Dictionary = terrain.meta["ingrid"]
 	var p: Array = info["pos"]
-	var ingrid := (load("res://assets/models/ingrid.glb") as PackedScene).instantiate() as Node3D
+	var ingrid := (load(SpikeConfig.INGRID_MODEL) as PackedScene).instantiate() as Node3D
 	ingrid.name = "Ingrid"
 	add_child(ingrid)
 	var pos := Vector3(float(p[0]), 0.0, float(p[2]))
@@ -498,6 +455,8 @@ func apply_preset(i: int) -> void:
 	RenderingServer.directional_shadow_atlas_set_size(int(p["shadow_atlas"]), true)
 	env.glow_enabled = bool(p["glow"])
 	terrain.material.set_shader_parameter("quality", int(p["terrain_quality"]))
+	if corner_ground:
+		corner_ground.set_shader_parameter("quality", int(p["terrain_quality"]))
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))

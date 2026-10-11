@@ -12,6 +12,12 @@ var coarse_img: Image
 var fine_img: Image
 var material: ShaderMaterial
 var tile_count: int = 0
+## Beauty corner (pass 3): leaf tiles (finest level, 160 m) inside this rect of tile indices are
+## not built; scenes/BeautyCorner.tscn draws them as lightmapped meshes. Set before build().
+var skip_leaf: Rect2i = Rect2i()
+## Tile nodes per level: Vector2i(tile i, j) -> MeshInstance3D (corner meshes take their
+## visibility parent from here).
+var tile_nodes: Array[Dictionary] = []
 
 var _coarse: Dictionary = {}
 var _fine: Dictionary = {}
@@ -177,6 +183,8 @@ func build() -> void:
 			var tj: int = int(t[1])
 			if li > 0 and not complete.has(Vector2i(ti, tj) / int(prev_size / size)):
 				continue
+			if leaf and skip_leaf.has_point(Vector2i(ti, tj)):
+				continue
 			var lo: float = float(t[2]) - SpikeConfig.SKIRT_DEPTH - size / float(cells)
 			var hi: float = float(t[3])
 			var mi := MeshInstance3D.new()
@@ -203,6 +211,7 @@ func build() -> void:
 			cur[Vector2i(ti, tj)] = mi
 			tile_count += 1
 		prev = cur
+		tile_nodes.append(cur)
 		prev_size = size
 		complete = has_children
 

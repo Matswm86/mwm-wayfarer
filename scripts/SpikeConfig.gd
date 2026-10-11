@@ -4,6 +4,12 @@ extends RefCounted
 ## Every tunable number of the performance spike lives here.
 
 const TERRAIN_DIR := "res://assets/terrain/"
+## Beauty corner (pass 3): spawn, village, shore and cliff foot as lightmapped real meshes with
+## scanned houses, props, rocks and birches (tools/spike/build_corner.gd, bake_corner.sh).
+## CORNER_TILES = the finest terrain tiles (160 m) it replaces, same rect as the builder.
+const CORNER_SCENE := "res://scenes/BeautyCorner.tscn"
+const CORNER_TILES := Rect2i(38, 55, 4, 4)
+const CORNER_MASK := "res://assets/terrain/corner/corner_mask.png"
 ## A tile splits into its four children when the camera is closer than this times its size.
 const LOD_SPLIT := 1.0
 const LOD_MARGIN := 0.1
@@ -26,7 +32,14 @@ const TREE_LOD0_RADIUS := 22.0
 ## turn on ("rocks") when the designer's cliff set replaces them.
 const ROCK_LOD_RANGES := Vector3(90.0, 320.0, 900.0)
 const ROCK_TINT := Color(0.62, 0.66, 0.72)
-const TREE_MESH := "res://assets/models/trees/scots_pine/scots_pine_a.glb"
+## One model per forest variant (0-1 pines, 2-3 firs in trees.json): designer's Scots pine a/b and
+## Norway spruce a/b (pass 3).
+const TREE_MESHES: Array[String] = [
+	"res://assets/models/corner/trees/scots_pine_a.glb",
+	"res://assets/models/corner/trees/scots_pine_b.glb",
+	"res://assets/models/corner/trees/norway_spruce_a.glb",
+	"res://assets/models/corner/trees/norway_spruce_b.glb",
+]
 
 ## Ground cover: one plant (two crossed cards) per GRASS_SPACING m grid point within
 ## GRASS_RADIUS of the player.
@@ -40,6 +53,19 @@ const GRASS_FAR_SCALE := 1.7
 ## Skin shading (Humans.skin): material names that are skin, light through skin.
 const SKIN_MATERIALS: Array[String] = ["body", "skin", "head", "face"]
 const SKIN_BACKLIGHT := Color(0.32, 0.1, 0.06)
+## Player model (pass 3): scanned man (designer's player_nathan, Renderpeople CC BY 4.0, Quaternius
+## clips CC0); faces -Z. Ingrid: designer's ingrid_farmer (CC BY 4.0).
+const PLAYER_MODEL := "res://assets/models/characters/player_nathan.glb"
+const INGRID_MODEL := "res://assets/models/characters/ingrid_farmer.glb"
+## Locomotion blend for the scanned rigs: [clip, ground speed m/s, playback rate]. The clips are
+## authored at about 1.4 (walk), 3.5 (run) and 6 m/s (sprint); the game's walk speed jogs and its
+## run sprints, with rates that keep the feet near the ground speed.
+const PLAYER_GAITS: Array = [
+	["idle", 0.0, 1.0],
+	["walk", 1.4, 1.0],
+	["run", 4.5, 1.25],
+	["sprint", 8.0, 1.3],
+]
 const PLAYER_WALK := 4.5
 const PLAYER_RUN := 8.0
 ## Walk clip playback rate at walking speed (feet match the ground).
@@ -94,11 +120,17 @@ const ACTOR_LAYER := 2
 const CONTACT_STRENGTH := 0.55
 const HOUSE_AO_STRENGTH := 0.5
 
-## Waterfall: ribbon half-width at the top and the foot (m), height above the gully floor (m),
-## mist puff size (m). Wide and bright enough to read from the village about 1.1 km away.
-const FALLS_WIDTH := Vector2(15.0, 28.0)
-const FALLS_LIFT := 7.0
-const FALLS_MIST_SIZE := 55.0
+## Waterfall (pass 3, scripts/Waterfall.gd): path resample step (m); half-widths (top, foot) of the
+## white-water core and the veil (true size; the shader widens them only with distance); spray
+## and mist sheet sizes; plunge pool radius; wet rock decal width and darkness.
+const FALLS_STEP := 3.0
+const FALLS_CORE := Vector2(2.0, 3.2)
+const FALLS_VEIL := Vector2(3.2, 4.6)
+const FALLS_SPRAY_SIZE := 4.0
+const FALLS_MIST_SIZE := 18.0
+const FALLS_POOL_RADIUS := 7.0
+const FALLS_WET_WIDTH := 22.0
+const FALLS_WET_STRENGTH := 0.55
 
 const BENCH_SECONDS := 60.0
 const BENCH_WARMUP := 1.0

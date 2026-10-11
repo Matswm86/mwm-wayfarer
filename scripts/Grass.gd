@@ -8,11 +8,12 @@ extends MultiMeshInstance3D
 
 const CARDS := "res://assets/models/ground/"
 ## Cumulative pick weights per card (ground_cards.json order): short grass x2, tall grass x2,
-## fern, shrub.
-const CARD_PICK: Array[float] = [0.34, 0.68, 0.82, 0.92, 0.96, 1.0]
+## fern, shrub, dandelion, pink flower (pass 3: wildflowers from the designer's meadow atlas, the
+## broad fern down from 10 % to 4 %, it read as flat leaves everywhere).
+const CARD_PICK: Array[float] = [0.32, 0.64, 0.79, 0.88, 0.92, 0.95, 0.98, 1.0]
 ## Per card: scale (short grass doubled so tufts merge into a sward) and brightness.
-const CARD_SCALE: Array[float] = [2.2, 2.2, 1.0, 1.0, 0.8, 1.0]
-const CARD_GAIN: Array[float] = [1.9, 1.9, 1.0, 1.0, 1.2, 1.0]
+const CARD_SCALE: Array[float] = [2.2, 2.2, 1.0, 1.0, 0.8, 1.0, 1.0, 1.0]
+const CARD_GAIN: Array[float] = [1.9, 1.9, 1.0, 1.0, 1.2, 1.0, 1.0, 1.0]
 
 var target: Node3D
 var mat: ShaderMaterial

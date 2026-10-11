@@ -14,10 +14,14 @@ const AO_LIGHT_AFFECT := 0.45
 var surfaces: int = 0
 
 
-func build() -> void:
-	var info: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DIR + "materials.json"))
-	var ao: Texture2D = load(DIR + "village_ao.png")
-	var houses := (load(DIR + "village.glb") as PackedScene).instantiate() as Node3D
+## variant "" = all houses and boats; "_naust" = only the two boathouses (the beauty corner has
+## the scanned houses and the designer's boats).
+func build(variant: String = "") -> void:
+	var info: Dictionary = JSON.parse_string(
+		FileAccess.get_file_as_string(DIR + "materials%s.json" % variant)
+	)
+	var ao: Texture2D = load(DIR + "village%s_ao.png" % variant)
+	var houses := (load(DIR + "village%s.glb" % variant) as PackedScene).instantiate() as Node3D
 	add_child(houses)
 	for mi: MeshInstance3D in houses.find_children("*", "MeshInstance3D", true, false):
 		for s in mi.mesh.get_surface_count():

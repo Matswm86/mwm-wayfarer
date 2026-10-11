@@ -19,17 +19,21 @@ render_mode cull_disabled, world_vertex_coords;
 #include "res://shaders/terrain_light.gdshaderinc"
 
 uniform sampler2D cards : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
-uniform float card_count = 6.0;
+uniform float card_count = 8.0;
 // per card: size in metres (square frames)
-uniform float card_size[6];
+uniform float card_size[8];
 // per card: extra scale and brightness (the short-grass scans are small and dark)
-uniform float card_scale[6];
-uniform float card_gain[6];
+uniform float card_scale[8];
+uniform float card_gain[8];
 // cumulative pick weights per card (last = 1.0)
-uniform float card_pick[6];
+uniform float card_pick[8];
 uniform vec3 grass_center;
 // forest stand density (npz_to_godot.py): ferns and shrubs under the trees, not meadow grass
 uniform sampler2D forest_mask : filter_linear, repeat_disable;
+// beauty corner ground mask (tools/spike/build_corner.gd): no plants on the path and the shore,
+// fewer in the yards; inside the corner the light probes of its lightmap hold the sky occlusion
+uniform sampler2D corner_mask : filter_linear, repeat_disable;
+uniform vec4 corner_rect = vec4(0.0);
 uniform float grass_radius = 40.0;
 uniform float grid_spacing = 0.6;
 // far ring (Ultra): fades in from inner_radius, bigger clumps
@@ -53,6 +57,8 @@ float hash12(vec2 p) {
 	return fract((p3.x + p3.y) * p3.z);
 }
 
+varying float in_corner;
+
 void vertex() {
 	vec3 grid_pt = MODEL_MATRIX[3].xyz;
 	vec2 key = floor(grid_pt.xz / grid_spacing + 0.5);
@@ -62,7 +68,7 @@ void vertex() {
 	float r4 = hash12(key + 73.1);
 	vec2 base_xz = grid_pt.xz + (vec2(r1, r2) - 0.5) * grid_spacing;
 	float kind = 0.0;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 7; i++) {
 		kind += step(card_pick[i], r4);
 	}
 	vec2 fuv = clamp((grid_pt.xz - coarse_rect.xy) / coarse_rect.zw, vec2(0.0), vec2(1.0));
@@ -79,6 +85,15 @@ void vertex() {
 	keep *= inner_radius > 0.0 ? smoothstep(inner_radius * 0.8, inner_radius, gd) : 1.0;
 	size *= size_mult;
 	keep *= smoothstep(0.4, 1.0, ground) * smoothstep(0.72, 0.82, gn.y) * (1.0 - smoothstep(500.0, 600.0, ground));
+	in_corner = 0.0;
+	if (corner_rect.z > 0.0) {
+		vec2 cuv = (base_xz - corner_rect.xy) / corner_rect.zw;
+		if (all(greaterThan(cuv, vec2(0.0))) && all(lessThan(cuv, vec2(1.0)))) {
+			vec4 cm = textureLod(corner_mask, cuv, 0.0);
+			keep *= 1.0 - clamp(cm.r * 1.4 + cm.b * 1.3 + cm.g * 0.55 - (r2 - 0.5) * 0.3, 0.0, 1.0);
+			in_corner = 1.0;
+		}
+	}
 	size *= keep;
 
 	vec3 local = VERTEX - grid_pt;
@@ -113,7 +128,7 @@ void fragment() {
 	ROUGHNESS = 0.85;
 	SPECULAR = 0.2;
 	// darker at the root, where the clump shades itself
-	AO = mix(1.0, sky_vis, 0.8) * mix(0.45, 1.0, smoothstep(1.0, 0.35, UV.y));
+	AO = mix(1.0, sky_vis, 0.8 * (1.0 - in_corner)) * mix(0.45, 1.0, smoothstep(1.0, 0.35, UV.y));
 	AO_LIGHT_AFFECT = 0.35;
 }
 

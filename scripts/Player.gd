@@ -24,14 +24,13 @@ func build() -> void:
 	shape.shape = cap
 	shape.position.y = 0.875
 	add_child(shape)
-	# MakeHuman explorer (CC0), exported by tools/spike/export_human.py; faces +Z, the body faces -Z
-	model = (load("res://assets/models/explorer.glb") as PackedScene).instantiate() as Node3D
-	model.rotation.y = PI
+	# scanned man (pass 3; SpikeConfig.PLAYER_MODEL), faces -Z like the body
+	model = (load(SpikeConfig.PLAYER_MODEL) as PackedScene).instantiate() as Node3D
 	add_child(model)
 	anim = Humans.find_player(model)
 	Humans.loop_all(anim)
-	Humans.skin(model)
-	locomotion = Humans.locomotion(anim)
+	_scan_skin(model)
+	locomotion = Humans.locomotion(anim, SpikeConfig.PLAYER_GAITS)
 	camera = Camera3D.new()
 	camera.fov = 60.0
 	camera.near = 0.2
@@ -40,6 +39,22 @@ func build() -> void:
 	camera.top_level = true
 	floor_snap_length = 0.6
 	floor_max_angle = deg_to_rad(50.0)
+
+
+## The scan has one albedo-only material (skin and clothes): soft, low specular, a faint rim.
+static func _scan_skin(root: Node) -> void:
+	for mi: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
+		for si in mi.mesh.get_surface_count():
+			var src := mi.mesh.surface_get_material(si) as StandardMaterial3D
+			if src == null:
+				continue
+			var m := src.duplicate() as StandardMaterial3D
+			m.roughness = 0.75
+			m.metallic_specular = 0.3
+			m.rim_enabled = true
+			m.rim = 0.15
+			m.rim_tint = 0.5
+			mi.set_surface_override_material(si, m)
 
 
 func _physics_process(delta: float) -> void:

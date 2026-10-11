@@ -54,7 +54,8 @@ static func _is_skin(material_name: String) -> bool:
 
 ## Idle / walk / run blended by speed (m/s) through an AnimationTree. Clips missing from the model
 ## fall back: run -> walk played faster. Returns the tree; set "parameters/move/blend_position".
-static func locomotion(anim: AnimationPlayer) -> AnimationTree:
+## points: [clip, speed m/s, playback rate] (default: idle / walk / run of the MakeHuman rig).
+static func locomotion(anim: AnimationPlayer, points: Array = []) -> AnimationTree:
 	if anim == null:
 		return null
 	var names: PackedStringArray = anim.get_animation_list()
@@ -62,11 +63,12 @@ static func locomotion(anim: AnimationPlayer) -> AnimationTree:
 	space.min_space = 0.0
 	space.max_space = SpikeConfig.PLAYER_RUN
 	var rates: Array[float] = []
-	var points: Array = [
-		["idle", 0.0, 1.0],
-		["walk", SpikeConfig.PLAYER_WALK, SpikeConfig.ANIM_WALK_RATE],
-		["run", SpikeConfig.PLAYER_RUN, 1.0]
-	]
+	if points.is_empty():
+		points = [
+			["idle", 0.0, 1.0],
+			["walk", SpikeConfig.PLAYER_WALK, SpikeConfig.ANIM_WALK_RATE],
+			["run", SpikeConfig.PLAYER_RUN, 1.0]
+		]
 	for p: Array in points:
 		var clip: String = str(p[0])
 		var rate: float = float(p[2])
