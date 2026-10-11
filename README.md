@@ -1,10 +1,36 @@
 # MWM Wayfarer
 
-**[Download the phone performance spike APK (Android)](https://github.com/Matswm86/mwm-wayfarer/releases/download/latest/mwm-wayfarer.apk)**
+Working title. A realistic open-world game for Android in which you live through human history: you start as one of the first apes to come down from the trees in East Africa, about 7 million years ago, and play forward era by era to today. Engine: Godot 4.6 (Mobile renderer). The APK linked below is a graphics and performance test of one chapter's valley, not the game yet.
 
 <p align="center"><img src="docs/spike/b_street_ultra.jpg" alt="Spike build, Ultra preset: a scanned carved Norwegian storehouse on a worn dirt path in Skarvik village, a turf-roofed log house behind it, the grey fjord wall above" width="720"></p>
 
-Working title. A realistic open-world game for Android in which you live through human history: you start as one of the first apes to come down from the trees in East Africa, about 7 million years ago, and play forward era by era to today. Engine: Godot 4.6 (Mobile renderer). The APK below is a graphics and performance test of one chapter's valley, not the game yet.
+<p align="center">Skarvik village on the Naeroyfjord shore in the spike build (Ultra preset, rendered on a laptop GPU).</p>
+
+## Download
+
+**[Download the phone performance spike APK (Android)](https://github.com/Matswm86/mwm-wayfarer/releases/download/latest/mwm-wayfarer.apk)**, also on the [latest release](https://github.com/Matswm86/mwm-wayfarer/releases/tag/latest) page.
+
+1. On the phone or tablet, tap the link above.
+2. Open the file and allow "Install unknown apps" for your browser if Android asks.
+3. If an older build will not update (signature mismatch), uninstall it first.
+
+The APK runs on 64-bit phones and 32-bit tablets (arm64-v8a and armeabi-v7a). It is a release build signed with a CI key, for sideloading only. Landscape.
+
+## What it does
+
+- Walk, run and look around a 12.8 x 12.8 km stretch of the real Naeroyfjord valley in Norway, with the village of Skarvik, forest, cliffs, a waterfall and the fjord.
+- Meet Ingrid at the jetty and watch 20 animals (deer, elk, moose, fox, rabbits, wolves, a bear, an eagle, gulls) graze, wander and run from you. There is no combat.
+- Switch between four graphics presets (Low, Medium, High, Ultra) and read the phone's frame rate, GPU time, draw calls and video memory live.
+- Run the built-in benchmarks (Bench 60 s, Bench all, Bench corner, GPU parts) to see what each setting costs on your phone.
+- Planned, not built yet: 12 chapters from the first apes in East Africa to today (see "The game" below).
+
+## How it works
+
+Wayfarer is a Godot 4.6 project on the Mobile renderer, exported to Android as an APK for arm64-v8a and armeabi-v7a by a GitHub Actions workflow. The valley is real terrain: Python tools bake Kartverket elevation data offline into chunked height tiles with five levels of detail, plus baked sun shadows, sky occlusion, a forest of up to 90 000 trees and the waterfall path. Houses, trees, rocks and animals are scanned or downloaded models prepared with Blender and Python scripts and drawn at several levels of detail; the small beauty corner around the spawn also carries a lightmap baked in the editor. The four presets trade render scale, anti-aliasing, shadows, forest density and ground cover for frame time, and the in-game readout and benchmark buttons measure each one on the device.
+
+## Status
+
+Version 0.1.0, a graphics and performance spike: the valley, village and wildlife can be walked through, but the eras, fire, survival and story are not built yet. On the test phone the Ultra preset reached 46.6 fps (19.1 ms GPU average) in the Bench corner run of 11 Oct, short of a steady 60 fps; Low and Medium hold about 60.
 
 ## The game (plan, `docs/GDD.md` v2)
 
@@ -18,7 +44,7 @@ Working title. A realistic open-world game for Android in which you live through
 
 ## What the APK is right now: a performance spike
 
-The current build is a test scene, not the game. It answers one question: can a phone show the real Naeroyfjord valley at 60 fps (high-end) or 30 fps (floor) with the Mobile renderer? Budgets are in `docs/GDD.md` section 9.4.
+The current build is a test scene, not the game. It answers one question: can a phone show the real Naeroyfjord valley at 60 fps (high-end) or 30 fps (floor) with the Mobile renderer? Budgets are in `docs/GDD.md` section 14.4.
 
 What is in it:
 - 12.8 x 12.8 km of real terrain (Kartverket 10 m model, 2.5 m round the village), drawn as chunked tiles with five levels of detail.
@@ -26,10 +52,10 @@ What is in it:
 - A Poly Haven cloud sky with a sun disc and glow round the sun, AgX tone mapping, glow, a colour grade fitted to the look-dev key frame, blue-grey haze that layers the far ridges, a near-white 30 degree sun with soft shadows.
 - The fjord water mirrors the walls (two reflection probes), with calm ripples, chart-depth shallows and shore foam.
 - Real village buildings: turf-roof timber houses, boathouses, boats and a wooden pier, with baked ambient occlusion.
-- Up to 90 000 pines and spruces in forest stands with clearings below a tree line of about 500-650 m, drawn as impostors of scanned trees (8 directions, 2 heights) that sway in the wind and let the sun shine through; on Ultra the pines within 70 m are real tree meshes. Grass tufts, tall grass, ferns and shrubs round the player (out to 120 m on Ultra, ferns under the trees); a waterfall down the gully on the east wall that reads from the village.
+- Up to 90 000 pines and spruces in forest stands with clearings below a tree line of about 500-650 m, drawn as impostors of scanned trees (8 directions, 2 heights) that sway in the wind and let the sun shine through; on Ultra the pines within 70 m are real tree meshes. Grass tufts, tall grass, ferns and shrubs round the player (out to 95 m on Ultra, ferns under the trees); a waterfall down the gully on the east wall that reads from the village.
 - Soft contact shadows under animals, the player, Ingrid and every house; a reflection probe over the village street.
 - Wildlife: does and deer grazing in view of the start, an elk and a moose at the forest edge, a fox and rabbits by the fields, wolves and a bear far off, an eagle over the walls and gulls over the fjord. They graze, wander and run from you; no combat.
-- Ingrid, a villager standing idle by the jetty, and an explorer you control (idle, walk and run blend by speed; skin lit with light bleeding through).
+- Ingrid, a villager standing idle by the jetty, and Luca, the scanned man you control (idle, walk, run and sprint blend by speed; skin lit with light bleeding through).
 
 | Spawn, Ultra | Village street, Ultra | Inside a pine stand, Ultra | Cliff, Ultra |
 |---|---|---|---|
@@ -60,14 +86,6 @@ One small area is built to final quality first, to prove the bar can be hit on a
 | ![](docs/spike/b_falls_far_ultra.jpg) | ![](docs/spike/b_falls_near_ultra.jpg) | ![](docs/spike/spawn_ultra.jpg) | ![](docs/spike/spawn_high.jpg) |
 
 What still falls short (looked at in every shot above): the ground cover is still flat cards up close; the cliff wall itself is the smooth terrain surface, the rock pieces on it read as rounded boulders more than broken gneiss; the cascade close-up is a mid-distance view through trees and the cascade cannot be seen from the village; the two boathouses by the jetty are still the old procedural models; five storehouses share one scan (two mirrored).
-
-## Install on a phone or tablet
-
-1. On the device, tap [mwm-wayfarer.apk](https://github.com/Matswm86/mwm-wayfarer/releases/download/latest/mwm-wayfarer.apk) (or open the [latest release](https://github.com/Matswm86/mwm-wayfarer/releases/tag/latest)).
-2. Open the file and allow "Install from this source" if Android asks.
-3. If an older build will not update (signature mismatch), uninstall it first.
-
-The APK runs on 64-bit phones and 32-bit tablets (arm64-v8a and armeabi-v7a). It is a release build signed with a CI key, for sideloading only. Landscape.
 
 ## Controls
 
@@ -105,10 +123,10 @@ Laptop counts from the screenshot bot (1920 x 1080, visual pass 2): Low max 71 d
 Pass 3 (performance): High is capped at 60 fps (uncapped it jittered between 8, 17 and 25 ms frames on the 120 Hz screen); Ultra renders at 0.9 scale with a cheaper soft-shadow filter and fewer far clumps; heavy meshes (scanned houses, near trees, birches) cast their sun shadow with a light copy only; animals animate only near and in view; the near-tree gather runs on a worker thread. Laptop bench flight, GPU average / p95 before -> after (RTX 3060, rendering offscreen so the GPU keeps its clocks; laptop GPU is not a phone GPU): High 3.18 / 4.23 -> 2.98 / 4.62 ms, Ultra 5.20 / 7.78 -> 3.43 / 5.22 ms, with the beauty corner added. Bench lines now also show render CPU and physics ms.
 
 Corner pass (11 Oct, after the phone found the spawn view at 30.5 ms GPU on Ultra):
-- The game's model textures (characters, animals, trees, rocks, boathouses: 93 files) were stored uncompressed, about 1.4 GB of video memory; they now use the phone's compressed formats (ETC2 on Android) with mipmaps, and the two scanned characters load at 2048 px (studio rule). Terrain data, masks and the colour grade stay lossless.
+- The game's model textures (characters, animals, trees, rocks, boathouses: 90 files) were stored uncompressed, about 1.4 GB of video memory; they now use the phone's compressed formats (ETC2 on Android) with mipmaps, and the two scanned characters load at 2048 px (studio rule). Terrain data, masks and the colour grade stay lossless.
 - The ground shader skips its cliff-rock layers (20-35 texture reads per pixel) wherever the ground is not steep, which is the meadow, the path and the village, and the four path/gravel/pebble/sand layers wherever the corner mask is empty. On flat ground the rock skip gives the same pixels as before.
 - The beauty corner now follows the preset: each preset has its own distance for every detail level of the scanned houses, props, rocks and birches. Low uses only the light versions (no full-detail scans, birches as cards), Medium brings in full detail close up, and Ultra keeps the pass 3 ranges. The Evju storehouse gets a third, 3000-triangle version for distance views and its shadow (`tools/spike/house_lod2_blender.py` + `house_lod2.gd`; the log-cabin scan tore open when decimated and keeps two). Rocks cast their shadow with their lightest version out to 150 m.
-- Laptop, standing at the spawn, 1920 x 1080 offscreen, RTX 3060 (GPU avg / p95 ms; before = pass 3 measured right before this change under the same machine load): Low 1.58 / 1.70 -> 1.41 / 1.42, Medium 3.92 / 4.11 -> 2.50 / 2.55, High 7.32 / 8.27 -> 4.13 / 4.26, Ultra 8.00 / 8.42 -> 4.62 / 4.80 ms (textures and ground shader). Render CPU 0.6-1.2 ms on every preset, unchanged. Video memory at the spawn 1875-2018 MB -> 978-1122 MB. Primitives / draws at the spawn: Low 361k / 162 -> 279k / 117, Medium 637k / 236 -> 576k / 226, High 834k / 240 -> 770k / 253, Ultra 1169k / 259 -> 1106k / 266; corner path p95: Low 488k -> 301k (Low budget 350k), Medium 838k -> 669k, Ultra 1556k -> 1453k. The detail-level work was measured in primitives only: another job held the laptop GPU for the rest of the session. On the phone the spawn view took about 3.8 times the laptop's GPU time in pass 3, which puts Ultra at about 17-18 ms after this pass (my estimate); the phone's own Bench corner is the real test.
+- Laptop, standing at the spawn, 1920 x 1080 offscreen, RTX 3060 (GPU avg / p95 ms; before = pass 3 measured right before this change under the same machine load): Low 1.58 / 1.70 -> 1.41 / 1.42, Medium 3.92 / 4.11 -> 2.50 / 2.55, High 7.32 / 8.27 -> 4.13 / 4.26, Ultra 8.00 / 8.42 -> 4.62 / 4.80 ms (textures and ground shader). Render CPU 0.6-1.2 ms on every preset, unchanged. Video memory at the spawn 1875-2018 MB -> 978-1122 MB. Primitives / draws at the spawn: Low 361k / 162 -> 279k / 117, Medium 637k / 236 -> 576k / 226, High 834k / 240 -> 770k / 253, Ultra 1169k / 259 -> 1106k / 266; corner path p95: Low 488k -> 301k (Low budget 350k), Medium 838k -> 669k, Ultra 1556k -> 1453k. The detail-level work was measured in primitives only: another job held the laptop GPU for the rest of the session. On the phone the spawn view took about 3.8 times the laptop's GPU time in pass 3, which puts Ultra at about 17-18 ms after this pass (my estimate). The phone's own Bench corner, which also covers the path, then measured 19.1 ms GPU average on Ultra (p95 25.6 ms); see the table below.
 
 Phone results so far (one test phone, Samsung SM-S931B, Bench flight):
 
@@ -122,8 +140,12 @@ Phone results so far (one test phone, Samsung SM-S931B, Bench flight):
 | Pass 3 (beauty corner, 11 Oct) | High | 59.3 | 16.7 ms | 33.3 ms | 13.9 ms (p95 16.0) | 281 | 1299k |
 | Pass 3 (beauty corner, 11 Oct) | Ultra | 58.3 | 18.1 ms | 50.0 ms | 14.3 ms (p95 17.6) | 302 | 1673k |
 | Pass 3, standing at the spawn (live readout) | Ultra | 33 | 31.7 ms | | 30.5 ms (p95 30.4) | 290 | 1134k (VRAM 1956 MB) |
+| Corner pass, Bench corner (11 Oct) | Low | 60.0 | 16.7 ms | 31.0 ms | 12.3 ms (p95 14.4) | | |
+| Corner pass, Bench corner (11 Oct) | Medium | 59.8 | 16.7 ms | 27.0 ms | 12.9 ms (p95 14.8) | | |
+| Corner pass, Bench corner (11 Oct) | High | 56.1 | 22.2 ms | 33.2 ms | 16.0 ms (p95 18.6) | | |
+| Corner pass, Bench corner (11 Oct) | Ultra | 46.6 | 28.0 ms | 36.9 ms | 19.1 ms (p95 25.6) | | |
 
-Spawn-view finding (pass 3): the bench flight held about 60 fps on every preset, but standing at the spawn inside the beauty corner on Ultra the GPU took 30.5 ms, about twice the 16.7 ms a 60 fps frame allows. The flight spends most of its time high over the valley and never looks at the corner the way the player does, so it missed the cost. The new Bench corner button measures that view; the corner pass below cut it.
+Spawn-view finding (pass 3): the bench flight held about 60 fps on every preset, but standing at the spawn inside the beauty corner on Ultra the GPU took 30.5 ms, about twice the 16.7 ms a 60 fps frame allows. The flight spends most of its time high over the valley and never looks at the corner the way the player does, so it missed the cost. The new Bench corner button measures that view; the corner pass above cut it. The phone's Bench corner after the pass (11 Oct, `docs/phone/bench_corner_2026-10-11_s25.jpg`): Low and Medium at about 60 fps, High 56.1 fps at 16.0 ms GPU, Ultra 46.6 fps at 19.1 ms GPU (p95 25.6 ms), so Ultra still misses a steady 60 fps there.
 
 The APK is about 616 MB since the corner pass (755 MB in pass 3; the model textures are now stored compressed; size is not a constraint for this build).
 
@@ -131,13 +153,15 @@ To report a phone result: run Bench all and Bench corner and take a screenshot o
 
 ## Repository
 
-- `docs/BRIEF.md`: the owner brief. `docs/GDD.md`: game design. `docs/DESIGN.md`: look. `docs/mockups/`: look-dev renders. `docs/spike/`: spike screenshots.
+- `docs/BRIEF.md`: the owner brief. `docs/GDD.md`: game design. `docs/DESIGN.md`: look. `docs/mockups/`: look-dev renders. `docs/spike/`: spike screenshots. `docs/phone/`: screenshots of bench results from the owner's phone.
 - `project.godot`, `scenes/`, `scripts/`, `shaders/`, `tests/`: the Godot spike. Every tunable number is in `scripts/SpikeConfig.gd`.
 - `tools/terrain/npz_to_godot.py`: bakes the terrain, forest, waterfall, village and bench path into `assets/terrain/`. Frame: scene (x, y, h) maps to Godot (x, h, -y), so Godot -Z looks down the fjord.
 - `tools/terrain/copy_textures.py`: copies the CC0 textures into `assets/textures/`.
 - Beauty corner: `tools/spike/export_corner_houses.py` (Blender: scans to game meshes), `tools/spike/pack_corner_textures.py` (path, gravel, pebble and sand layers), `tools/spike/build_corner.gd` (builds `scenes/BeautyCorner.tscn`), `tools/spike/bake_corner.sh` (bakes its lightmap through `addons/wf_bake`, `WF_CORNER_QUALITY=low|medium|high`). The screenshot bot's `CAPTURE_SET=beauty` takes the six corner views and `CAPTURE_SET=walk` proves the walk direction (Luca walking away, left and right, a side view with a planted-foot check, Ingrid and every animal from the front); `tests/profile.tscn` measures CPU and GPU per preset on the bench flight, and with `PROFILE_SPAWN=1` at the spawn view and on the corner path (`PROFILE_ABLATE_HERE=1`: the GPU parts cases there, `PROFILE_PRIMS=1`: primitives per part). `tools/spike/export_human.py`: exports the MakeHuman characters into `assets/models/`.
 - `tools/spike/`: graphics-pass tools: `bake_terrain_light.py` (baked sun shadow and sky occlusion), `sky_to_ldr.py`, `export_village.py` + `village_textures.py`, `bake_tree_impostors.py` + `pack_tree_atlas.py`, `bake_ground_cards.py` + `pack_ground_cards.py`, `export_animals.py`, `vram_import.sh`; visual pass 2: `bake_terrain_detail.py` (per-texel normals, drainage, ridges), `pack_terrain_textures.py` (2K-4K rock and ground sets), `cube_to_png.py` (colour grade LUT), `export_rocks.py` (cliff rock stand-ins with LODs).
-- `tools/art/`: Blender scripts that render the look-dev scenes. `tools/terrain/dem_to_game.py`: turns real elevation data into the fjord scene's terrain.
+- `tools/assets/`: asset preparation scripts: tree cards and impostors (`cardify_tree.py`, `bake_impostors.py`), rock bake (`bake_rock.py`), character retarget (`retarget_char.py`), ground cover, props, and download helpers for Poly Haven and Sketchfab.
+- `tools/fire_calc.py`, `tools/econ_calc.py`: the calculations behind numbers in `docs/GDD.md` (fire and warmth; economy, audio size, NPC cost).
+- `tools/art/`: Blender scripts that render the look-dev scenes. `tools/terrain/dem_to_game.py`: turns real elevation data into the fjord scene's terrain; `tools/terrain/cop_to_game.py` does the same for Copernicus tiles (the non-Norway look-dev scenes).
 
 ## Credits
 
