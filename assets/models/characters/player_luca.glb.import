@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dgn7kgd84tfy6"
-path="res://.godot/imported/player_nathan.glb-377f30a30934e65b55f63e0dabf95311.scn"
+path="res://.godot/imported/player_luca.glb-202656a9dbb0b179d8a327ce8fa06cf9.scn"
 
 [deps]
 
-source_file="res://assets/models/characters/player_nathan.glb"
-dest_files=["res://.godot/imported/player_nathan.glb-377f30a30934e65b55f63e0dabf95311.scn"]
+source_file="res://assets/models/characters/player_luca.glb"
+dest_files=["res://.godot/imported/player_luca.glb-202656a9dbb0b179d8a327ce8fa06cf9.scn"]
 
 [params]
 

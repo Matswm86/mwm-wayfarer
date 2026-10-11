@@ -66,11 +66,11 @@ META = {
         "godot": "Use triplanar on faces steeper than about 48 deg; sample height for blend weights.",
     },
     "player_nathan": {
-        "title": "Player character (scanned man), idle / walk / run / sprint / talk / interact / pickup / sit",
+        "title": "Player character Luca (scanned man; in the game assets/models/characters/player_luca.glb), idle / walk / run / sprint / talk / interact / pickup / sit",
         "source": "Renderpeople 'Nathan Animated 003 - Walking 3D Man' on Sketchfab " + SF + "143a2b1ea5eb4385ae90a73657aca3bc (8K source albedo reduced to 4K). Animations: Quaternius Universal Animation Library (CC0).",
         "licence": "Model CC BY 4.0: credit \"Nathan Animated 003\" by Renderpeople, CC BY 4.0. Animations CC0 (courtesy credit Quaternius).",
         "how": "`tools/assets/retarget_char.py` (bone match by name, rest-pose alignment by chain direction, per-frame world-rotation transfer, hips scaled by leg ratio). Clips are NLA tracks = separate glTF animations, in place (no root motion). Check render: `player_nathan_check.jpg`.",
-        "place": "Player. 1.80 m, origin at the feet, faces -Z in Godot (+Y forward in Blender was converted by the exporter). Has jaw, eye and eyelid bones (not animated yet).",
+        "place": "Player. 1.80 m, origin at the feet, faces +Z in Godot like every glTF rig (+Y forward in Blender was converted by the exporter); scripts/Player.gd turns it half round to the body's -Z. Has jaw, eye and eyelid bones (not animated yet).",
         "verdict": "Best realism of the set: scanned face holds at talk distance, motion reads natural. Gap: T-shirt and jeans, not outdoor clothes; add the existing backpack/jacket gear or accept a summer look. Only an albedo map (scan); no normal/ORM.",
         "godot": "Import with Skeleton BoneMap (Unreal-like names: hip, spine_01..03, upperleg/lowerleg ...). Use `idle`, `walk`, `run` for locomotion blend; drive speed by root velocity (walk about 1.4 m/s, run about 3.5 m/s).",
     },
@@ -80,7 +80,7 @@ META = {
         "licence": "CC BY 4.0: credit \"Rigged T-Pose Human Male w 50 Face Blendshapes\" by mikealger",
         "how": "As player_nathan. Keeps 50 face blend shapes (ARKit-style names) for talk lip-sync.",
         "place": "Alternative player or a village NPC.",
-        "verdict": "Good body and clothing for travel; face slightly CG next to Nathan's scan. 2K albedo only.",
+        "verdict": "Good body and clothing for travel; face slightly CG next to Luca's scan. 2K albedo only.",
         "godot": "Mixamo bone names (mixamorig_*): Godot's BoneMap auto-detects them.",
     },
     "ingrid_farmer": {

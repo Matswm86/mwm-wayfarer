@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c36be0ojkj0s3"
-path="res://.godot/imported/player_nathan_nathan_albedo_4k.png-38268d0a62cdd8cc95cb3adb8b647cf4.ctex"
+path.s3tc="res://.godot/imported/player_luca_albedo.png-650c6bfdc8e0c952404116c10294d9da.s3tc.ctex"
+path.etc2="res://.godot/imported/player_luca_albedo.png-650c6bfdc8e0c952404116c10294d9da.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2a8461499489dd94c3e26dc99d27116f"
@@ -13,12 +15,12 @@ generator_parameters={
 
 [deps]
 
-source_file="res://assets/models/characters/player_nathan_nathan_albedo_4k.png"
-dest_files=["res://.godot/imported/player_nathan_nathan_albedo_4k.png-38268d0a62cdd8cc95cb3adb8b647cf4.ctex"]
+source_file="res://assets/models/characters/player_luca_albedo.png"
+dest_files=["res://.godot/imported/player_luca_albedo.png-650c6bfdc8e0c952404116c10294d9da.s3tc.ctex", "res://.godot/imported/player_luca_albedo.png-650c6bfdc8e0c952404116c10294d9da.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -39,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=1
+process/size_limit=2048
+detect_3d/compress_to=0

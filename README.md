@@ -51,7 +51,7 @@ One small area is built to final quality first, to prove the bar can be hit on a
 - Props: boats on the shore and at the jetty, woodpiles, skigard fences, two hjell drying racks. Rocks: boulders on the shore and in the meadow, talus and rock faces at wall scale on the cliff foot.
 - Trees: birches round the village; on Ultra the near pines and spruces are real Scots pine and Norway spruce meshes.
 - The cascade: white water down the real gully, faster where it is steeper, clear water on the run-out, splash and spray where it lands, mist, a plunge pool, dark wet rock. From the village only its mouth at the fjord is in view: the spur of the east wall hides the cascade (checked by line of sight on the elevation data).
-- Characters: a scanned man as the player (idle, walk, run, sprint), a farmer as Ingrid.
+- Characters: Luca, a scanned man, as the player (idle, walk, run, sprint), a farmer as Ingrid.
 
 | Village street, Ultra | House from 5 m, Ultra | Shore, Ultra | Cliff foot, Ultra |
 |---|---|---|---|

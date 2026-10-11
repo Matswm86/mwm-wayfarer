@@ -222,7 +222,7 @@ Terrain from real elevation data wherever the licence allows (section 7.4). A he
 
 ### 7.3 Characters and props
 - Realistic proportions, work clothes in natural dyes (wool grey, oilskin yellow, linen, falu red); no bright synthetic colours on NPCs.
-- Faces must read at talk-camera distance (waist-up, 3.5-4 m with a 60 mm lens). MakeHuman (MPFB, CC0) was the stand-in and is retired by pass 2 (10-10 c): the player is a scanned human (Renderpeople Nathan, 4K albedo), Ingrid a realistic woman in denim work bibs, linen shirt and boots (section 7.6). Both share one animation set retargeted from Quaternius UAL (CC0): idle, walk, run, sprint, talk, interact, pickup, sit.
+- Faces must read at talk-camera distance (waist-up, 3.5-4 m with a 60 mm lens). MakeHuman (MPFB, CC0) was the stand-in and is retired by pass 2 (10-10 c): the player, Luca, is a scanned human (Renderpeople scan, albedo 2K in the game), Ingrid a realistic woman in denim work bibs, linen shirt and boots (section 7.6). Both share one animation set retargeted from Quaternius UAL (CC0): idle, walk, run, sprint, talk, interact, pickup, sit.
 - Hero budget (owner 10-10, frame time is the only limit): player up to about 60k triangles with 4K albedo; NPCs at talk distance up to 60k with 4K; crowd NPCs 15-25k with 2K.
 - **Ingrid** (`wf_mh.py` preset `ingrid`, 10-10 b): woman about 50, long mid-brown hair (a ponytail read as a man from the front), orange oilskin bibs over a grey-blue wool shirt, texture eyes (the procedural MPFB eyes glow at talk distance), calm talk pose `talk_calm` (hands low, no wide gesture). Talk camera: over the player's left shoulder, NPC face at x about 660 px, y about 400 px at 1080p, player blurred under the replies.
 - Item icons: render each item model in the game's own daylight on transparent, 256 px, three-quarter view, consistent light from top-left (`tools/art/icons.py`). The trade mock uses Poly Haven's own CC0 thumbnails as stand-ins.
@@ -259,7 +259,7 @@ Delivered to `assets/incoming/<asset>/` (GLB + PNG textures + `NOTES.md` each; c
 | Cliff bands | `rocks/cliff_*` (8) | Poly Haven scans decimated to 8k / 2.4k / 0.6k, baked to 4K, albedo graded to fjord gneiss (saturation 0.35, mean sRGB luminance 0.33) | True cliff faces for slopes above about 70 deg instead of stretched heightfield |
 | Talus, boulders | `rocks/cliff_jagged_a/b` (talus aprons), `boulder_a`, `boulders_a` (cobbles), `stones_a` (pebbles) | Same bake, sets split into single stones sharing one 2K atlas; the two moss-stone sets were rejected (black patches from the source scans) | Cliff feet and shore |
 | Cliff material | `cliff_materials/gneiss_banded`, `gneiss_dark`, `granite_lichen` | ambientCG Rock030 / Rock028 / Rock048 at 4K (albedo, normal GL, ORM, height) | Grey foliated rock with no wood-grain swirl; `gneiss_dark` and `granite_lichen` repeat visibly at 3 x 3, so break them with a macro noise or random rotation |
-| Player | `player_nathan` (alt `player_mike`) | Renderpeople scan (CC BY 4.0) + UAL clips by `tools/assets/retarget_char.py` | Scanned face holds at talk distance |
+| Player | `player_luca` (Luca; alt `player_mike`) | Renderpeople scan (CC BY 4.0) + UAL clips by `tools/assets/retarget_char.py` | Scanned face holds at talk distance |
 | Ingrid | `ingrid_farmer` | Sketchfab "Woman Farmer" (CC BY 4.0), welded, decimated 142k to 60k, albedo re-baked at 4K | Realistic woman in work clothes |
 | Meadow | `ground_cover/meadow_*` | 16 Poly Haven plant renders, 10 side tiles for crossed-card clumps, 6 oblique tiles for far cover | Fills the flat meadow beyond 35 m |
 | Village | `village_props/*` | 3 Sketchfab boats and 2 woodpiles (CC BY 4.0, 2K re-packed); skigard and hjell built by `tools/assets/build_skigard_hjell.py` | Village stops looking empty |
@@ -267,7 +267,7 @@ Delivered to `assets/incoming/<asset>/` (GLB + PNG textures + `NOTES.md` each; c
 **Four questions, answered for pass 2**
 - *Card trees near, impostors far:* 1) yes, trees fill every slope; 2) LOD0 13-18k triangles, two surfaces (bark opaque, leaves alpha-scissor), so keep LOD0 inside about 40 m, LOD1 (2-4k) to about 150 m, impostors beyond; alpha-tested overdraw is the real cost, so never alpha blend the leaves; 3) the cheaper trick is already the impostor; 4) fits.
 - *Rock meshes on cliff bands:* 1) yes, walls are half the fjord frame; 2) 8k LOD0 opaque, one material, instance-friendly; LOD2 0.6k from about 250 m; 3) beyond about 1.5 km the terrain shader alone is cheaper and enough; 4) fits.
-- *Scanned characters:* 1) the player is on screen 100 % of the time; 2) 21.5k triangles (Nathan) and 60k (Ingrid) skinned, one material each: fine for 1-3 skinned meshes on screen; 3) none cheaper that still reads as a person at talk distance; 4) fits.
+- *Scanned characters:* 1) the player is on screen 100 % of the time; 2) 21.5k triangles (Luca) and 60k (Ingrid) skinned, one material each: fine for 1-3 skinned meshes on screen; 3) none cheaper that still reads as a person at talk distance; 4) fits.
 - *Ground clumps beyond 35 m:* 1) yes, the meadow is the foreground of most frames; 2) 6 triangles per clump, alpha-scissor, so density costs overdraw: cap at about 1 clump per 2 m2 from 35 to 120 m; 3) far tiles as flat cards past 80 m are the cheaper trick; 4) fits.
 
 **Do / don't for these assets**

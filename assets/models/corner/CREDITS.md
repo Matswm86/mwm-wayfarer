@@ -23,7 +23,7 @@ Licence pages: CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ ; CC0 http
 | woodpile_logs | "Woodpile (game ready asset)" by apariciosilva3D | CC Attribution 4.0 |
 | woodpile_split | "Stacked Firewood" by Seth7Santos | CC Attribution 4.0 |
 | skigard_4m, hjell_6m | built by the designer with Poly Haven rough_wood and pine_bark textures | CC0 |
-| Player (assets/models/characters/player_nathan.glb) | "Nathan Animated 003 - Walking 3D Man" by Renderpeople; animations Quaternius Universal Animation Library | CC Attribution 4.0; animations CC0 |
+| Player (assets/models/characters/player_luca.glb) | "Nathan Animated 003 - Walking 3D Man" by Renderpeople; animations Quaternius Universal Animation Library | CC Attribution 4.0; animations CC0 |
 | Ingrid (assets/models/characters/ingrid_farmer.glb) | "Woman Farmer Walking Left Turn" by Natasha_Nabilah; animations Quaternius | CC Attribution 4.0; animations CC0 |
 
 ## Ground textures of the corner (tools/spike/pack_corner_textures.py)
