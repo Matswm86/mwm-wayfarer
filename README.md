@@ -4,7 +4,17 @@
 
 <p align="center"><img src="docs/spike/b_street_ultra.jpg" alt="Spike build, Ultra preset: a scanned carved Norwegian storehouse on a worn dirt path in Skarvik village, a turf-roofed log house behind it, the grey fjord wall above" width="720"></p>
 
-Working title. A non-violent open-world game for Android: explore, gather, build, trade and travel between regions that each look different. Engine: Godot 4.6 (Mobile renderer).
+Working title. A realistic open-world game for Android in which you live through human history: you start as one of the first apes to come down from the trees in East Africa, about 7 million years ago, and play forward era by era to today. Engine: Godot 4.6 (Mobile renderer). The APK below is a graphics and performance test of one chapter's valley, not the game yet.
+
+## The game (plan, `docs/GDD.md` v2)
+
+- **12 eras** as chapters: from the trees to the ground (East Africa), keepers of the fire (Homo erectus), first words by the sea (southern Africa), painted caves (Ice Age France), after the ice, first fields, bronze and iron, the Viking Age, the valley emptied by plague, the 1850s fjord farm village, power and roads, and today.
+- **Places you come back to.** A few real places return in several eras, changed by time. The Naeroyfjord valley in Norway carries 7 eras on one real terrain. What you leave or witness in one era turns up later: a hearth you build becomes a legend in a later century and an archaeology dig today.
+- **Fire** grows with you: carry embers from a wildfire, keep a fire alive through wind and rain, make it by friction and later by sparks, then cook, stay warm, signal and smelt.
+- **Survival without death:** cold, hunger and tiredness cause setbacks, never a game over. Animals are watched, followed and avoided, never fought.
+- **Lore:** every era has local legends tied to real places, told as rumors that can be true, partly true, outdated, exaggerated or false. Dragons and sea serpents live in that lore, with very rare sightings that are never confirmed; real sea life (whales, orcas, seals, basking sharks) is part of the world.
+- **Opening:** a pale blue dot in black space; the camera zooms in until it is Earth as it was millions of years ago, dives to an East African lake and forest edge, and stops on our character climbing down from a tree. Then the title card, and you play.
+- **First chapter to ship:** the 1850s fjord farm village (Era 10), because its valley, village, people and animals are already built (below).
 
 ## What the APK is right now: a performance spike
 
@@ -92,6 +102,17 @@ At start the game renders every preset once behind a "Loading" note (about 2-3 s
 Laptop counts from the screenshot bot (1920 x 1080, visual pass 2): Low max 71 draws / 179k primitives over the eight shots, Ultra max 153 / 798k. Bench flight maxima: Low 100 draws / 205k, Medium 159 / 353k, High 172 / 504k, Ultra 178 / 786k. Laptop GPU time (RTX 3060, 1080p) on the flight: Low 6.0 ms, Medium 14.9, High 17.4, Ultra 18.7; only the phone numbers count.
 
 Pass 3 (performance): High is capped at 60 fps (uncapped it jittered between 8, 17 and 25 ms frames on the 120 Hz screen); Ultra renders at 0.9 scale with a cheaper soft-shadow filter and fewer far clumps; heavy meshes (scanned houses, near trees, birches) cast their sun shadow with a light copy only; animals animate only near and in view; the near-tree gather runs on a worker thread. Laptop bench flight, GPU average / p95 before -> after (RTX 3060, rendering offscreen so the GPU keeps its clocks; laptop GPU is not a phone GPU): High 3.18 / 4.23 -> 2.98 / 4.62 ms, Ultra 5.20 / 7.78 -> 3.43 / 5.22 ms, with the beauty corner added. Bench lines now also show render CPU and physics ms.
+
+Phone results so far (one test phone, Samsung SM-S931B, Bench flight):
+
+| Build | Preset | Avg fps | p95 frame | Max frame | GPU avg | Max draws | Max primitives |
+|---|---|---|---|---|---|---|---|
+| First spike (10 Oct) | High | 117.3 | 9.5 ms | 29.5 ms | not measured | 163 | 507k |
+| Visual pass 2 (10 Oct) | High | 70.4 | 19.4 ms | 33 ms | 13.4 ms | 174 | 521k |
+| Visual pass 2 (10 Oct) | Ultra | 47.5 | 30 ms | 51 ms | 19.7 ms | 178 | 814k |
+| Pass 3 (beauty corner) | all | not yet measured on the phone | | | | | |
+
+The APK is about 755 MB since pass 3 (full-resolution scans and textures; size is not a constraint for this build).
 
 To report a phone result: run Bench all and take a screenshot of the result box (the GPU column is the one that matters on Ultra), then GPU parts on Ultra.
 
