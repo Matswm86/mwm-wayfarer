@@ -125,7 +125,7 @@ Phone results so far (one test phone, Samsung SM-S931B, Bench flight):
 
 Spawn-view finding (pass 3): the bench flight held about 60 fps on every preset, but standing at the spawn inside the beauty corner on Ultra the GPU took 30.5 ms, about twice the 16.7 ms a 60 fps frame allows. The flight spends most of its time high over the valley and never looks at the corner the way the player does, so it missed the cost. The new Bench corner button measures that view; the corner pass below cut it.
 
-The APK is about 755 MB since pass 3 (full-resolution scans and textures; size is not a constraint for this build).
+The APK is about 616 MB since the corner pass (755 MB in pass 3; the model textures are now stored compressed; size is not a constraint for this build).
 
 To report a phone result: run Bench all and Bench corner and take a screenshot of each result box (the GPU column is the one that matters on Ultra), then GPU parts on Ultra standing at the spawn.
 
