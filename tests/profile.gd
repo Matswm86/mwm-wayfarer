@@ -46,6 +46,8 @@ func _ready() -> void:
 		main.apply_preset(p)
 		Engine.max_fps = 0
 		await _fly(str(SpikeConfig.PRESETS[p]["name"]), secs)
+	if OS.get_environment("PROFILE_PRIMS") == "1":
+		await _prims()
 	if OS.get_environment("PROFILE_CPU") == "1":
 		await _cpu_ablate()
 	if OS.get_environment("PROFILE_ABLATE") == "1":
@@ -66,6 +68,8 @@ func _sample() -> Dictionary:
 			+ RenderingServer.get_frame_setup_time_cpu()
 		),
 		"gpu": RenderingServer.viewport_get_measured_render_time_gpu(vp_rid),
+		"draws": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+		"kprims": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME) / 1000.0,
 	}
 
 
@@ -85,7 +89,7 @@ func _fly(label: String, secs: float) -> void:
 
 func _summary(rows: Array[Dictionary]) -> String:
 	var out: PackedStringArray = []
-	for k: String in ["frame", "process", "physics", "render_cpu", "gpu"]:
+	for k: String in ["frame", "process", "physics", "render_cpu", "gpu", "draws", "kprims"]:
 		var v := PackedFloat32Array()
 		for r in rows:
 			v.append(float(r[k]))
@@ -191,3 +195,43 @@ func _cpu_ablate() -> void:
 		)
 		for n in off:
 			n.process_mode = Node.PROCESS_MODE_INHERIT
+
+
+## Primitives and draws at the spawn view (Ultra) with one part hidden at a time.
+func _prims() -> void:
+	main.apply_preset(3)
+	main.player.camera.current = true
+	main.grass.target = main.player
+	main.grass_far.target = main.player
+	var parts: Dictionary = {
+		"base": [],
+		"near trees": [main.near_trees],
+		"forest": [main.forest],
+		"grass": [main.grass],
+		"far grass": [main.grass_far],
+		"corner": [main.corner],
+		"corner houses": [main.corner.get_node("Houses")],
+		"corner rocks": [main.corner.get_node("Rocks")],
+		"corner props": [main.corner.get_node("Props")],
+		"corner birches": [main.corner.get_node("Trees")],
+		"wildlife": [main.wildlife],
+		"terrain": [main.terrain],
+	}
+	for k: String in parts:
+		for n: Node3D in parts[k]:
+			n.visible = false
+		for i in 40:
+			await get_tree().process_frame
+		print(
+			(
+				"PRIMS %-16s %5dk prims  %4d draws  GPU %.2f ms"
+				% [
+					k,
+					int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME) / 1000.0),
+					int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)),
+					RenderingServer.viewport_get_measured_render_time_gpu(vp_rid)
+				]
+			)
+		)
+		for n: Node3D in parts[k]:
+			n.visible = true

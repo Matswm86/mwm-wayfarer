@@ -8,6 +8,8 @@ extends Node
 ## CAPTURE_BENCH_SECONDS sets the bench length (default 0 = skip).
 ## CAPTURE_HIDE_UI=1 hides the readout and buttons (clean frames for look comparisons).
 ## CAPTURE_SUFFIX is appended to every file name (e.g. "_before").
+## CAPTURE_SET=beauty (pass 3): only spawn and the six beauty-corner cameras (village street, house
+## close-up at 5 m, shoreline, cliff foot, waterfall from the village, waterfall close).
 
 const CLIFF_TARGET := Vector3(420.0, 0.0, -500.0)
 const CLIFF_CAMERA := Vector3(320.0, 0.0, -540.0)
@@ -29,6 +31,8 @@ func _ready() -> void:
 		await main.warmed_up
 	if OS.get_environment("CAPTURE_HIDE_UI") == "1":
 		PerfOverlay.set_ui_visible(false)
+	if OS.get_environment("CAPTURE_NO_LIGHTMAP") == "1" and main.corner:
+		(main.corner.get_node("LightmapGI") as LightmapGI).light_data = null
 	if OS.get_environment("CAPTURE_NO_WATER") == "1":
 		main.water.visible = false
 	await _frames(30)
@@ -42,6 +46,7 @@ func _ready() -> void:
 		presets.clear()
 		for s: String in env_p.split(","):
 			presets.append(int(s))
+	var beauty: bool = OS.get_environment("CAPTURE_SET") == "beauty"
 	for preset in presets:
 		main.apply_preset(preset)
 		var tag: String = str(SpikeConfig.PRESETS[preset]["name"]).to_lower()
@@ -49,6 +54,10 @@ func _ready() -> void:
 		_ground_cover_follows(main.player)
 		await _frames(45)
 		await _shot("spawn_%s" % tag)
+		if beauty:
+			_ground_cover_follows(main.bench.camera)
+			await _beauty(tag)
+			continue
 		_ground_cover_follows(main.bench.camera)
 		await _village_street(tag)
 		await _animals(tag)
@@ -127,6 +136,52 @@ func _village_street(tag: String) -> void:
 	main.bench.view(a, b)
 	await _frames(45)
 	await _shot("village_street_%s" % tag)
+
+
+## The six fixed beauty-corner cameras (pass 3).
+func _beauty(tag: String) -> void:
+	var only: String = OS.get_environment("CAPTURE_ONLY")
+	if only == "house":
+		var hh: Node3D = main.corner.get_node("Houses").get_child(0)
+		var hhp := hh.global_position
+		var ff := hh.global_transform.basis.x.normalized()
+		await _view(hhp + ff * 9.8, 1.7, hhp, 2.6, "b_house_%s" % tag)
+		await _view(hhp - ff * 9.8, 1.7, hhp, 2.6, "b_house_west_%s" % tag)
+		return
+	# village street at eye height, down the path between the scanned houses
+	await _view(
+		Vector3(229.0, 0.0, -150.0), 1.7, Vector3(296.0, 0.0, -232.0), 3.0, "b_street_%s" % tag
+	)
+	# a scanned house from 5 m (the first cabin on the slots), eye height
+	var house: Node3D = main.corner.get_node("Houses").get_child(0)
+	var hp := house.global_position
+	var front := house.global_transform.basis.x.normalized()
+	await _view(hp + front * 9.8, 1.7, hp, 2.6, "b_house_%s" % tag)
+	# shoreline: low on the pebbles, along the water to the jetty and boats
+	await _view(
+		Vector3(196.0, 0.0, -112.0), 1.5, Vector3(216.0, 0.0, -170.0), 0.5, "b_shore_%s" % tag
+	)
+	# cliff foot east of the houses: talus, rock faces, the wall above
+	await _view(
+		Vector3(318.0, 0.0, -245.0), 1.8, Vector3(405.0, 0.0, -250.0), 30.0, "b_cliff_%s" % tag
+	)
+	# the cascade from the village street
+	var f: Vector3 = main.waterfall.foot
+	var mo: Vector3 = main.waterfall.mouth
+	main.bench.view(
+		Vector3(290.0, main.terrain.height_at(290.0, -236.0) + 1.7, -236.0),
+		mo + Vector3(30.0, 25.0, 0.0)
+	)
+	await _frames(45)
+	await _shot("b_falls_far_%s" % tag)
+	# the cascade close: a clear spot (no trees in the line) 43 m from the main foot, looking up
+	await _view(
+		f + Vector3(-36.0, 0.0, -24.0),
+		3.0,
+		f + Vector3(40.0, 0.0, 0.0),
+		30.0,
+		"b_falls_near_%s" % tag
+	)
 
 
 ## Grass and ferns grow round whatever the shot looks from (the player in play).
