@@ -210,7 +210,7 @@ A rumor in one era can be history the player saw in another. Each lore entry may
 | Carries over | How | Shown as |
 |---|---|---|
 | **Knowledge** | Each era's key discovery becomes a permanent skill baseline: fire keeping (2), language (3), sewing (4), boats (5), farming (6), metal and runes (7)... Actions learned earlier start at a higher skill in later eras | Journal "Hearth Book": one page per discovery, illustrated |
-| **The family line** | The player is always "of the line". At era end the current character hands the keepsake to a younger one (section 4.3) | Family tree on the Long Map; one portrait per era |
+| **The family line: Luca's line** (owner 2026-10-11) | The player is always "of Luca's line". Luca names the line after LUCA, the last universal common ancestor of all life; in eras with language the current character is called Luca, a name that works in every era (before language, the line has no spoken name, only the keepsake). At era end the current character hands the keepsake to a younger one (section 4.3) | Family tree on the Long Map; one portrait per era |
 | **The keepsake stone** | One object through all eras (section 4.2) | Always in the bag; changes look per era |
 | **The map** | The Long Map: anchors x eras grid; each cell is a playable save state once finished | Map screen with an era slider per anchor |
 | **Traces** | Section 3 | Echoes in the journal |
