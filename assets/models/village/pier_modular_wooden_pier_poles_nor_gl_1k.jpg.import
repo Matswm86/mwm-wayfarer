@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b6n6ydvhoxa6j"
-path="res://.godot/imported/pier_modular_wooden_pier_poles_nor_gl_1k.jpg-8663a2a9d0aa1cad93160be8ab7ba5fe.ctex"
+path.s3tc="res://.godot/imported/pier_modular_wooden_pier_poles_nor_gl_1k.jpg-8663a2a9d0aa1cad93160be8ab7ba5fe.s3tc.ctex"
+path.etc2="res://.godot/imported/pier_modular_wooden_pier_poles_nor_gl_1k.jpg-8663a2a9d0aa1cad93160be8ab7ba5fe.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2716c162f7671dcfa1570055932a2a67"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/village/pier_modular_wooden_pier_poles_nor_gl_1k.jpg"
-dest_files=["res://.godot/imported/pier_modular_wooden_pier_poles_nor_gl_1k.jpg-8663a2a9d0aa1cad93160be8ab7ba5fe.ctex"]
+dest_files=["res://.godot/imported/pier_modular_wooden_pier_poles_nor_gl_1k.jpg-8663a2a9d0aa1cad93160be8ab7ba5fe.s3tc.ctex", "res://.godot/imported/pier_modular_wooden_pier_poles_nor_gl_1k.jpg-8663a2a9d0aa1cad93160be8ab7ba5fe.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

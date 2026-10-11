@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cy5tmijrl3p02"
-path="res://.godot/imported/elk_Image_3.png-ccb3911973a1bf7c2873c72b5f142132.ctex"
+path.s3tc="res://.godot/imported/elk_Image_3.png-ccb3911973a1bf7c2873c72b5f142132.s3tc.ctex"
+path.etc2="res://.godot/imported/elk_Image_3.png-ccb3911973a1bf7c2873c72b5f142132.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "f5dcf6228691650a7fc1d5937279fe16"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/animals/elk_Image_3.png"
-dest_files=["res://.godot/imported/elk_Image_3.png-ccb3911973a1bf7c2873c72b5f142132.ctex"]
+dest_files=["res://.godot/imported/elk_Image_3.png-ccb3911973a1bf7c2873c72b5f142132.s3tc.ctex", "res://.godot/imported/elk_Image_3.png-ccb3911973a1bf7c2873c72b5f142132.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

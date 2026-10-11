@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bjuvbanvpsux"
-path="res://.godot/imported/explorer_short02_diffuse.jpg-1b4a89c3a612481e154219863d8dbd2e.ctex"
+path.s3tc="res://.godot/imported/explorer_short02_diffuse.jpg-1b4a89c3a612481e154219863d8dbd2e.s3tc.ctex"
+path.etc2="res://.godot/imported/explorer_short02_diffuse.jpg-1b4a89c3a612481e154219863d8dbd2e.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "7a79c0d62b5d955a2da9a27c5547ab52"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/explorer_short02_diffuse.jpg"
-dest_files=["res://.godot/imported/explorer_short02_diffuse.jpg-1b4a89c3a612481e154219863d8dbd2e.ctex"]
+dest_files=["res://.godot/imported/explorer_short02_diffuse.jpg-1b4a89c3a612481e154219863d8dbd2e.s3tc.ctex", "res://.godot/imported/explorer_short02_diffuse.jpg-1b4a89c3a612481e154219863d8dbd2e.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

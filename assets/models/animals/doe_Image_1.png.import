@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbslyw38wtc70"
-path="res://.godot/imported/doe_Image_1.png-9afcd16d0a09cb434dde5cb4002ed4f5.ctex"
+path.s3tc="res://.godot/imported/doe_Image_1.png-9afcd16d0a09cb434dde5cb4002ed4f5.s3tc.ctex"
+path.etc2="res://.godot/imported/doe_Image_1.png-9afcd16d0a09cb434dde5cb4002ed4f5.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "8965a0c6379c9e1a97088825e455f97c"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/animals/doe_Image_1.png"
-dest_files=["res://.godot/imported/doe_Image_1.png-9afcd16d0a09cb434dde5cb4002ed4f5.ctex"]
+dest_files=["res://.godot/imported/doe_Image_1.png-9afcd16d0a09cb434dde5cb4002ed4f5.s3tc.ctex", "res://.godot/imported/doe_Image_1.png-9afcd16d0a09cb434dde5cb4002ed4f5.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

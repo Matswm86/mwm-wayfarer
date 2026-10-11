@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cskfkbt3ulvcn"
-path="res://.godot/imported/deer_Image_0.png-fbe233b85a6878e4abcf64640ed4cc41.ctex"
+path.s3tc="res://.godot/imported/deer_Image_0.png-fbe233b85a6878e4abcf64640ed4cc41.s3tc.ctex"
+path.etc2="res://.godot/imported/deer_Image_0.png-fbe233b85a6878e4abcf64640ed4cc41.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "53994aa44d615d388d8e33c6a5e7f843"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/animals/deer_Image_0.png"
-dest_files=["res://.godot/imported/deer_Image_0.png-fbe233b85a6878e4abcf64640ed4cc41.ctex"]
+dest_files=["res://.godot/imported/deer_Image_0.png-fbe233b85a6878e4abcf64640ed4cc41.s3tc.ctex", "res://.godot/imported/deer_Image_0.png-fbe233b85a6878e4abcf64640ed4cc41.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

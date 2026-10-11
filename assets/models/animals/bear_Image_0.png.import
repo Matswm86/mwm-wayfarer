@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhlw6x31ucijk"
-path="res://.godot/imported/bear_Image_0.png-5442b9de200e6c40fc40d0a72e972e73.ctex"
+path.s3tc="res://.godot/imported/bear_Image_0.png-5442b9de200e6c40fc40d0a72e972e73.s3tc.ctex"
+path.etc2="res://.godot/imported/bear_Image_0.png-5442b9de200e6c40fc40d0a72e972e73.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "94cb5c20e746c23ef642fce807035048"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/animals/bear_Image_0.png"
-dest_files=["res://.godot/imported/bear_Image_0.png-5442b9de200e6c40fc40d0a72e972e73.ctex"]
+dest_files=["res://.godot/imported/bear_Image_0.png-5442b9de200e6c40fc40d0a72e972e73.s3tc.ctex", "res://.godot/imported/bear_Image_0.png-5442b9de200e6c40fc40d0a72e972e73.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

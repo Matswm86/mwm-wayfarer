@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://beauwisfls37a"
-path="res://.godot/imported/ingrid_brown_eye.jpg-3b31ae9b8cc65882a3b68a5c9ea5a59f.ctex"
+path.s3tc="res://.godot/imported/ingrid_brown_eye.jpg-3b31ae9b8cc65882a3b68a5c9ea5a59f.s3tc.ctex"
+path.etc2="res://.godot/imported/ingrid_brown_eye.jpg-3b31ae9b8cc65882a3b68a5c9ea5a59f.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "070ac232b42b37c42fdd0e0a62dc5565"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ingrid_brown_eye.jpg"
-dest_files=["res://.godot/imported/ingrid_brown_eye.jpg-3b31ae9b8cc65882a3b68a5c9ea5a59f.ctex"]
+dest_files=["res://.godot/imported/ingrid_brown_eye.jpg-3b31ae9b8cc65882a3b68a5c9ea5a59f.s3tc.ctex", "res://.godot/imported/ingrid_brown_eye.jpg-3b31ae9b8cc65882a3b68a5c9ea5a59f.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

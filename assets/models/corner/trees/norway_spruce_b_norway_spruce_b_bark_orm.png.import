@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://t2wy6mqh5tad"
-path="res://.godot/imported/norway_spruce_b_norway_spruce_b_bark_orm.png-0376f88093d624e9cf5fdbe4f2d335be.ctex"
+path.s3tc="res://.godot/imported/norway_spruce_b_norway_spruce_b_bark_orm.png-0376f88093d624e9cf5fdbe4f2d335be.s3tc.ctex"
+path.etc2="res://.godot/imported/norway_spruce_b_norway_spruce_b_bark_orm.png-0376f88093d624e9cf5fdbe4f2d335be.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "a5b804ca1cc349d110c43dd62f44d574"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/corner/trees/norway_spruce_b_norway_spruce_b_bark_orm.png"
-dest_files=["res://.godot/imported/norway_spruce_b_norway_spruce_b_bark_orm.png-0376f88093d624e9cf5fdbe4f2d335be.ctex"]
+dest_files=["res://.godot/imported/norway_spruce_b_norway_spruce_b_bark_orm.png-0376f88093d624e9cf5fdbe4f2d335be.s3tc.ctex", "res://.godot/imported/norway_spruce_b_norway_spruce_b_bark_orm.png-0376f88093d624e9cf5fdbe4f2d335be.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=2048
-detect_3d/compress_to=1
+detect_3d/compress_to=0
