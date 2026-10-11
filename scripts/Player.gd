@@ -24,8 +24,10 @@ func build() -> void:
 	shape.shape = cap
 	shape.position.y = 0.875
 	add_child(shape)
-	# scanned man (pass 3; SpikeConfig.PLAYER_MODEL), faces -Z like the body
+	# scanned man (pass 3; SpikeConfig.PLAYER_MODEL). glTF rigs face +Z (toes at +z in the rest
+	# pose), the body walks toward -Z: turn the model half round or he walks backwards.
 	model = (load(SpikeConfig.PLAYER_MODEL) as PackedScene).instantiate() as Node3D
+	model.rotation.y = PI
 	add_child(model)
 	anim = Humans.find_player(model)
 	Humans.loop_all(anim)

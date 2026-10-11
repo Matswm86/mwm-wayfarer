@@ -10,6 +10,9 @@ extends Node
 ## CAPTURE_SUFFIX is appended to every file name (e.g. "_before").
 ## CAPTURE_SET=beauty (pass 3): only spawn and the six beauty-corner cameras (village street, house
 ## close-up at 5 m, shoreline, cliff foot, waterfall from the village, waterfall close).
+## CAPTURE_SET=walk: walk-direction proof only (Ultra): the player walks away from the camera
+## (back to camera), then left and right (side to camera), then a fixed side camera films a walk
+## in 0.1 s steps (a planted foot must stay put on the ground: no moonwalk), then Ingrid's face.
 
 const CLIFF_TARGET := Vector3(420.0, 0.0, -500.0)
 const CLIFF_CAMERA := Vector3(320.0, 0.0, -540.0)
@@ -40,6 +43,11 @@ func _ready() -> void:
 	var high := _v(path[7])
 	var spawn_look := _v(path[1]) + Vector3(0.0, -60.0, -300.0)
 
+	if OS.get_environment("CAPTURE_SET") == "walk":
+		await _walk_set()
+		print("CAPTURE DONE")
+		get_tree().quit()
+		return
 	var presets: Array[int] = [0, SpikeConfig.PRESETS.size() - 1]
 	var env_p: String = OS.get_environment("CAPTURE_PRESETS")
 	if env_p != "":
@@ -105,6 +113,96 @@ func _ready() -> void:
 		await _shot("bench_result")
 	print("CAPTURE DONE")
 	get_tree().quit()
+
+
+## Walk-direction proof (see the header). Stick y -1 = away from the camera, x -1 / +1 = left /
+## right.
+func _walk_set() -> void:
+	main.apply_preset(SpikeConfig.PRESETS.size() - 1)
+	var pl: Player = main.player
+	pl.camera.current = true
+	_ground_cover_follows(pl)
+	await _frames(30)
+	await _shot("walk_0_idle")
+	var legs: Array = [["away", Vector2(0.0, -1.0)], ["left", Vector2(-1.0, 0.0)],
+		["right", Vector2(1.0, 0.0)]]
+	for leg: Array in legs:
+		var a: Vector3 = pl.global_position
+		main.controls.move = leg[1] * 0.6
+		await get_tree().create_timer(1.0).timeout
+		await _shot("walk_%s_1s" % leg[0])
+		await get_tree().create_timer(1.0).timeout
+		await _shot("walk_%s_2s" % leg[0])
+		var d: Vector3 = pl.global_position - a
+		var face: Vector3 = pl.model.global_transform.basis.z
+		print("WALKDIR %s moved (%.2f, %.2f)  model +Z (%.2f, %.2f)  cos %.2f" % [
+			leg[0], d.x, d.z, face.x, face.z,
+			Vector2(d.x, d.z).normalized().dot(Vector2(face.x, face.z).normalized())])
+		main.controls.move = Vector2.ZERO
+		await _frames(20)
+	# fixed side camera, the player walks across it (camera yaw 0: right = +X)
+	var p0: Vector3 = pl.global_position
+	main.bench.view(p0 + Vector3(2.0, 1.0, 5.0), p0 + Vector3(2.0, 0.9, 0.0))
+	main.controls.move = Vector2(0.6, 0.0)
+	await get_tree().create_timer(0.4).timeout
+	for i in 6:
+		await _shot("walk_side_%d" % i)
+		await get_tree().create_timer(0.1).timeout
+	await _foot_check(pl)
+	main.controls.move = Vector2.ZERO
+	var ing: Node3D = main.get_node("Ingrid")
+	var ip := ing.global_position
+	var front := ing.global_transform.basis.z
+	main.bench.view(ip + front * 3.0 + Vector3(0.0, 1.6, 0.0), ip + Vector3(0.0, 1.3, 0.0))
+	await _frames(30)
+	await _shot("walk_ingrid_front")
+	# every species once, camera on its +Z side (the side the movement code treats as the front)
+	var seen: Dictionary = {}
+	for a: Variant in main.wildlife.animals:
+		var sp: String = str(a.spec["species"])
+		if seen.has(sp):
+			continue
+		seen[sp] = true
+		var n: Node3D = a.node
+		var size: float = float(a.spec["size"])
+		var fz := n.global_transform.basis.z.normalized()
+		var c := n.global_position + Vector3(0.0, size * 0.35, 0.0)
+		main.bench.view(c + fz * size * 2.2 + Vector3(0.0, size * 0.25, 0.0), c)
+		await _frames(4)
+		await _shot("walk_front_%s" % sp)
+
+
+## Moonwalk check: over 90 physics frames, the world speed along the walk of whichever foot is
+## lower (the planted one) vs the body speed. Feet driven forward: planted foot well under the body
+## speed; a clip running backwards drives the planted foot ahead faster than the body.
+func _foot_check(pl: Player) -> void:
+	var sk: Skeleton3D = pl.model.find_children("*", "Skeleton3D", true, false)[0]
+	var feet: Array[int] = []
+	for i in sk.get_bone_count():
+		var n := sk.get_bone_name(i)
+		if n.ends_with("ball_l_077") or n.ends_with("ball_r_084"):
+			feet.append(i)
+	var planted := 0.0
+	var body := 0.0
+	var prev: Array[float] = [0.0, 0.0]
+	var prev_body := pl.global_position.x
+	for i in feet.size():
+		prev[i] = (sk.global_transform * sk.get_bone_global_pose(feet[i])).origin.x
+	for f in 90:
+		await get_tree().physics_frame
+		var xs: Array[float] = []
+		var ys: Array[float] = []
+		for i in feet.size():
+			var o := (sk.global_transform * sk.get_bone_global_pose(feet[i])).origin
+			xs.append(o.x)
+			ys.append(o.y)
+		var low := 0 if ys[0] < ys[1] else 1
+		planted += xs[low] - prev[low]
+		body += pl.global_position.x - prev_body
+		prev = xs
+		prev_body = pl.global_position.x
+	print("FEET planted foot moved %.2f m while the body moved %.2f m (ratio %.2f)" % [
+		planted, body, planted / maxf(body, 0.001)])
 
 
 ## Camera `up_cam` m above the ground at `cam`, looking at a point `up_tgt` m above `tgt`.

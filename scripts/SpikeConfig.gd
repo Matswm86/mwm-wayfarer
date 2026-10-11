@@ -54,7 +54,8 @@ const GRASS_FAR_SCALE := 1.7
 const SKIN_MATERIALS: Array[String] = ["body", "skin", "head", "face"]
 const SKIN_BACKLIGHT := Color(0.32, 0.1, 0.06)
 ## Player model (pass 3): scanned man (designer's player_nathan, Renderpeople CC BY 4.0, Quaternius
-## clips CC0); faces -Z. Ingrid: designer's ingrid_farmer (CC BY 4.0).
+## clips CC0); faces +Z like every glTF rig (Player turns it to the body's -Z).
+## Ingrid: designer's ingrid_farmer (CC BY 4.0).
 const PLAYER_MODEL := "res://assets/models/characters/player_nathan.glb"
 const INGRID_MODEL := "res://assets/models/characters/ingrid_farmer.glb"
 ## Locomotion blend for the scanned rigs: [clip, ground speed m/s, playback rate]. The clips are
