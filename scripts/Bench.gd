@@ -3,12 +3,21 @@ extends Node3D
 
 ## Fixed camera flight over the village and the fjord (points from terrain.json, made from
 ## the scene_fjord.py shore line). run() flies it once and returns the frame statistics.
+## run_corner() measures what the player sees instead: the player stands at the spawn in the
+## start view and looks round (SpikeConfig.CORNER_LOOK s), then runs the worn path through the
+## beauty corner (SpikeConfig.CORNER_WALK) with his own camera, and is put back at the spawn.
 
 signal finished(stats: Dictionary)
 
 var camera: Camera3D
 var running: bool = false
 var curve: Curve3D
+## Set by Main for run_corner().
+var player: Player
+var controls: TouchControls
+var spawn: Vector3
+var spawn_yaw: float = 0.0
+var _wp: int = 0
 
 
 func build(points: Array) -> void:
@@ -48,8 +57,58 @@ func view(pos: Vector3, target: Vector3) -> void:
 
 
 func run(seconds: float) -> Dictionary:
-	running = true
 	camera.current = true
+	place(0.0)
+	return await _measure(seconds, _path_step.bind(seconds))
+
+
+func _path_step(t: float, _dt: float, seconds: float) -> void:
+	place(clampf(t / seconds, 0.0, 1.0))
+
+
+## The corner pass (see the header). Same statistics as run().
+func run_corner(seconds: float) -> Dictionary:
+	_reset_player()
+	_wp = 0
+	player.camera.current = true
+	var stats: Dictionary = await _measure(seconds, _corner_step)
+	controls.move = Vector2.ZERO
+	_reset_player()
+	return stats
+
+
+func _reset_player() -> void:
+	player.global_position = spawn
+	player.velocity = Vector3.ZERO
+	player.yaw = spawn_yaw
+	player.pitch = -0.12
+	controls.move = Vector2.ZERO
+
+
+## Look round at the spawn, then steer the stick toward the next path point (camera behind).
+func _corner_step(t: float, dt: float) -> void:
+	var look: float = SpikeConfig.CORNER_LOOK
+	if t < look:
+		player.yaw = spawn_yaw + sin(maxf(t, 0.0) / look * TAU) * 0.6
+		controls.move = Vector2.ZERO
+		return
+	var pos := Vector2(player.global_position.x, player.global_position.z)
+	var walk: Array[Vector2] = SpikeConfig.CORNER_WALK
+	while _wp < walk.size() and pos.distance_to(walk[_wp]) < 3.0:
+		_wp += 1
+	if _wp >= walk.size():
+		controls.move = Vector2.ZERO
+		return
+	var d := (walk[_wp] - pos).normalized()
+	player.yaw = lerp_angle(player.yaw, atan2(-d.x, -d.y), minf(1.0, dt * 3.0))
+	var fwd := Vector2(-sin(player.yaw), -cos(player.yaw))
+	var right := Vector2(cos(player.yaw), -sin(player.yaw))
+	controls.move = Vector2(d.dot(right), -d.dot(fwd)).normalized()
+
+
+## Runs `step(t, dt)` every frame for `seconds` after the warm-up and collects frame statistics.
+func _measure(seconds: float, step: Callable) -> Dictionary:
+	running = true
 	var frames := PackedFloat32Array()
 	var gpu := PackedFloat32Array()
 	var cpu_sum: float = 0.0
@@ -59,12 +118,11 @@ func run(seconds: float) -> Dictionary:
 	var prims_sum: float = 0.0
 	var prims_max: float = 0.0
 	var t: float = -SpikeConfig.BENCH_WARMUP
-	place(0.0)
 	while t < seconds:
 		await get_tree().process_frame
 		var dt: float = get_process_delta_time()
 		t += dt
-		place(clampf(t / seconds, 0.0, 1.0))
+		step.call(t, dt)
 		if t <= 0.0:
 			continue
 		frames.append(dt * 1000.0)

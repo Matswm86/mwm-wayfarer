@@ -6,6 +6,10 @@ extends Node
 ##    physics time, render-thread CPU (culling + command recording), GPU time.
 ## 2. PROFILE_ABLATE=1: at fixed views on the path, toggles one feature at a time and prints the
 ##    GPU and CPU change it causes (laptop GPU != phone GPU; only the ratios guide the cuts).
+## 3. PROFILE_SPAWN=1 (2026-10-11): per preset, the player's start view at the spawn held for 300
+##    frames (GPU avg/p95, draws, prims), then the "Bench corner" pass (Bench.run_corner,
+##    PROFILE_CORNER_SECONDS, default SpikeConfig.CORNER_BENCH_SECONDS; 0 = skip).
+##    PROFILE_ABLATE_HERE=1: the GPU parts cases at the spawn view (the phone button's logic).
 
 var main: Node3D
 var vp_rid: RID
@@ -40,6 +44,18 @@ func _ready() -> void:
 	var secs: float = float(OS.get_environment("PROFILE_SECONDS"))
 	if secs <= 0.0:
 		secs = 30.0
+	if OS.get_environment("PROFILE_SPAWN") == "1":
+		for p in presets:
+			await _spawn(p)
+		if OS.get_environment("PROFILE_PRIMS") == "1":
+			for p in presets:
+				await _prims(p)
+		if OS.get_environment("PROFILE_ABLATE_HERE") == "1":
+			for p in presets:
+				await _ablate(p, true)
+		print("PROFILE DONE")
+		get_tree().quit()
+		return
 	main.grass.target = main.bench.camera
 	main.grass_far.target = main.bench.camera
 	for p in presets:
@@ -47,7 +63,8 @@ func _ready() -> void:
 		Engine.max_fps = 0
 		await _fly(str(SpikeConfig.PRESETS[p]["name"]), secs)
 	if OS.get_environment("PROFILE_PRIMS") == "1":
-		await _prims()
+		for p in presets:
+			await _prims(p)
 	if OS.get_environment("PROFILE_CPU") == "1":
 		await _cpu_ablate()
 	if OS.get_environment("PROFILE_ABLATE") == "1":
@@ -102,12 +119,52 @@ func _summary(rows: Array[Dictionary]) -> String:
 	return "  ".join(out)
 
 
+## Spawn view held for 300 frames, then the corner pass, for preset p (player camera, grass round
+## the player).
+func _spawn(p: int) -> void:
+	var label: String = str(SpikeConfig.PRESETS[p]["name"])
+	main.apply_preset(p)
+	Engine.max_fps = 0
+	main.grass.target = main.player
+	main.grass_far.target = main.player
+	main.bench.call("_reset_player")
+	main.player.camera.current = true
+	for i in 60:
+		await get_tree().process_frame
+	var rows: Array[Dictionary] = []
+	for i in 300:
+		await get_tree().process_frame
+		rows.append(_sample())
+	var vram := Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
+	print("SPAWN %-6s %s  vram %.0f MB" % [label, _summary(rows), vram])
+	var secs: float = SpikeConfig.CORNER_BENCH_SECONDS
+	var env_s: String = OS.get_environment("PROFILE_CORNER_SECONDS")
+	if env_s != "":
+		secs = float(env_s)
+	if secs <= 0.0:
+		return
+	# the corner pass with this script's sampler (the overlay measures the root viewport only)
+	main.bench.call("_reset_player")
+	main.bench.set("_wp", 0)
+	rows.clear()
+	var t: float = -1.0
+	while t < secs:
+		await get_tree().process_frame
+		var dt: float = get_process_delta_time()
+		t += dt
+		main.bench.call("_corner_step", t, dt)
+		if t > 0.0:
+			rows.append(_sample())
+	main.bench.call("_reset_player")
+	print("CORNER %-6s %s" % [label, _summary(rows)])
+
+
 ## Average GPU and render CPU over n frames from the current camera.
-func _ablate(p: int) -> void:
+func _ablate(p: int, at_player: bool = false) -> void:
 	main.apply_preset(p)
 	var parts := GpuParts.new()
 	add_child(parts)
-	var lines: Array[String] = await parts.run(main, vp)
+	var lines: Array[String] = await parts.run(main, vp, at_player)
 	for line in lines:
 		print("ABLATE %-6s %s" % [str(SpikeConfig.PRESETS[p]["name"]), line])
 	parts.queue_free()
@@ -197,10 +254,14 @@ func _cpu_ablate() -> void:
 			n.process_mode = Node.PROCESS_MODE_INHERIT
 
 
-## Primitives and draws at the spawn view (Ultra) with one part hidden at a time.
-func _prims() -> void:
-	main.apply_preset(3)
+## Primitives and draws at the spawn view (preset p) with one part hidden at a time.
+func _prims(p: int) -> void:
+	main.apply_preset(p)
+	Engine.max_fps = 0
+	main.bench.call("_reset_player")
 	main.player.camera.current = true
+	for i in 120:
+		await get_tree().process_frame
 	main.grass.target = main.player
 	main.grass_far.target = main.player
 	var parts: Dictionary = {
@@ -216,6 +277,11 @@ func _prims() -> void:
 		"corner birches": [main.corner.get_node("Trees")],
 		"wildlife": [main.wildlife],
 		"terrain": [main.terrain],
+		"corner ground": [main.corner.get_node("Ground")],
+		"village": [main.village],
+		"waterfall": [main.waterfall],
+		"player": [main.player.model],
+		"ingrid": [main.get_node("Ingrid")],
 	}
 	for k: String in parts:
 		for n: Node3D in parts[k]:
@@ -224,8 +290,9 @@ func _prims() -> void:
 			await get_tree().process_frame
 		print(
 			(
-				"PRIMS %-16s %5dk prims  %4d draws  GPU %.2f ms"
+				"PRIMS %-6s %-16s %5dk prims  %4d draws  GPU %.2f ms"
 				% [
+					str(SpikeConfig.PRESETS[p]["name"]),
 					k,
 					int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME) / 1000.0),
 					int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)),
@@ -235,3 +302,19 @@ func _prims() -> void:
 		)
 		for n: Node3D in parts[k]:
 			n.visible = true
+	# shadow-map primitives: the same view with the sun shadow off
+	main.sun.shadow_enabled = false
+	for i in 40:
+		await get_tree().process_frame
+	print(
+		(
+			"PRIMS %-6s %-16s %5dk prims  %4d draws"
+			% [
+				str(SpikeConfig.PRESETS[p]["name"]),
+				"sun shadows",
+				int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME) / 1000.0),
+				int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+			]
+		)
+	)
+	main.apply_preset(p)

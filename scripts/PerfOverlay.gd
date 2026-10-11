@@ -15,6 +15,7 @@ signal forest_pressed
 signal bench_pressed(all_presets: bool)
 signal vsync_pressed
 signal parts_pressed
+signal corner_pressed
 
 const WINDOW := 300
 ## The readout text is rebuilt this many times a second (perf pass 3: re-shaping the label every
@@ -97,6 +98,7 @@ func _ready() -> void:
 	_add_button(grid, "bench_all", "Bench all", func() -> void: bench_pressed.emit(true))
 	_add_button(grid, "vsync", "VSync: on", func() -> void: vsync_pressed.emit())
 	_add_button(grid, "parts", "GPU parts", func() -> void: parts_pressed.emit())
+	_add_button(grid, "corner", "Bench corner", func() -> void: corner_pressed.emit())
 
 
 func _make_label(size: int, col: Color) -> Label:

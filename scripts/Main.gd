@@ -93,12 +93,16 @@ func _ready() -> void:
 	bench.name = "Bench"
 	add_child(bench)
 	bench.build(terrain.meta["bench_path"])
+	bench.player = player
+	bench.spawn = player.global_position
+	bench.spawn_yaw = player.yaw
 
 	var ui := CanvasLayer.new()
 	add_child(ui)
 	controls = TouchControls.new()
 	ui.add_child(controls)
 	player.controls = controls
+	bench.controls = controls
 
 	PerfOverlay.preset_pressed.connect(_on_preset)
 	PerfOverlay.foam_pressed.connect(_on_foam)
@@ -106,6 +110,7 @@ func _ready() -> void:
 	PerfOverlay.bench_pressed.connect(_on_bench)
 	PerfOverlay.vsync_pressed.connect(_on_vsync)
 	PerfOverlay.parts_pressed.connect(_on_parts)
+	PerfOverlay.corner_pressed.connect(_on_corner)
 	apply_preset(preset_index)
 	set_vsync(true)
 	print(
@@ -265,6 +270,61 @@ func _build_corner() -> void:
 		SpikeConfig.CORNER_TILES.size.y * 160.0
 	)
 	corner.set_meta("rect", rect)
+	# storehouses: a light LOD2 (tools/spike/house_lod2.gd) for distance views and the shadow proxy
+	for house: Node3D in corner.get_node("Houses").get_children():
+		var kind: String = String(house.name).get_slice("_", 0)
+		if not ResourceLoader.exists(SpikeConfig.CORNER_HOUSE_LOD2 % kind):
+			continue
+		var lod2 := MeshInstance3D.new()
+		lod2.name = "LOD2"
+		lod2.mesh = load(SpikeConfig.CORNER_HOUSE_LOD2 % kind)
+		lod2.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		lod2.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		house.add_child(lod2)
+		var hs := house.get_node_or_null("Shadow") as MeshInstance3D
+		if hs:
+			hs.mesh = lod2.mesh
+	# rock shadows from the lightest LOD (600 instead of 2300 triangles per split), shorter range
+	for rock: Node3D in corner.get_node("Rocks").get_children():
+		var sh := rock.get_node_or_null("Shadow") as MeshInstance3D
+		var lods := _lod_nodes(rock)
+		if sh and lods.size() > 0:
+			sh.mesh = lods[lods.size() - 1].mesh
+			sh.visibility_range_end = SpikeConfig.CORNER_ROCK_SHADOW_RANGE
+
+
+## The LOD children of a corner model, in order (LOD0, LOD1, LOD3 ...).
+static func _lod_nodes(model: Node) -> Array[MeshInstance3D]:
+	var out: Array[MeshInstance3D] = []
+	for c in model.get_children():
+		if c is MeshInstance3D and String(c.name).begins_with("LOD"):
+			out.append(c as MeshInstance3D)
+	return out
+
+
+## Per-preset LOD ranges of the corner models (SpikeConfig PRESETS "corner_lods").
+func _apply_corner(p: Dictionary) -> void:
+	if corner == null:
+		return
+	var table: Dictionary = p["corner_lods"]
+	for group: String in table:
+		var ends: Array = table[group]
+		for model in corner.get_node(group).get_children():
+			var lods := _lod_nodes(model)
+			var begin: float = 0.0
+			for k in lods.size():
+				var mi := lods[k]
+				var end: float = float(ends[k]) if k < ends.size() else 0.0
+				if k == lods.size() - 1:
+					end = float(ends[ends.size() - 1])  # a model's last LOD takes the last range
+				mi.visible = end >= 0.0
+				if end < 0.0:
+					continue
+				mi.visibility_range_begin = begin
+				mi.visibility_range_end = end
+				mi.visibility_range_begin_margin = 4.0 if begin > 0.0 else 0.0
+				mi.visibility_range_end_margin = 4.0 if end > 0.0 else 0.0
+				begin = end
 
 
 ## Colour grade toward the key frame (docs/mockups/key_fjord_rock.jpg): a 33^3 LUT fitted by
@@ -457,6 +517,7 @@ func apply_preset(i: int) -> void:
 	terrain.material.set_shader_parameter("quality", int(p["terrain_quality"]))
 	if corner_ground:
 		corner_ground.set_shader_parameter("quality", int(p["terrain_quality"]))
+	_apply_corner(p)
 	forest_index = SpikeConfig.FOREST_STEPS.find(float(p["forest"]))
 	forest.set_density(float(p["forest"]))
 	forest.set_shadows(bool(p["shadows"]))
@@ -508,8 +569,19 @@ func _on_bench(all_presets: bool) -> void:
 	run_bench(list, SpikeConfig.BENCH_SECONDS)
 
 
-## "GPU parts": what each feature of the current preset costs on this device's GPU
-## (scripts/GpuParts.gd, about 2 minutes).
+## "Bench corner": every preset, standing at the spawn then running the village path
+## (Bench.run_corner), so the bench measures what the player sees in the beauty corner.
+func _on_corner() -> void:
+	if bench.running or not warm:
+		return
+	var list: Array[int] = []
+	for k in SpikeConfig.PRESETS.size():
+		list.append(k)
+	run_bench(list, SpikeConfig.CORNER_BENCH_SECONDS, true)
+
+
+## "GPU parts": what each feature of the current preset costs on this device's GPU where the
+## player stands (scripts/GpuParts.gd, about 3 minutes).
 func _on_parts() -> void:
 	if bench.running or not warm:
 		return
@@ -518,15 +590,10 @@ func _on_parts() -> void:
 	set_vsync(false)
 	PerfOverlay.set_buttons_enabled(false)
 	PerfOverlay.show_result("GPU parts: measuring (about 2 min)")
-	var grass_target := grass.target
-	grass.target = bench.camera
-	grass_far.target = bench.camera
 	var parts := GpuParts.new()
 	add_child(parts)
-	var lines: Array[String] = await parts.run(self, get_viewport())
+	var lines: Array[String] = await parts.run(self, get_viewport(), true)
 	parts.queue_free()
-	grass.target = grass_target
-	grass_far.target = grass_target
 	player.camera.current = true
 	set_vsync(start_vsync)
 	bench.running = false
@@ -539,21 +606,27 @@ func _on_parts() -> void:
 	)
 
 
-## Flies the bench path once per preset; restores the player camera and the starting preset.
-func run_bench(list: Array[int], seconds: float) -> Array[Dictionary]:
+## Flies the bench path once per preset (corner: the corner pass, Bench.run_corner); restores the
+## player camera and the starting preset.
+func run_bench(list: Array[int], seconds: float, corner_pass: bool = false) -> Array[Dictionary]:
 	var start_preset: int = preset_index
 	var start_vsync: bool = vsync_on
 	set_vsync(false)
 	var mode: String = vsync_mode_name()
 	PerfOverlay.set_buttons_enabled(false)
 	var grass_target := grass.target
-	grass.target = bench.camera
-	grass_far.target = bench.camera
+	var follow: Node3D = player if corner_pass else bench.camera
+	grass.target = follow
+	grass_far.target = follow
 	var lines: Array[String] = []
 	var out: Array[Dictionary] = []
 	for i in list:
 		apply_preset(i)
-		var s: Dictionary = await bench.run(seconds)
+		var s: Dictionary
+		if corner_pass:
+			s = await bench.run_corner(seconds)
+		else:
+			s = await bench.run(seconds)
 		s["preset"] = SpikeConfig.PRESETS[i]["name"]
 		out.append(s)
 		var line := Bench.format(str(s["preset"]), s)
@@ -568,8 +641,14 @@ func run_bench(list: Array[int], seconds: float) -> Array[Dictionary]:
 	PerfOverlay.set_buttons_enabled(true)
 	PerfOverlay.show_result(
 		(
-			"Bench %d s (%s, vsync %s)\n%s"
-			% [int(seconds), OS.get_model_name(), mode, "\n".join(lines)]
+			"Bench %s%d s (%s, vsync %s)\n%s"
+			% [
+				"corner " if corner_pass else "",
+				int(seconds),
+				OS.get_model_name(),
+				mode,
+				"\n".join(lines)
+			]
 		)
 	)
 	return out

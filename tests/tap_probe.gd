@@ -49,6 +49,33 @@ func _ready() -> void:
 	while main.bench.running:
 		await get_tree().process_frame
 	print("PROBE GPU parts result: ", PerfOverlay._result.text.split("\n").slice(0, 4))
+	# Low: the corner on its light LODs (no lightmapped house LOD0, no birch meshes)
+	main.apply_preset(0)
+	var house: Node3D = main.corner.get_node("Houses").get_child(0)
+	var birch: Node3D = main.corner.get_node("Trees").get_child(0)
+	print(
+		"PROBE Low corner: house LOD0 visible ",
+		house.get_node("LOD0").visible,
+		", birch LOD0 visible ",
+		birch.get_node("LOD0").visible
+	)
+	main.apply_preset(3)
+	print("PROBE Ultra corner: house LOD0 visible ", house.get_node("LOD0").visible)
+	var spawn: Vector3 = main.player.global_position
+	await _tap("corner")
+	for i in 5:
+		await get_tree().process_frame
+	print("PROBE corner bench running after tap: ", main.bench.running)
+	var walked: float = 0.0
+	while main.bench.running:
+		await get_tree().process_frame
+		walked = maxf(walked, main.player.global_position.distance_to(spawn))
+	var pp: Vector3 = main.player.global_position
+	var back := Vector2(pp.x - spawn.x, pp.z - spawn.z)
+	# horizontal: the reset puts him at the spawn height plus 0.5 m and he drops to the ground
+	print("PROBE corner bench: player went %.0f m from the spawn, back at the spawn %s" % [
+		walked, back.length() < 0.5])
+	print("PROBE corner bench result: ", PerfOverlay._result.text.split("\n").slice(0, 5))
 	await _tap("bench_all")
 	for i in 5:
 		await get_tree().process_frame

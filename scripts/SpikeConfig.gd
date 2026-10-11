@@ -135,6 +135,24 @@ const FALLS_WET_STRENGTH := 0.55
 
 const BENCH_SECONDS := 60.0
 const BENCH_WARMUP := 1.0
+## "Bench corner" (Bench.run_corner): seconds per preset, seconds standing at the spawn looking
+## round, then the worn village path the player runs (x, z; tools/spike/build_corner.gd PATH).
+const CORNER_BENCH_SECONDS := 45.0
+const CORNER_LOOK := 8.0
+const CORNER_WALK: Array[Vector2] = [
+	Vector2(150, -52),
+	Vector2(178, -82),
+	Vector2(200, -108),
+	Vector2(219, -132),
+	Vector2(233, -158),
+	Vector2(250, -178),
+	Vector2(268, -192),
+	Vector2(287, -212),
+	Vector2(296, -232),
+	Vector2(318, -256),
+	Vector2(338, -282),
+	Vector2(352, -310),
+]
 ## Boot warm-up: frames rendered per preset and view so every pipeline compiles before play.
 const WARMUP_FRAMES := 3
 
@@ -154,6 +172,12 @@ const WARMUP_FRAMES := 3
 const PRESETS: Array[Dictionary] = [
 	{
 		"name": "Low",
+		"corner_lods": {
+			"Houses": [-1.0, 40.0, 0.0],
+			"Props": [-1.0, 50.0],
+			"Rocks": [-1.0, 25.0, 140.0],
+			"Trees": [-1.0, -1.0, 110.0],
+		},
 		"rocks": false,
 		"tree_geo": 0.0,
 		"grass_far": false,
@@ -175,6 +199,12 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Medium",
+		"corner_lods": {
+			"Houses": [25.0, 70.0, 0.0],
+			"Props": [18.0, 90.0],
+			"Rocks": [18.0, 70.0, 300.0],
+			"Trees": [12.0, 24.0, 130.0],
+		},
 		"rocks": false,
 		"tree_geo": 0.0,
 		"grass_far": false,
@@ -196,6 +226,12 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "High",
+		"corner_lods": {
+			"Houses": [35.0, 110.0, 0.0],
+			"Props": [28.0, 130.0],
+			"Rocks": [30.0, 120.0, 600.0],
+			"Trees": [22.0, 45.0, 150.0],
+		},
 		"rocks": false,
 		"tree_geo": 0.0,
 		"grass_far": false,
@@ -217,6 +253,12 @@ const PRESETS: Array[Dictionary] = [
 	},
 	{
 		"name": "Ultra",
+		"corner_lods": {
+			"Houses": [45.0, 150.0, 0.0],
+			"Props": [35.0, 160.0],
+			"Rocks": [40.0, 150.0, 900.0],
+			"Trees": [30.0, 60.0, 150.0],
+		},
 		"rocks": false,
 		"tree_geo": 70.0,
 		"grass_far": true,
@@ -237,6 +279,18 @@ const PRESETS: Array[Dictionary] = [
 		"shadow_atlas": 4096,
 	},
 ]
+## corner_lods (corner pass 2026-10-11): visibility end (m) of each LOD of the beauty corner's
+## scanned houses, props, rocks and birches (children named LOD*, in order; Main._apply_corner).
+## Each LOD begins where the previous visible one ends; 0 = no end; -1 = that LOD is off. Ultra =
+## the ranges baked by tools/spike/build_corner.gd (plus the house LOD2 from 150 m). Low and
+## Medium start on the light LODs (the lightmapped LOD0 only on Medium, close up) so the corner
+## fits their prim and draw budgets:
+## Low has no birch meshes (cards only), no full-detail houses, rocks or props.
+## The Evju storehouses get a third LOD at run time (3000 triangles, tools/spike/house_lod2.gd),
+## also their shadow proxy; the log cabins keep two (a model's last LOD takes the last range).
+## Corner rocks cast their sun shadow from the lightest LOD out to this range (m).
+const CORNER_HOUSE_LOD2 := "res://assets/models/corner/baked/%s_LOD2.res"
+const CORNER_ROCK_SHADOW_RANGE := 150.0
 ## Share of the 90 000 placed trees per preset (High keeps the pass 1 count of about 54 000).
 const FOREST_STEPS: Array[float] = [0.2, 0.4, 0.6, 1.0]
 
