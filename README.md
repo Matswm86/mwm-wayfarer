@@ -87,7 +87,8 @@ Top left (always on): frames per second, p95 frame time over the last 300 frames
 | Bench 60 s | Flies the camera along a fixed 60 s path over the village and the fjord, then shows average fps, p95 ms, max ms, GPU average and p95 ms, average and max draw calls and max primitives for the current preset. |
 | Bench all | Runs the same flight for Low, Medium, High and Ultra in a row (4 minutes) and shows one line per preset. |
 | Hide result | Closes the bench result. |
-| GPU parts | Measures what each feature of the current preset costs on this phone's GPU: at five views it renders the preset as is and with one switch off (anti-aliasing, sun shadows, shadow filter, tree shadows, ground cover, far clumps, pine meshes, forest, foam, glow, rock detail, render scale), alternating so heat drift cancels, and lists the ms each one costs. About 2 minutes. |
+| GPU parts | Measures what each feature of the current preset costs on this phone's GPU where the player stands (his own view, turned 25 degrees left and right): it renders the preset as is and with one switch off (anti-aliasing, sun shadows, shadow filter, tree shadows, ground cover, far clumps, pine meshes, forest, foam, glow, rock detail, render scale, and each part of the beauty corner: houses, props, rocks, birches, ground; the player, Ingrid and the animals, the waterfall, the boathouses), alternating so heat drift cancels, and lists the ms each one costs. Stand at the spawn for the corner's costs. About 3 minutes. |
+| Bench corner | Measures what the player sees: for each preset, 8 s standing at the spawn looking round, then running the worn path through the village to the cliff path with his own camera (45 s per preset, 3 minutes), then puts him back at the spawn. Same columns as Bench all. |
 | VSync | Switches vsync off and on. With vsync on, the phone caps at its display rate (120 fps showed as 8.3 ms on every preset). Both bench buttons always run with vsync off and print the mode the driver reports, so the result shows the real frame time. |
 
 At start the game renders every preset once behind a "Loading" note (about 2-3 s) so the shaders compile before you play, instead of stuttering the first time a preset or effect appears.
@@ -103,6 +104,12 @@ Laptop counts from the screenshot bot (1920 x 1080, visual pass 2): Low max 71 d
 
 Pass 3 (performance): High is capped at 60 fps (uncapped it jittered between 8, 17 and 25 ms frames on the 120 Hz screen); Ultra renders at 0.9 scale with a cheaper soft-shadow filter and fewer far clumps; heavy meshes (scanned houses, near trees, birches) cast their sun shadow with a light copy only; animals animate only near and in view; the near-tree gather runs on a worker thread. Laptop bench flight, GPU average / p95 before -> after (RTX 3060, rendering offscreen so the GPU keeps its clocks; laptop GPU is not a phone GPU): High 3.18 / 4.23 -> 2.98 / 4.62 ms, Ultra 5.20 / 7.78 -> 3.43 / 5.22 ms, with the beauty corner added. Bench lines now also show render CPU and physics ms.
 
+Corner pass (11 Oct, after the phone found the spawn view at 30.5 ms GPU on Ultra):
+- The game's model textures (characters, animals, trees, rocks, boathouses: 93 files) were stored uncompressed, about 1.4 GB of video memory; they now use the phone's compressed formats (ETC2 on Android) with mipmaps, and the two scanned characters load at 2048 px (studio rule). Terrain data, masks and the colour grade stay lossless.
+- The ground shader skips its cliff-rock layers (20-35 texture reads per pixel) wherever the ground is not steep, which is the meadow, the path and the village, and the four path/gravel/pebble/sand layers wherever the corner mask is empty. On flat ground the rock skip gives the same pixels as before.
+- The beauty corner now follows the preset: each preset has its own distance for every detail level of the scanned houses, props, rocks and birches. Low uses only the light versions (no full-detail scans, birches as cards), Medium brings in full detail close up, and Ultra keeps the pass 3 ranges. The Evju storehouse gets a third, 3000-triangle version for distance views and its shadow (`tools/spike/house_lod2_blender.py` + `house_lod2.gd`; the log-cabin scan tore open when decimated and keeps two). Rocks cast their shadow with their lightest version out to 150 m.
+- Laptop, standing at the spawn, 1920 x 1080 offscreen, RTX 3060 (GPU avg / p95 ms; before = pass 3 measured right before this change under the same machine load): Low 1.58 / 1.70 -> 1.41 / 1.42, Medium 3.92 / 4.11 -> 2.50 / 2.55, High 7.32 / 8.27 -> 4.13 / 4.26, Ultra 8.00 / 8.42 -> 4.62 / 4.80 ms (textures and ground shader). Render CPU 0.6-1.2 ms on every preset, unchanged. Video memory at the spawn 1875-2018 MB -> 978-1122 MB. Primitives / draws at the spawn: Low 361k / 162 -> 279k / 117, Medium 637k / 236 -> 576k / 226, High 834k / 240 -> 770k / 253, Ultra 1169k / 259 -> 1106k / 266; corner path p95: Low 488k -> 301k (Low budget 350k), Medium 838k -> 669k, Ultra 1556k -> 1453k. The detail-level work was measured in primitives only: another job held the laptop GPU for the rest of the session. On the phone the spawn view took about 3.8 times the laptop's GPU time in pass 3, which puts Ultra at about 17-18 ms after this pass (my estimate); the phone's own Bench corner is the real test.
+
 Phone results so far (one test phone, Samsung SM-S931B, Bench flight):
 
 | Build | Preset | Avg fps | p95 frame | Max frame | GPU avg | Max draws | Max primitives |
@@ -110,11 +117,17 @@ Phone results so far (one test phone, Samsung SM-S931B, Bench flight):
 | First spike (10 Oct) | High | 117.3 | 9.5 ms | 29.5 ms | not measured | 163 | 507k |
 | Visual pass 2 (10 Oct) | High | 70.4 | 19.4 ms | 33 ms | 13.4 ms | 174 | 521k |
 | Visual pass 2 (10 Oct) | Ultra | 47.5 | 30 ms | 51 ms | 19.7 ms | 178 | 814k |
-| Pass 3 (beauty corner) | all | not yet measured on the phone | | | | | |
+| Pass 3 (beauty corner, 11 Oct) | Low | 60.0 | 16.7 ms | 26.1 ms | 11.1 ms (p95 13.2) | 182 | 577k |
+| Pass 3 (beauty corner, 11 Oct) | Medium | 60.0 | 16.7 ms | 25.6 ms | 13.1 ms (p95 14.3) | 273 | 929k |
+| Pass 3 (beauty corner, 11 Oct) | High | 59.3 | 16.7 ms | 33.3 ms | 13.9 ms (p95 16.0) | 281 | 1299k |
+| Pass 3 (beauty corner, 11 Oct) | Ultra | 58.3 | 18.1 ms | 50.0 ms | 14.3 ms (p95 17.6) | 302 | 1673k |
+| Pass 3, standing at the spawn (live readout) | Ultra | 33 | 31.7 ms | | 30.5 ms (p95 30.4) | 290 | 1134k (VRAM 1956 MB) |
+
+Spawn-view finding (pass 3): the bench flight held about 60 fps on every preset, but standing at the spawn inside the beauty corner on Ultra the GPU took 30.5 ms, about twice the 16.7 ms a 60 fps frame allows. The flight spends most of its time high over the valley and never looks at the corner the way the player does, so it missed the cost. The new Bench corner button measures that view; the corner pass below cut it.
 
 The APK is about 755 MB since pass 3 (full-resolution scans and textures; size is not a constraint for this build).
 
-To report a phone result: run Bench all and take a screenshot of the result box (the GPU column is the one that matters on Ultra), then GPU parts on Ultra.
+To report a phone result: run Bench all and Bench corner and take a screenshot of each result box (the GPU column is the one that matters on Ultra), then GPU parts on Ultra standing at the spawn.
 
 ## Repository
 
@@ -122,7 +135,7 @@ To report a phone result: run Bench all and take a screenshot of the result box 
 - `project.godot`, `scenes/`, `scripts/`, `shaders/`, `tests/`: the Godot spike. Every tunable number is in `scripts/SpikeConfig.gd`.
 - `tools/terrain/npz_to_godot.py`: bakes the terrain, forest, waterfall, village and bench path into `assets/terrain/`. Frame: scene (x, y, h) maps to Godot (x, h, -y), so Godot -Z looks down the fjord.
 - `tools/terrain/copy_textures.py`: copies the CC0 textures into `assets/textures/`.
-- Beauty corner: `tools/spike/export_corner_houses.py` (Blender: scans to game meshes), `tools/spike/pack_corner_textures.py` (path, gravel, pebble and sand layers), `tools/spike/build_corner.gd` (builds `scenes/BeautyCorner.tscn`), `tools/spike/bake_corner.sh` (bakes its lightmap through `addons/wf_bake`, `WF_CORNER_QUALITY=low|medium|high`). The screenshot bot's `CAPTURE_SET=beauty` takes the six corner views; `tests/profile.tscn` measures CPU and GPU per preset on the bench flight. `tools/spike/export_human.py`: exports the MakeHuman characters into `assets/models/`.
+- Beauty corner: `tools/spike/export_corner_houses.py` (Blender: scans to game meshes), `tools/spike/pack_corner_textures.py` (path, gravel, pebble and sand layers), `tools/spike/build_corner.gd` (builds `scenes/BeautyCorner.tscn`), `tools/spike/bake_corner.sh` (bakes its lightmap through `addons/wf_bake`, `WF_CORNER_QUALITY=low|medium|high`). The screenshot bot's `CAPTURE_SET=beauty` takes the six corner views and `CAPTURE_SET=walk` proves the walk direction (Luca walking away, left and right, a side view with a planted-foot check, Ingrid and every animal from the front); `tests/profile.tscn` measures CPU and GPU per preset on the bench flight, and with `PROFILE_SPAWN=1` at the spawn view and on the corner path (`PROFILE_ABLATE_HERE=1`: the GPU parts cases there, `PROFILE_PRIMS=1`: primitives per part). `tools/spike/export_human.py`: exports the MakeHuman characters into `assets/models/`.
 - `tools/spike/`: graphics-pass tools: `bake_terrain_light.py` (baked sun shadow and sky occlusion), `sky_to_ldr.py`, `export_village.py` + `village_textures.py`, `bake_tree_impostors.py` + `pack_tree_atlas.py`, `bake_ground_cards.py` + `pack_ground_cards.py`, `export_animals.py`, `vram_import.sh`; visual pass 2: `bake_terrain_detail.py` (per-texel normals, drainage, ridges), `pack_terrain_textures.py` (2K-4K rock and ground sets), `cube_to_png.py` (colour grade LUT), `export_rocks.py` (cliff rock stand-ins with LODs).
 - `tools/art/`: Blender scripts that render the look-dev scenes. `tools/terrain/dem_to_game.py`: turns real elevation data into the fjord scene's terrain.
 
