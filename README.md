@@ -1,6 +1,6 @@
 # MWM Wayfarer
 
-Working title. A realistic open-world game for Android in which you live through human history: you start as one of the first apes to come down from the trees in East Africa, about 7 million years ago, and play forward era by era to today. Engine: Godot 4.6 (Mobile renderer). The APK linked below is a graphics and performance test of one chapter's valley, not the game yet.
+**Stopped October 2026.** The plan was a realistic open-world game for Android in which you live through human history: you start as one of the first apes to come down from the trees in East Africa, about 7 million years ago, and play forward era by era to today. The graphics never reached the quality wanted on a phone, so development stopped. What remains is the graphics and performance test below: a walk-through of one chapter's valley. Engine: Godot 4.6 (Mobile renderer).
 
 <p align="center"><img src="docs/spike/b_street_ultra.jpg" alt="Spike build, Ultra preset: a scanned carved Norwegian storehouse on a worn dirt path in Skarvik village, a turf-roofed log house behind it, the grey fjord wall above" width="720"></p>
 
@@ -22,7 +22,7 @@ The APK runs on 64-bit phones and 32-bit tablets (arm64-v8a and armeabi-v7a). It
 - Meet Ingrid at the jetty and watch 20 animals (deer, elk, moose, fox, rabbits, wolves, a bear, an eagle, gulls) graze, wander and run from you. There is no combat.
 - Switch between four graphics presets (Low, Medium, High, Ultra) and read the phone's frame rate, GPU time, draw calls and video memory live.
 - Run the built-in benchmarks (Bench 60 s, Bench all, Bench corner, GPU parts) to see what each setting costs on your phone.
-- Planned, not built yet: 12 chapters from the first apes in East Africa to today (see "The game" below).
+- Never built (the project stopped here): 12 chapters from the first apes in East Africa to today (see "The game" below).
 
 ## How it works
 
@@ -30,7 +30,7 @@ Wayfarer is a Godot 4.6 project on the Mobile renderer, exported to Android as a
 
 ## Status
 
-Version 0.1.0, a graphics and performance spike: the valley, village and wildlife can be walked through, but the eras, fire, survival and story are not built yet. On the test phone the Ultra preset reached 46.6 fps (19.1 ms GPU average) in the Bench corner run of 11 Oct, short of a steady 60 fps; Low and Medium hold about 60.
+Stopped October 2026: the graphics quality wanted for the full game was not reachable on a phone, so no further chapters are being built. The last build is version 0.1.0, a graphics and performance spike: the valley, village and wildlife can be walked through; the eras, fire, survival and story were never built. On the test phone the Ultra preset reached 46.6 fps (19.1 ms GPU average) in the Bench corner run of 11 Oct, short of a steady 60 fps; Low and Medium hold about 60.
 
 ## The game (plan, `docs/GDD.md` v2)
 
